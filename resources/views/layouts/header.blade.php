@@ -118,13 +118,13 @@
                     </summary>
                     <ul class="pl-9 pr-2 py-2 space-y-1">
                         <li>
-                            <a href="#"
+                            <a href={{ route('employees.index') }}
                                 class="flex items-center gap-2 text-gray-600 hover:text-blue-700 text-sm py-1.5 transition-colors">
                                 <i class="bi bi-circle text-[8px]"></i><span>All Employees</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#"
+                            <a href={{ route('employees.create') }}
                                 class="flex items-center gap-2 text-gray-600 hover:text-blue-700 text-sm py-1.5 transition-colors">
                                 <i class="bi bi-circle text-[8px]"></i><span>Add Employee</span>
                             </a>

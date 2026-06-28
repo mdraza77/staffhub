@@ -124,6 +124,9 @@
                 </table>
             </div>
         </div>
+        <div class="mt-3">
+            {{ $departments->links() }}
+        </div>
     </div>
 
     <script>

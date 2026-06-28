@@ -15,7 +15,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::withTrashed()->latest()->get();
+        $departments = Department::withTrashed()->latest()->paginate(10);
         // Return view with layout
         return view('departments.index', compact('departments'));
     }
