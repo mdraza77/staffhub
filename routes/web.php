@@ -20,6 +20,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('departments', DepartmentController::class);
+    Route::post('departments/{id}/restore', [DepartmentController::class, 'restore'])->name('departments.restore');
+    Route::delete('departments/{id}/force-delete', [DepartmentController::class, 'forceDelete'])->name('departments.force-delete');
 });
 
 require __DIR__ . '/auth.php';

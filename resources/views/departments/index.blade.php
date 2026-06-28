@@ -14,11 +14,12 @@
                     <span class="text-gray-900 font-medium">Departments</span>
                 </nav>
             </div>
-            <button type="button"
-                class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
-                data-bs-toggle="modal" data-bs-target="#addDepartmentModal">
-                <i class="fa-solid fa-plus text-lg"></i> Create Department
-            </button>
+            <a href="{{ route('departments.create') }}">
+                <button type="button"
+                    class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm">
+                    <i class="fa-solid fa-plus text-lg"></i> Create Department
+                </button>
+            </a>
         </div>
 
         <!-- Success/Error Messages -->
@@ -55,6 +56,7 @@
                             <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Department Name</th>
                             <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Description</th>
                             <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Created On</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
                             <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
                         </tr>
                     </thead>
@@ -66,16 +68,43 @@
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $department->description ?? '---' }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $department->created_at->format('d M, Y') }}
                                 </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    @if ($department->deleted_at)
+                                        <span
+                                            class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">
+                                            Deleted
+                                        </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-inset ring-green-500/20">
+                                            Active
+                                        </span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 text-center">
                                     <div class="flex items-center justify-center gap-2">
-                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                            title="Edit" data-bs-toggle="modal" data-bs-target="#editDepartmentModal">
-                                            <i class="fa-solid fa-pen-to-square text-lg"></i>
-                                        </button>
-                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                            title="Delete" onclick="confirmDelete()">
-                                            <i class="fa-solid fa-trash text-lg"></i>
-                                        </button>
+                                        @if ($department->deleted_at === null)
+                                            <a href="{{ route('departments.edit', $department->id) }}"
+                                                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                title="Edit">
+                                                <i class="fa-solid fa-pen-to-square text-lg"></i>
+                                            </a>
+                                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                title="Delete" onclick="confirmDelete({{ $department->id }})">
+                                                <i class="fa-solid fa-trash text-lg"></i>
+                                            </button>
+                                        @else
+                                            <button
+                                                class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                title="Restore" onclick="confirmRestore({{ $department->id }})">
+                                                <i class="fa-solid fa-recycle text-lg"></i>
+                                            </button>
+                                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                title="Permanent Delete"
+                                                onclick="confirmPermanentDelete({{ $department->id }})">
+                                                <i class="fa-solid fa-trash text-lg"></i>
+                                            </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -97,62 +126,73 @@
         </div>
     </div>
 
-    <!-- Create Department Modal -->
-    <div class="modal fade" id="addDepartmentModal" tabindex="-1" aria-labelledby="addDepartmentModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-xl">
-                <div class="modal-header bg-gradient-to-r from-blue-600 to-blue-700 text-white border-0">
-                    <div>
-                        <h5 class="modal-title text-lg font-bold" id="addDepartmentModalLabel">
-                            <i class="fa-solid fa-plus me-2"></i>Create New Department
-                        </h5>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-
-                <form action="{{ route('departments.store') }}" method="POST">
-                    @csrf
-                    <div class="modal-body p-6">
-                        <div class="mb-4">
-                            <label for="name" class="block text-sm font-semibold text-gray-900 mb-2">
-                                Department Name
-                                <span class="text-red-600">*</span>
-                            </label>
-                            <input type="text"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-50 transition-colors"
-                                id="name" name="name" value="{{ old('name') }}" required
-                                placeholder="e.g. IT, HR, Marketing">
-                        </div>
-
-                        <div class="mb-0">
-                            <label for="description"
-                                class="block text-sm font-semibold text-gray-900 mb-2">Description</label>
-                            <textarea
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-50 transition-colors resize-none"
-                                id="description" name="description" rows="3" placeholder="Brief details about this department">{{ old('description') }}</textarea>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer border-t border-gray-200 p-6 bg-gray-50">
-                        <button type="button"
-                            class="px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-medium"
-                            data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit"
-                            class="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">Save
-                            Department</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <script>
-        function confirmDelete() {
-            if (confirm('Are you sure you want to delete this department?')) {
-                // Add delete functionality
-            }
+        function confirmDelete(departmentId) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You can revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + departmentId).submit();
+                }
+            });
+        }
+
+        function confirmRestore(departmentId) {
+            Swal.fire({
+                title: "Restore Department?",
+                text: "This department will be restored to active status.",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#10b981",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, restore it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('restore-form-' + departmentId).submit();
+                }
+            });
+        }
+
+        function confirmPermanentDelete(departmentId) {
+            Swal.fire({
+                title: "Permanent Delete?",
+                text: "This cannot be undone! The department will be permanently deleted.",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonColor: "#dc2626",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete permanently!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('permanent-delete-form-' + departmentId).submit();
+                }
+            });
         }
     </script>
+
+    <!-- Hidden delete forms for each department -->
+    @foreach ($departments as $department)
+        <form id="delete-form-{{ $department->id }}" action="{{ route('departments.destroy', $department->id) }}"
+            method="POST" class="hidden">
+            @csrf
+            @method('DELETE')
+        </form>
+        @if ($department->deleted_at !== null)
+            <form id="restore-form-{{ $department->id }}" action="{{ route('departments.restore', $department->id) }}"
+                method="POST" class="hidden">
+                @csrf
+            </form>
+            <form id="permanent-delete-form-{{ $department->id }}"
+                action="{{ route('departments.force-delete', $department->id) }}" method="POST" class="hidden">
+                @csrf
+                @method('DELETE')
+            </form>
+        @endif
+    @endforeach
 @endsection

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Department;
 use Illuminate\Support\Str;
+use SweetAlert2\Laravel\Swal;
+use Illuminate\Support\Facades\Log;
 
 class DepartmentController extends Controller
 {
@@ -13,7 +15,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::latest()->get();
+        $departments = Department::withTrashed()->latest()->get();
         // Return view with layout
         return view('departments.index', compact('departments'));
     }
@@ -23,7 +25,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        return view('departments.create');
     }
 
     /**
@@ -31,20 +33,37 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        // Validation
-        $request->validate([
-            'name' => 'required|string|max:255|unique:departments',
-            'description' => 'nullable|string',
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:departments,name'],
+            'description' => ['nullable', 'string'],
         ]);
 
-        // Create department
-        Department::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-        ]);
+        try {
 
-        return redirect()->route('departments.index')->with('success', 'Department created successfully!');
+            Department::create([
+                'name' => $validated['name'],
+                'slug' => Str::slug($validated['name']),
+                'description' => $validated['description'] ?? null,
+            ]);
+
+            Swal::toastSuccess([
+                'title' => 'Department created successfully',
+            ]);
+
+            return redirect()->route('departments.index');
+        } catch (\Exception $e) {
+
+            Log::error('Department Creation Failed', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+            ]);
+
+            Swal::toastError([
+                'title' => 'Something went wrong',
+            ]);
+
+            return back()->withInput();
+        }
     }
 
     /**
@@ -60,7 +79,8 @@ class DepartmentController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $department = Department::findOrFail($id);
+        return view('departments.edit', compact('department'));
     }
 
     /**
@@ -68,7 +88,30 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $department = Department::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:departments,name,' . $id],
+            'description' => ['nullable', 'string'],
+        ]);
+
+        try {
+            $department->update([
+                'name' => $validated['name'],
+                'slug' => Str::slug($validated['name']),
+                'description' => $validated['description'] ?? null,
+            ]);
+
+            return redirect()->route('departments.index')->with('success', 'Department updated successfully!');
+        } catch (\Exception $e) {
+            Log::error('Department Update Failed', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'department_id' => $id,
+            ]);
+
+            return back()->withInput()->withErrors(['error' => 'Failed to update department']);
+        }
     }
 
     /**
@@ -76,6 +119,36 @@ class DepartmentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $department = Department::findOrFail($id);
+
+        $department->delete();
+
+        return redirect()->route('departments.index')->with('success', 'Department deleted successfully!');
+    }
+
+    /**
+     * Restore a soft deleted resource.
+     */
+    public function restore(string $id)
+    {
+        $department = Department::withTrashed()->findOrFail($id);
+
+        if ($department->trashed()) {
+            $department->restore();
+            return redirect()->route('departments.index')->with('success', 'Department restored successfully!');
+        }
+
+        return redirect()->route('departments.index')->with('error', 'Department is not deleted.');
+    }
+
+    /**
+     * Permanently delete a soft deleted resource.
+     */
+    public function forceDelete(string $id)
+    {
+        $department = Department::withTrashed()->findOrFail($id);
+        $department->forceDelete();
+
+        return redirect()->route('departments.index')->with('success', 'Department permanently deleted!');
     }
 }

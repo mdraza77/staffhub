@@ -242,7 +242,7 @@
             }
         }
     </script>
-
+    @include('sweetalert2::index')
 </body>
 
 </html>
