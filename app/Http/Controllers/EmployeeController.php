@@ -98,9 +98,10 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $employee)
     {
-        //
+        $employee->load('department');
+        return view('employees.show', compact('employee'));
     }
 
     /**
@@ -181,8 +182,28 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $employee)
     {
-        //
+        $employee->delete(); // Soft Delete
+        return redirect()->route('employees.index')->with('success', 'Employee soft deleted successfully.');
+    }
+
+    public function restore($id)
+    {
+        User::withTrashed()->findOrFail($id)->restore();
+        return redirect()->route('employees.index')->with('success', 'Employee restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        $employee = User::withTrashed()->findOrFail($id);
+
+        // Profile image bhi delete karo permanently
+        if ($employee->profile) {
+            Storage::disk('public')->delete($employee->profile);
+        }
+
+        $employee->forceDelete();
+        return redirect()->route('employees.index')->with('success', 'Employee permanently deleted.');
     }
 }

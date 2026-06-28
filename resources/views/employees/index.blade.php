@@ -14,9 +14,15 @@
         </a>
     </div>
 
+    {{-- Flash Messages --}}
     @if (session('success'))
         <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
             <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
         </div>
     @endif
 
@@ -35,55 +41,137 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($employees as $key => $employee)
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ $key + 1 }}</td>
+                        <tr
+                            class="transition-colors {{ $employee->trashed() ? 'bg-red-50 opacity-70' : 'hover:bg-gray-50' }}">
+
+                            {{-- # --}}
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ $employees->firstItem() + $key }}</td>
+
+                            {{-- Employee --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     @if ($employee->profile)
-                                        <img src="{{ asset('storage/' . $employee->profile) }}" alt=""
-                                            class="w-10 h-10 rounded-full object-cover border border-gray-200">
+                                        <img src="{{ asset('storage/' . $employee->profile) }}" alt="{{ $employee->name }}"
+                                            class="w-10 h-10 rounded-full object-cover border border-gray-200 {{ $employee->trashed() ? 'grayscale' : '' }}">
                                     @else
                                         <div
-                                            class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm border border-blue-200">
-                                            {{ substr($employee->name, 0, 2) }}
+                                            class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border
+                                            {{ $employee->trashed() ? 'bg-gray-200 text-gray-400 border-gray-300' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
+                                            {{ strtoupper(substr($employee->name, 0, 2)) }}
                                         </div>
                                     @endif
                                     <div>
-                                        <p class="text-sm font-semibold text-gray-800">{{ $employee->name }}</p>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm font-semibold text-gray-800">{{ $employee->name }}</p>
+                                            @if ($employee->trashed())
+                                                <span
+                                                    class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-600 uppercase tracking-wide">
+                                                    Deleted
+                                                </span>
+                                            @endif
+                                        </div>
                                         <p class="text-xs text-gray-500">{{ $employee->email }}</p>
                                     </div>
                                 </div>
                             </td>
+
+                            {{-- ID & Role --}}
                             <td class="px-6 py-4">
                                 <p class="text-sm font-medium text-gray-800">{{ $employee->employee_id ?? 'N/A' }}</p>
                                 <p class="text-xs text-gray-500">{{ $employee->designation ?? 'N/A' }}</p>
                             </td>
+
+                            {{-- Department --}}
                             <td class="px-6 py-4 text-sm text-gray-600">
-                                {{ $employee->department ? $employee->department->name : 'Unassigned' }}
+                                {{ $employee->department->name ?? 'Unassigned' }}
                             </td>
+
+                            {{-- Status Badge --}}
                             <td class="px-6 py-4">
-                                @if ($employee->status === 'active')
+                                @if ($employee->trashed())
+                                    <span class="bg-red-100 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                        <i class="fa-solid fa-ban text-[10px] mr-1"></i>Deleted
+                                    </span>
+                                @elseif ($employee->status === 'active')
                                     <span
-                                        class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">Active</span>
-                                @elseif($employee->status === 'inactive')
+                                        class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                        <i class="fa-solid fa-circle text-[8px] mr-1"></i>Active
+                                    </span>
+                                @elseif ($employee->status === 'inactive')
                                     <span
-                                        class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">Inactive</span>
+                                        class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                        <i class="fa-solid fa-circle text-[8px] mr-1"></i>Inactive
+                                    </span>
                                 @else
-                                    <span
-                                        class="bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full">Terminated</span>
+                                    <span class="bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                        <i class="fa-solid fa-circle text-[8px] mr-1"></i>Terminated
+                                    </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-center">
-                                <a href="{{ route('employees.edit', $employee->id) }}"
-                                    class="text-blue-600 hover:text-blue-800 mx-1 transition-colors" title="Edit"><i
-                                        class="fa-solid fa-pen-to-square"></i></a>
-                                <button class="text-red-600 hover:text-red-800 mx-1 transition-colors" title="Delete"><i
-                                        class="fa-solid fa-trash"></i></button>
+
+                            {{-- Actions --}}
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center gap-1">
+                                    @if ($employee->trashed())
+                                        {{-- SOFT DELETED STATE: Restore + Force Delete only --}}
+
+                                        {{-- Restore Form --}}
+                                        <form action="{{ route('employees.restore', $employee->id) }}" method="POST"
+                                            id="restore-form-{{ $employee->id }}">
+                                            @csrf
+                                            <button type="button" title="Restore Employee"
+                                                onclick="confirmRestore({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
+                                                class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+                                                <i class="fa-solid fa-rotate-left text-base"></i>
+                                            </button>
+                                        </form>
+
+                                        {{-- Permanent Delete Form --}}
+                                        <form action="{{ route('employees.force-delete', $employee->id) }}" method="POST"
+                                            id="force-delete-form-{{ $employee->id }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" title="Permanently Delete"
+                                                onclick="confirmForceDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
+                                                class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                                <i class="fa-solid fa-trash-can text-base"></i>
+                                            </button>
+                                        </form>
+                                    @else
+                                        {{-- NORMAL STATE: View + Edit + Soft Delete --}}
+
+                                        {{-- View --}}
+                                        <a href="{{ route('employees.show', $employee->id) }}" title="View Details"
+                                            class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                            <i class="fa-solid fa-eye text-base"></i>
+                                        </a>
+
+                                        {{-- Edit --}}
+                                        <a href="{{ route('employees.edit', $employee->id) }}" title="Edit Employee"
+                                            class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
+                                            <i class="fa-solid fa-pen-to-square text-base"></i>
+                                        </a>
+
+                                        {{-- Soft Delete Form --}}
+                                        <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
+                                            id="delete-form-{{ $employee->id }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" title="Delete Employee"
+                                                onclick="confirmSoftDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
+                                                class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
+                                                <i class="fa-solid fa-trash text-base"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </td>
+
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-400">
+                                <i class="fa-solid fa-users-slash text-3xl mb-3 block"></i>
                                 No employees found. Click "Add Employee" to get started.
                             </td>
                         </tr>
@@ -91,8 +179,75 @@
                 </tbody>
             </table>
         </div>
-        <div class="mt-3">
-            {{ $employees->links() }}
-        </div>
+
+        {{-- Pagination --}}
+        @if ($employees->hasPages())
+            <div class="px-6 py-4 border-t border-gray-100">
+                {{ $employees->links() }}
+            </div>
+        @endif
     </div>
+
 @endsection
+
+@push('scripts')
+    <script>
+        // ===== SOFT DELETE =====
+        function confirmSoftDelete(id, name) {
+            Swal.fire({
+                title: 'Delete Employee?',
+                html: `<span class="text-gray-600">Are you sure you want to delete <strong>${name}</strong>?<br><span class="text-sm text-gray-400">They can be restored later.</span></span>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="fa-solid fa-trash mr-1"></i> Yes, Delete',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + id).submit();
+                }
+            });
+        }
+
+        // ===== RESTORE =====
+        function confirmRestore(id, name) {
+            Swal.fire({
+                title: 'Restore Employee?',
+                html: `<span class="text-gray-600">Restore <strong>${name}</strong> back to active records?</span>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#22c55e',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="fa-solid fa-rotate-left mr-1"></i> Yes, Restore',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('restore-form-' + id).submit();
+                }
+            });
+        }
+
+        // ===== PERMANENT DELETE =====
+        function confirmForceDelete(id, name) {
+            Swal.fire({
+                title: 'Permanently Delete?',
+                html: `<span class="text-gray-600">This will <strong>permanently delete</strong> <strong>${name}</strong> along with their profile picture.<br><br><span class="text-red-500 text-sm font-semibold">⚠️ This action CANNOT be undone.</span></span>`,
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="fa-solid fa-trash-can mr-1"></i> Yes, Delete Forever',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true,
+                focusCancel: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('force-delete-form-' + id).submit();
+                }
+            });
+        }
+    </script>
+@endpush

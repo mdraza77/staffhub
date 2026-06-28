@@ -100,7 +100,7 @@
 
             <li>
                 <a class="flex items-center gap-3 px-3 py-2.5 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors font-medium"
-                    href="#">
+                    href="{{ route('dashboard') }}">
                     <i class="bi bi-grid text-lg"></i>
                     <span>Dashboard</span>
                 </a>
