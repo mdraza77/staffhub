@@ -97,12 +97,12 @@
                                             <button
                                                 class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                                                 title="Restore" onclick="confirmRestore({{ $department->id }})">
-                                                <i class="fa-solid fa-recycle text-lg"></i>
+                                                <i class="fa-solid fa-rotate-left text-lg"></i>
                                             </button>
                                             <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                                 title="Permanent Delete"
                                                 onclick="confirmPermanentDelete({{ $department->id }})">
-                                                <i class="fa-solid fa-trash text-lg"></i>
+                                                <i class="fa-solid fa-trash-can text-lg"></i>
                                             </button>
                                         @endif
                                     </div>
