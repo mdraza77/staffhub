@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
@@ -25,6 +26,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('employees', EmployeeController::class);
     Route::post('employees/{id}/restore', [EmployeeController::class, 'restore'])->name('employees.restore');
     Route::delete('employees/{id}/force-delete', [EmployeeController::class, 'forceDelete'])->name('employees.force-delete');
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+    Route::post('/attendance/punch', [AttendanceController::class, 'punch'])->name('attendance.punch');
 });
 
 require __DIR__ . '/auth.php';
