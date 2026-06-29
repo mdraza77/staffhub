@@ -150,6 +150,22 @@
             </li>
 
             <li>
+                <a class="{{ request()->routeIs('leave-types.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium"
+                    href="{{ route('leave-types.index') }}">
+                    <i class="fa-solid fa-plane-departure text-lg"></i>
+                    <span>Leave Types</span>
+                </a>
+            </li>
+
+            <li>
+                <a class="{{ request()->routeIs('leaves.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium"
+                    href="{{ route('leaves.index') }}">
+                    <i class="fa-solid fa-person-walking-arrow-right text-lg"></i>
+                    <span>Leaves</span>
+                </a>
+            </li>
+
+            <li>
                 <a class="flex items-center gap-3 px-3 py-2.5 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors font-medium"
                     href="#">
                     <i class="fa-solid fa-list-check text-lg"></i>
