@@ -5,9 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\LeaveType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class LeaveTypeController extends Controller
+class LeaveTypeController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:LeaveType-Index',  only: ['index']),
+            new Middleware('permission:LeaveType-Create', only: ['store']),
+            new Middleware('permission:LeaveType-Edit',   only: ['update']),
+            new Middleware('permission:LeaveType-Delete', only: ['destroy']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */

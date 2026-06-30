@@ -213,6 +213,19 @@
                         @endif
                     </div>
 
+                    <div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Assigned Role</p>
+                        @if ($employee->roles->isNotEmpty())
+                            <span
+                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold">
+                                <i class="fa-solid fa-shield-halved text-[10px]"></i>
+                                {{ $employee->roles->first()->name }}
+                            </span>
+                        @else
+                            <p class="text-sm font-medium text-gray-400">No role assigned</p>
+                        @endif
+                    </div>
+
                 </div>
             </div>
 

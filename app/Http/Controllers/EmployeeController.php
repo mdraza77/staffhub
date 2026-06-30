@@ -9,9 +9,25 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class EmployeeController extends Controller
+class EmployeeController extends Controller implements HasMiddleware
 {
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:Employee-Index',  only: ['index']),
+            new Middleware('permission:Employee-Create', only: ['create', 'store']),
+            new Middleware('permission:Employee-Edit',   only: ['edit', 'update']),
+            new Middleware('permission:Employee-Delete', only: ['destroy']),
+            new Middleware('permission:Employee-Restore', only: ['Restore']),
+            new Middleware('permission:Employee-ForceDelete', only: ['ForceDelete']),
+            new Middleware('permission:Employee-View',   only: ['show']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */
@@ -31,7 +47,8 @@ class EmployeeController extends Controller
     public function create()
     {
         $departments = Department::orderBy('name')->get();
-        return view('employees.create', compact('departments'));
+        $roles = Role::orderBy('name')->get();
+        return view('employees.create', compact('departments', 'roles'));
     }
 
     /**
@@ -50,6 +67,7 @@ class EmployeeController extends Controller
             'joining_date' => 'nullable|date',
             'status' => 'required|in:active,inactive,terminated',
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB image
+            'role' => 'nullable|exists:roles,name',
         ]);
 
         try {
@@ -64,7 +82,7 @@ class EmployeeController extends Controller
             }
 
             // Create Employee/User
-            User::create([
+            $employee = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -77,16 +95,19 @@ class EmployeeController extends Controller
                 'profile' => $profilePath,
             ]);
 
+            if ($request->filled('role')) {
+                $employee->assignRole($request->role);
+            }
+
             DB::commit(); // Save changes to database
 
             return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
         } catch (\Exception $e) {
-            DB::rollBack(); // Agar koi error aayi toh database mein kuch save nahi hoga
+            DB::rollBack();
 
             // Log the actual error for debugging
             Log::error('Employee Creation Failed: ' . $e->getMessage());
 
-            // Image agar upload ho gayi thi par DB mein save nahi hui, toh usko delete karo
             if (isset($profilePath)) {
                 Storage::disk('public')->delete($profilePath);
             }
@@ -110,7 +131,9 @@ class EmployeeController extends Controller
     public function edit(User $employee)
     {
         $departments = Department::all();
-        return view('employees.edit', compact('employee', 'departments'));
+        $roles = Role::orderBy('name')->get();
+        $employeeRole = $employee->roles->first()->name ?? null;
+        return view('employees.edit', compact('employee', 'departments', 'roles', 'employeeRole'));
     }
 
     /**
@@ -120,7 +143,6 @@ class EmployeeController extends Controller
     {
         $request->validate([
             'name'          => 'required|string|max:255',
-            // unique ignore karega current employee ka apna record
             'email'         => 'required|string|email|max:255|unique:users,email,' . $employee->id,
             'password'      => 'nullable|string|min:8|confirmed',
             'employee_id'   => 'nullable|string|unique:users,employee_id,' . $employee->id,
@@ -130,6 +152,7 @@ class EmployeeController extends Controller
             'joining_date'  => 'nullable|date',
             'status'        => 'required|in:active,inactive,terminated',
             'profile'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'role'          => 'nullable|exists:roles,name',
         ]);
 
         try {
@@ -161,6 +184,12 @@ class EmployeeController extends Controller
             }
 
             $employee->update($data);
+
+            if ($request->filled('role')) {
+                $employee->syncRoles([$request->role]);
+            } else {
+                $employee->syncRoles([]); // koi role nahi
+            }
 
             DB::commit();
 

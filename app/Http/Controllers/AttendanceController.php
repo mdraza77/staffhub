@@ -8,9 +8,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class AttendanceController extends Controller
+class AttendanceController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:Attendance-Index',  only: ['index']),
+            new Middleware('permission:Attendance-Marking', only: ['punch']),
+            new Middleware('permission:Attendance-View',   only: ['show']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */

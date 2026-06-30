@@ -8,9 +8,19 @@ use App\Models\LeaveType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class LeaveController extends Controller
+class LeaveController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:Leave-Index',  only: ['index']),
+            new Middleware('permission:Leave-Apply',  only: ['store']),
+            new Middleware('permission:Leave-ApproveReject',  only: ['updateStatus']),
+        ];
+    }
     public function index()
     {
         // Admin ke liye saari leaves, but normally employee ko sirf apni dikhti hain.

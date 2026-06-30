@@ -7,9 +7,22 @@ use App\Models\Department;
 use Illuminate\Support\Str;
 use SweetAlert2\Laravel\Swal;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class DepartmentController extends Controller
+class DepartmentController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:Department-Index',  only: ['index']),
+            new Middleware('permission:Department-Create', only: ['create', 'store']),
+            new Middleware('permission:Department-Edit',   only: ['edit', 'update']),
+            new Middleware('permission:Department-Delete', only: ['destroy']),
+            new Middleware('permission:Department-Restore', only: ['restore']),
+            new Middleware('permission:Department-ForceDelete', only: ['forceDelete']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */

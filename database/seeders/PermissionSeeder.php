@@ -23,6 +23,8 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Department-Edit']);
         Permission::firstOrCreate(['name' => 'Department-Delete']);
         Permission::firstOrCreate(['name' => 'Department-View']);
+        Permission::firstOrCreate(['name' => 'Employee-Restore']);
+        Permission::firstOrCreate(['name' => 'Employee-ForceDelete']);
 
         // ===== ACCESS MANAGEMENT =====
         Permission::firstOrCreate(['name' => 'AccessManagement-Index']);
@@ -42,26 +44,21 @@ class PermissionSeeder extends Seeder
 
         // ===== ATTENDANCE =====
         Permission::firstOrCreate(['name' => 'Attendance-Index']);
-        Permission::firstOrCreate(['name' => 'Attendance-Create']);
-        Permission::firstOrCreate(['name' => 'Attendance-Edit']);
+        Permission::firstOrCreate(['name' => 'Attendance-Marking']);
         Permission::firstOrCreate(['name' => 'Attendance-View']);
-        Permission::firstOrCreate(['name' => 'Attendance-Delete']);
 
         // ===== LEAVE TYPES =====
         Permission::firstOrCreate(['name' => 'LeaveType-Index']);
         Permission::firstOrCreate(['name' => 'LeaveType-Create']);
         Permission::firstOrCreate(['name' => 'LeaveType-Edit']);
-        Permission::firstOrCreate(['name' => 'LeaveType-View']);
+        // Permission::firstOrCreate(['name' => 'LeaveType-View']);
         Permission::firstOrCreate(['name' => 'LeaveType-Delete']);
 
         // ===== LEAVES =====
         Permission::firstOrCreate(['name' => 'Leave-Index']);
-        Permission::firstOrCreate(['name' => 'Leave-Create']);
-        Permission::firstOrCreate(['name' => 'Leave-Edit']);
-        Permission::firstOrCreate(['name' => 'Leave-View']);
-        Permission::firstOrCreate(['name' => 'Leave-Delete']);
-        Permission::firstOrCreate(['name' => 'Leave-Approve']);
-        Permission::firstOrCreate(['name' => 'Leave-Reject']);
+        Permission::firstOrCreate(['name' => 'Leave-Apply']);
+        // Permission::firstOrCreate(['name' => 'Leave-View']);
+        Permission::firstOrCreate(['name' => 'Leave-ApproveReject']);
 
         // ===== TASKS =====
         Permission::firstOrCreate(['name' => 'Task-Index']);

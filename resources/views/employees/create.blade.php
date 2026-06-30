@@ -143,6 +143,22 @@
                 @enderror
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Assign Role</label>
+                <select name="role"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white @error('role') border-red-500 @enderror">
+                    <option value="">— No Role —</option>
+                    @foreach ($roles as $role)
+                        <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
+                            {{ $role->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('role')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+
             <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Profile Picture</label>
                 <input type="file" name="profile" accept="image/*"
