@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Leave Types | WorkPilot')
+@section('title', 'Leave Types | StaffHub')
 
 @section('content')
     <div class="mb-6 flex justify-between items-center">

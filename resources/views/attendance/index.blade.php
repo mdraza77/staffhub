@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Attendance | WorkPilot')
+@section('title', 'Attendance | StaffHub')
 
 @section('content')
     <div class="mb-6 flex flex-col md:flex-row justify-between md:items-center gap-4">

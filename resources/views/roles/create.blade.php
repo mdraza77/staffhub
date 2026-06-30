@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Create Role | WorkPilot')
+@section('title', 'Create Role | StaffHub')
 
 @section('content')
 
