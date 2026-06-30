@@ -78,7 +78,7 @@
                     @endif
 
                     {{-- Hidden file input --}}
-                    @can('Employee-EditProfile')
+                    @can('Employee-Profile-Edit')
                         <input type="file" name="profile" id="profile-input" accept="image/*" class="hidden"
                             onchange="previewImage(this)">
 
@@ -364,7 +364,7 @@
                         class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">
                         Cancel
                     </a>
-                    @can('Employee-EditProfile')
+                    @can('Employee-Profile-Edit')
                         <button type="submit"
                             class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition-colors shadow-sm">
                             <i class="fa-solid fa-floppy-disk mr-1"></i> Save Changes
