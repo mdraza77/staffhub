@@ -175,7 +175,7 @@
                     <i class="fa-solid fa-chevron-right ml-auto text-xs text-gray-300 group-hover:text-purple-400"></i>
                 </a>
 
-                <a href="#"
+                <a href="{{ route('attendance.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-700 transition-all group">
                     <i
                         class="fa-solid fa-calendar-check w-5 text-center text-gray-400 group-hover:text-green-600 transition-colors"></i>
@@ -191,7 +191,7 @@
                     <i class="fa-solid fa-chevron-right ml-auto text-xs text-gray-300 group-hover:text-orange-400"></i>
                 </a>
 
-                <a href="#"
+                <a href="{{ route('roles.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-50 text-gray-700 hover:text-indigo-700 transition-all group">
                     <i
                         class="fa-solid fa-shield-halved w-5 text-center text-gray-400 group-hover:text-indigo-600 transition-colors"></i>

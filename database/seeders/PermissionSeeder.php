@@ -21,6 +21,13 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Department Edit']);
         Permission::firstOrCreate(['name' => 'Department Delete']);
 
+        // Access Management
+        Permission::firstOrCreate(['name' => 'AccessManagement-Index']);
+        Permission::firstOrCreate(['name' => 'AccessManagement-Create']);
+        Permission::firstOrCreate(['name' => 'AccessManagement-Edit']);
+        Permission::firstOrCreate(['name' => 'AccessManagement-View']);
+        Permission::firstOrCreate(['name' => 'AccessManagement-Delete']);
+
         // Create roles if they don't exist
         $superAdmin = Role::firstOrCreate(['name' => 'Super Admin']);
         $admin = Role::firstOrCreate(['name' => 'Admin']);
