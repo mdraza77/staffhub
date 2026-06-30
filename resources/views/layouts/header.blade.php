@@ -200,7 +200,7 @@
             @endcan
 
             {{-- ===== TASKS ===== --}}
-            {{-- @can('Task-Index')
+            @can('Task-Index')
                 <li>
                     <a href="{{ route('tasks.index') }}"
                         class="{{ request()->routeIs('tasks.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
@@ -208,7 +208,7 @@
                         <span>Tasks</span>
                     </a>
                 </li>
-            @endcan --}}
+            @endcan
 
             {{-- ===== ROLES & PERMISSIONS ===== --}}
             @can('AccessManagement-Index')
