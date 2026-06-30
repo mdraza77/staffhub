@@ -90,11 +90,13 @@
                             <i class="fa-solid fa-times"></i>
                             Cancel
                         </a>
-                        <button type="submit"
-                            class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 ml-auto">
-                            <i class="fa-solid fa-check"></i>
-                            Create Department
-                        </button>
+                        @can('Department-Create')
+                            <button type="submit"
+                                class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 ml-auto">
+                                <i class="fa-solid fa-check"></i>
+                                Create Department
+                            </button>
+                        @endcan
                     </div>
                 </form>
             </div>

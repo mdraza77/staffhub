@@ -68,10 +68,12 @@
                     </div>
 
                     {{-- Submit --}}
-                    <button type="submit"
-                        class="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition-colors shadow-sm">
-                        <i class="fa-solid fa-floppy-disk mr-1"></i> Save Role
-                    </button>
+                    @can('AccessManagement-Create')
+                        <button type="submit"
+                            class="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition-colors shadow-sm">
+                            <i class="fa-solid fa-floppy-disk mr-1"></i> Save Role
+                        </button>
+                    @endcan
 
                     <a href="{{ route('roles.index') }}"
                         class="block text-center mt-3 text-sm text-gray-500 hover:text-gray-700 transition-colors">

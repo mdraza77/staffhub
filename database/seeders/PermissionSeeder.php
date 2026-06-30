@@ -23,8 +23,8 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Department-Edit']);
         Permission::firstOrCreate(['name' => 'Department-Delete']);
         Permission::firstOrCreate(['name' => 'Department-View']);
-        Permission::firstOrCreate(['name' => 'Employee-Restore']);
-        Permission::firstOrCreate(['name' => 'Employee-ForceDelete']);
+        Permission::firstOrCreate(['name' => 'Department-Restore']);
+        Permission::firstOrCreate(['name' => 'Department-ForceDelete']);
 
         // ===== ACCESS MANAGEMENT =====
         Permission::firstOrCreate(['name' => 'AccessManagement-Index']);
@@ -45,7 +45,7 @@ class PermissionSeeder extends Seeder
         // ===== ATTENDANCE =====
         Permission::firstOrCreate(['name' => 'Attendance-Index']);
         Permission::firstOrCreate(['name' => 'Attendance-Marking']);
-        Permission::firstOrCreate(['name' => 'Attendance-View']);
+        // Permission::firstOrCreate(['name' => 'Attendance-View']);
 
         // ===== LEAVE TYPES =====
         Permission::firstOrCreate(['name' => 'LeaveType-Index']);
@@ -101,60 +101,17 @@ class PermissionSeeder extends Seeder
             'Department-Index',
             'Department-View',
             'Attendance-Index',
-            'Attendance-Create',
-            'Attendance-Edit',
-            'Attendance-View',
-            'Attendance-Delete',
-            'LeaveType-Index',
-            'LeaveType-Create',
-            'LeaveType-Edit',
-            'LeaveType-View',
-            'LeaveType-Delete',
-            'Leave-Index',
-            'Leave-Create',
-            'Leave-Edit',
-            'Leave-View',
-            'Leave-Approve',
-            'Leave-Reject',
-            'Task-Index',
-            'Task-Create',
-            'Task-Edit',
-            'Task-View',
         ]);
 
         // Department Manager
         $deptManager->syncPermissions([
             'Dashboard',
             'Employee-Index',
-            'Employee-View',
-            'Department-Index',
-            'Department-View',
-            'Attendance-Index',
-            'Attendance-Create',
-            'Attendance-Edit',
-            'Attendance-View',
-            'Leave-Index',
-            'Leave-View',
-            'Leave-Approve',
-            'Leave-Reject',
-            'Task-Index',
-            'Task-Create',
-            'Task-Edit',
-            'Task-View',
-            'Task-Delete',
         ]);
 
         // Employee
         $employee->syncPermissions([
             'Dashboard',
-            'Employee-View',
-            'Attendance-Index',
-            'Attendance-View',
-            'Leave-Index',
-            'Leave-Create',
-            'Leave-View',
-            'Task-Index',
-            'Task-View',
         ]);
 
         $this->command->info('All permissions seeded successfully.');

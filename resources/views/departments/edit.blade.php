@@ -80,7 +80,8 @@
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-50 transition-colors resize-none"
                             id="description" name="description" rows="5"
                             placeholder="Provide a brief description of this department, its responsibilities, and scope...">{{ old('description', $department->description) }}</textarea>
-                        <p class="text-gray-500 text-xs mt-1">Optional - helps team members understand the department's role</p>
+                        <p class="text-gray-500 text-xs mt-1">Optional - helps team members understand the department's role
+                        </p>
                     </div>
 
                     <!-- Form Actions -->
@@ -90,11 +91,13 @@
                             <i class="fa-solid fa-times"></i>
                             Cancel
                         </a>
-                        <button type="submit"
-                            class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 ml-auto">
-                            <i class="fa-solid fa-save"></i>
-                            Save Changes
-                        </button>
+                        @can('Department-Edit')
+                            <button type="submit"
+                                class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 ml-auto">
+                                <i class="fa-solid fa-save"></i>
+                                Save Changes
+                            </button>
+                        @endcan
                     </div>
                 </form>
             </div>
@@ -104,7 +107,8 @@
                 <i class="fa-solid fa-info-circle text-blue-600 text-lg mt-0.5 flex-shrink-0"></i>
                 <div>
                     <p class="text-blue-900 font-medium text-sm">Update department information</p>
-                    <p class="text-blue-800 text-xs mt-1">Changes will be saved immediately. You can modify the department name and description as needed.</p>
+                    <p class="text-blue-800 text-xs mt-1">Changes will be saved immediately. You can modify the department
+                        name and description as needed.</p>
                 </div>
             </div>
         </div>

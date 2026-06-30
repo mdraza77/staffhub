@@ -14,12 +14,14 @@
                     <span class="text-gray-900 font-medium">Departments</span>
                 </nav>
             </div>
-            <a href="{{ route('departments.create') }}">
-                <button type="button"
-                    class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm">
-                    <i class="fa-solid fa-plus text-lg"></i> Create Department
-                </button>
-            </a>
+            @can('Department-Create')
+                <a href="{{ route('departments.create') }}">
+                    <button type="button"
+                        class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm">
+                        <i class="fa-solid fa-plus text-lg"></i> Create Department
+                    </button>
+                </a>
+            @endcan
         </div>
 
         <!-- Success/Error Messages -->
@@ -84,26 +86,34 @@
                                 <td class="px-6 py-4 text-center">
                                     <div class="flex items-center justify-center gap-2">
                                         @if ($department->deleted_at === null)
-                                            <a href="{{ route('departments.edit', $department->id) }}"
-                                                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                title="Edit">
-                                                <i class="fa-solid fa-pen-to-square text-lg"></i>
-                                            </a>
-                                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                title="Delete" onclick="confirmDelete({{ $department->id }})">
-                                                <i class="fa-solid fa-trash text-lg"></i>
-                                            </button>
+                                            @can('Department-Edit')
+                                                <a href="{{ route('departments.edit', $department->id) }}"
+                                                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square text-lg"></i>
+                                                </a>
+                                            @endcan
+                                            @can('Department-Delete')
+                                                <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="Delete" onclick="confirmDelete({{ $department->id }})">
+                                                    <i class="fa-solid fa-trash text-lg"></i>
+                                                </button>
+                                            @endcan
                                         @else
-                                            <button
-                                                class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                                                title="Restore" onclick="confirmRestore({{ $department->id }})">
-                                                <i class="fa-solid fa-rotate-left text-lg"></i>
-                                            </button>
-                                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                title="Permanent Delete"
-                                                onclick="confirmPermanentDelete({{ $department->id }})">
-                                                <i class="fa-solid fa-trash-can text-lg"></i>
-                                            </button>
+                                            @can('Department-Restore')
+                                                <button
+                                                    class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                    title="Restore" onclick="confirmRestore({{ $department->id }})">
+                                                    <i class="fa-solid fa-rotate-left text-lg"></i>
+                                                </button>
+                                            @endcan
+                                            @can('Department-ForceDelete')
+                                                <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="Permanent Delete"
+                                                    onclick="confirmPermanentDelete({{ $department->id }})">
+                                                    <i class="fa-solid fa-trash-can text-lg"></i>
+                                                </button>
+                                            @endcan
                                         @endif
                                     </div>
                                 </td>

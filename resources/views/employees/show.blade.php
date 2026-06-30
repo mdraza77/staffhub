@@ -11,10 +11,12 @@
             <p class="text-sm text-gray-500 mt-1">Full profile information for {{ $employee->name }}</p>
         </div>
         <div class="flex items-center gap-3">
-            <a href="{{ route('employees.edit', $employee->id) }}"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-pen-to-square"></i> Edit
-            </a>
+            @can('Employee-Edit')
+                <a href="{{ route('employees.edit', $employee->id) }}"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                </a>
+            @endcan
             <a href="{{ route('employees.index') }}"
                 class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium text-sm">
                 <i class="fa-solid fa-arrow-left"></i> Back to List
@@ -110,19 +112,21 @@
             </div>
 
             {{-- Danger Zone --}}
-            <div class="bg-white rounded-xl border border-red-100 shadow-sm p-5">
-                <h3 class="text-sm font-semibold text-red-600 mb-3 uppercase tracking-wide">Danger Zone</h3>
-                <p class="text-xs text-gray-500 mb-4">Permanently delete this employee. This action cannot be undone.</p>
-                <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
-                    onsubmit="return confirm('Are you sure you want to delete {{ addslashes($employee->name) }}? This cannot be undone.')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                        class="w-full px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-medium">
-                        <i class="fa-solid fa-trash mr-1"></i> Delete Employee
-                    </button>
-                </form>
-            </div>
+            @can('Employee-Delete')
+                <div class="bg-white rounded-xl border border-red-100 shadow-sm p-5">
+                    <h3 class="text-sm font-semibold text-red-600 mb-3 uppercase tracking-wide">Danger Zone</h3>
+                    <p class="text-xs text-gray-500 mb-4">Permanently delete this employee.</p>
+                    <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
+                        onsubmit="return confirm('Are you sure you want to delete {{ addslashes($employee->name) }}?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                            class="w-full px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-medium">
+                            <i class="fa-solid fa-trash mr-1"></i> Delete Employee
+                        </button>
+                    </form>
+                </div>
+            @endcan
 
         </div>
 

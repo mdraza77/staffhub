@@ -9,10 +9,12 @@
             <p class="text-sm text-gray-500 mt-1">Apply for leave and manage employee requests.</p>
         </div>
 
-        <button onclick="toggleModal('applyLeaveModal')"
-            class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm">
-            <i class="fa-solid fa-paper-plane"></i> Apply Leave
-        </button>
+        @can('Leave-Apply')
+            <button onclick="toggleModal('applyLeaveModal')"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-paper-plane"></i> Apply Leave
+            </button>
+        @endcan
     </div>
 
     @if (session('success'))
@@ -86,26 +88,28 @@
                             <td class="px-6 py-4 text-center">
                                 @if ($leave->status === 'pending')
                                     <div class="flex items-center justify-center gap-2">
-                                        <form action="{{ route('leaves.updateStatus', $leave->id) }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="status" value="approved">
-                                            <button type="submit"
-                                                class="text-green-600 hover:text-green-800 bg-green-50 hover:bg-green-100 p-2 rounded transition-colors"
-                                                title="Approve">
-                                                <i class="fa-solid fa-check"></i>
-                                            </button>
-                                        </form>
+                                        @can('Leave-ApproveReject')
+                                            <form action="{{ route('leaves.updateStatus', $leave->id) }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="status" value="approved">
+                                                <button type="submit"
+                                                    class="text-green-600 hover:text-green-800 bg-green-50 hover:bg-green-100 p-2 rounded transition-colors"
+                                                    title="Approve">
+                                                    <i class="fa-solid fa-check"></i>
+                                                </button>
+                                            </form>
 
-                                        <form action="{{ route('leaves.updateStatus', $leave->id) }}" method="POST"
-                                            onsubmit="return confirm('Are you sure you want to reject this leave?');">
-                                            @csrf
-                                            <input type="hidden" name="status" value="rejected">
-                                            <button type="submit"
-                                                class="text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 p-2 rounded transition-colors"
-                                                title="Reject">
-                                                <i class="fa-solid fa-xmark"></i>
-                                            </button>
-                                        </form>
+                                            <form action="{{ route('leaves.updateStatus', $leave->id) }}" method="POST"
+                                                onsubmit="return confirm('Are you sure you want to reject this leave?');">
+                                                @csrf
+                                                <input type="hidden" name="status" value="rejected">
+                                                <button type="submit"
+                                                    class="text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 p-2 rounded transition-colors"
+                                                    title="Reject">
+                                                    <i class="fa-solid fa-xmark"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
                                     </div>
                                 @else
                                     <span class="text-xs text-gray-400">Processed</span>

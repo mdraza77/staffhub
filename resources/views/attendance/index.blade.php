@@ -16,39 +16,40 @@
                 $hasPunchedIn = $todayAttendance && $todayAttendance->check_in_time;
                 $hasPunchedOut = $todayAttendance && $todayAttendance->check_out_time;
             @endphp
+            @can('Attendance-Marking')
+                <div class="flex flex-col items-end gap-2">
 
-            <div class="flex flex-col items-end gap-2">
+                    @if (!$hasPunchedOut)
+                        <div class="w-full md:w-72">
+                            <input type="text" name="note"
+                                placeholder="Remark (e.g., {{ $hasPunchedIn ? 'Leaving early due to doctor visit' : 'Late due to traffic' }})"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder-gray-400 bg-gray-50">
+                        </div>
+                    @endif
 
-                @if (!$hasPunchedOut)
-                    <div class="w-full md:w-72">
-                        <input type="text" name="note"
-                            placeholder="Remark (e.g., {{ $hasPunchedIn ? 'Leaving early due to doctor visit' : 'Late due to traffic' }})"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder-gray-400 bg-gray-50">
-                    </div>
-                @endif
+                    {{-- Dynamic Button States --}}
+                    @if (!$hasPunchedIn)
+                        <button type="submit"
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 w-full">
+                            <i class="fa-solid fa-right-to-bracket text-lg"></i>
+                            <span>Punch In</span>
+                        </button>
+                    @elseif(!$hasPunchedOut)
+                        <button type="submit"
+                            class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-lg font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 w-full">
+                            <i class="fa-solid fa-right-from-bracket text-lg"></i>
+                            <span>Punch Out</span>
+                        </button>
+                    @else
+                        <button type="button" disabled
+                            class="bg-gray-100 border border-gray-200 text-gray-400 px-6 py-2.5 rounded-lg font-bold cursor-not-allowed flex items-center justify-center gap-2 w-full">
+                            <i class="fa-solid fa-calendar-check text-lg"></i>
+                            <span>Done for Today</span>
+                        </button>
+                    @endif
 
-                {{-- Dynamic Button States --}}
-                @if (!$hasPunchedIn)
-                    <button type="submit"
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 w-full">
-                        <i class="fa-solid fa-right-to-bracket text-lg"></i>
-                        <span>Punch In</span>
-                    </button>
-                @elseif(!$hasPunchedOut)
-                    <button type="submit"
-                        class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-lg font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 w-full">
-                        <i class="fa-solid fa-right-from-bracket text-lg"></i>
-                        <span>Punch Out</span>
-                    </button>
-                @else
-                    <button type="button" disabled
-                        class="bg-gray-100 border border-gray-200 text-gray-400 px-6 py-2.5 rounded-lg font-bold cursor-not-allowed flex items-center justify-center gap-2 w-full">
-                        <i class="fa-solid fa-calendar-check text-lg"></i>
-                        <span>Done for Today</span>
-                    </button>
-                @endif
-
-            </div>
+                </div>
+            @endcan
         </form>
     </div>
 

@@ -8,10 +8,12 @@
             <h1 class="text-2xl font-bold text-gray-800">Employees</h1>
             <p class="text-sm text-gray-500 mt-1">Manage your workforce</p>
         </div>
-        <a href="{{ route('employees.create') }}"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm">
-            <i class="fa-solid fa-plus"></i> Add Employee
-        </a>
+        @can('Employee-Create')
+            <a href="{{ route('employees.create') }}"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-plus"></i> Add Employee
+            </a>
+        @endcan
     </div>
 
     {{-- Flash Messages --}}
@@ -116,53 +118,63 @@
                                         {{-- SOFT DELETED STATE: Restore + Force Delete only --}}
 
                                         {{-- Restore Form --}}
-                                        <form action="{{ route('employees.restore', $employee->id) }}" method="POST"
-                                            id="restore-form-{{ $employee->id }}">
-                                            @csrf
-                                            <button type="button" title="Restore Employee"
-                                                onclick="confirmRestore({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
-                                                class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
-                                                <i class="fa-solid fa-rotate-left text-base"></i>
-                                            </button>
-                                        </form>
+                                        @can('Employee-Restore')
+                                            <form action="{{ route('employees.restore', $employee->id) }}" method="POST"
+                                                id="restore-form-{{ $employee->id }}">
+                                                @csrf
+                                                <button type="button" title="Restore Employee"
+                                                    onclick="confirmRestore({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
+                                                    class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+                                                    <i class="fa-solid fa-rotate-left text-base"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
 
                                         {{-- Permanent Delete Form --}}
-                                        <form action="{{ route('employees.force-delete', $employee->id) }}" method="POST"
-                                            id="force-delete-form-{{ $employee->id }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" title="Permanently Delete"
-                                                onclick="confirmForceDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
-                                                class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                                <i class="fa-solid fa-trash-can text-base"></i>
-                                            </button>
-                                        </form>
+                                        @can('Employee-ForceDelete')
+                                            <form action="{{ route('employees.force-delete', $employee->id) }}" method="POST"
+                                                id="force-delete-form-{{ $employee->id }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" title="Permanently Delete"
+                                                    onclick="confirmForceDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
+                                                    class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                                    <i class="fa-solid fa-trash-can text-base"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
                                     @else
                                         {{-- NORMAL STATE: View + Edit + Soft Delete --}}
 
                                         {{-- View --}}
-                                        <a href="{{ route('employees.show', $employee->id) }}" title="View Details"
-                                            class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                            <i class="fa-solid fa-eye text-base"></i>
-                                        </a>
+                                        @can('Employee-View')
+                                            <a href="{{ route('employees.show', $employee->id) }}" title="View Details"
+                                                class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                                <i class="fa-solid fa-eye text-base"></i>
+                                            </a>
+                                        @endcan
 
                                         {{-- Edit --}}
-                                        <a href="{{ route('employees.edit', $employee->id) }}" title="Edit Employee"
-                                            class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
-                                            <i class="fa-solid fa-pen-to-square text-base"></i>
-                                        </a>
+                                        @can('Employee-Edit')
+                                            <a href="{{ route('employees.edit', $employee->id) }}" title="Edit Employee"
+                                                class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
+                                                <i class="fa-solid fa-pen-to-square text-base"></i>
+                                            </a>
+                                        @endcan
 
                                         {{-- Soft Delete Form --}}
-                                        <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
-                                            id="delete-form-{{ $employee->id }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" title="Delete Employee"
-                                                onclick="confirmSoftDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
-                                                class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
-                                                <i class="fa-solid fa-trash text-base"></i>
-                                            </button>
-                                        </form>
+                                        @can('Employee-Delete')
+                                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
+                                                id="delete-form-{{ $employee->id }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" title="Delete Employee"
+                                                    onclick="confirmSoftDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
+                                                    class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
+                                                    <i class="fa-solid fa-trash text-base"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
                                     @endif
                                 </div>
                             </td>

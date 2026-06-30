@@ -104,7 +104,7 @@
                 <li>
                     <a href="{{ route('dashboard') }}"
                         class="{{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                        <i class="fa-solid fa-grid-2 text-lg"></i>
+                        <i class="fa-solid fa-dashboard text-lg"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>

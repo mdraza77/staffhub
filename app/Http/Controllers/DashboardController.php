@@ -19,15 +19,15 @@ class DashboardController extends Controller implements HasMiddleware
     public function index()
     {
         $stats = [
-            'total_employees'  => User::count(),
-            'active_employees' => User::where('status', 'active')->count(),
+            'total_employees'   => User::count(),
+            'active_employees'  => User::where('status', 'active')->count(),
             'inactive_employees' => User::where('status', 'inactive')->count(),
             'total_departments' => Department::count(),
+            'pending_leaves'    => \App\Models\Leave::where('status', 'pending')->count(),
+            'today_attendance'  => \App\Models\Attendance::whereDate('date', today())->count(),
         ];
 
-        // Recent 5 employees
-        $recentEmployees = User::withTrashed()
-            ->with(['department', 'roles'])
+        $recentEmployees = User::with(['department', 'roles'])
             ->where('id', '!=', auth()->id())
             ->latest()
             ->take(5)

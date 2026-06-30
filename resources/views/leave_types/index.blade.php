@@ -9,10 +9,12 @@
             <p class="text-sm text-gray-500 mt-1">Manage different categories of leaves (e.g., Sick, Casual).</p>
         </div>
 
-        <button onclick="toggleModal('addLeaveTypeModal')"
-            class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm">
-            <i class="fa-solid fa-plus"></i> Add Leave Type
-        </button>
+        @can('LeaveType-Create')
+            <button onclick="toggleModal('addLeaveTypeModal')"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-plus"></i> Add Leave Type
+            </button>
+        @endcan
     </div>
 
     @if (session('success'))
@@ -66,15 +68,19 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <button onclick="toggleModal('editLeaveTypeModal{{ $type->id }}')"
-                                    class="text-blue-600 hover:text-blue-800 mx-2 transition-colors" title="Edit">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
+                                @can('LeaveType-Edit')
+                                    <button onclick="toggleModal('editLeaveTypeModal{{ $type->id }}')"
+                                        class="text-blue-600 hover:text-blue-800 mx-2 transition-colors" title="Edit">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                @endcan
 
-                                <button type="button" onclick="confirmDelete({{ $type->id }})"
-                                    class="text-red-600 hover:text-red-800 mx-2 transition-colors" title="Delete">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
+                                @can('LeaveType-Delete')
+                                    <button type="button" onclick="confirmDelete({{ $type->id }})"
+                                        class="text-red-600 hover:text-red-800 mx-2 transition-colors" title="Delete">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                @endcan
 
                                 <form id="delete-form-{{ $type->id }}"
                                     action="{{ route('leave-types.destroy', $type->id) }}" method="POST" class="hidden">

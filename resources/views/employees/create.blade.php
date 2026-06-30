@@ -174,9 +174,11 @@
         <div class="mt-8 flex justify-end gap-3">
             <a href="{{ route('employees.index') }}"
                 class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">Cancel</a>
-            <button type="submit"
-                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm">Save
-                Employee</button>
+            @can('Employee-Create')
+                <button type="submit"
+                    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm">Save
+                    Employee</button>
+            @endcan
         </div>
     </form>
 @endsection
