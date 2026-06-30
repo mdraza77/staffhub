@@ -42,6 +42,10 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Employee-Restore']);
         Permission::firstOrCreate(['name' => 'Employee-ForceDelete']);
 
+        // ===== Profile =====
+        Permission::firstOrCreate(['name' => 'Employee-Profile-Edit']);
+        Permission::firstOrCreate(['name' => 'Employee-Profile-Index']);
+
         // ===== ATTENDANCE =====
         Permission::firstOrCreate(['name' => 'Attendance-Index']);
         Permission::firstOrCreate(['name' => 'Attendance-Marking']);

@@ -8,9 +8,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ProfileController extends Controller
+class ProfileController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:Employee-Profile-Edit', only: ['edit', 'update', 'removePhoto']),
+            new Middleware('permission:Employee-Profile-Index', only: ['index']),
+        ];
+    }
+    public function index()
+    {
+        $user = auth()->user()->load('department');
+        return view('profile.index', compact('user'));
+    }
     /**
      * Display the user's profile form.
      */
@@ -26,15 +44,68 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = auth()->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $request->validate([
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'password'      => 'nullable|string|min:8|confirmed',
+            'phone'         => 'nullable|string|max:20',
+            'designation'   => 'nullable|string|max:255',
+            'profile'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $data = [
+                'name'        => $request->name,
+                'email'       => $request->email,
+                'phone'       => $request->phone,
+                'designation' => $request->designation,
+            ];
+
+            if ($request->filled('password')) {
+                $data['password'] = Hash::make($request->password);
+            }
+
+            if ($request->hasFile('profile')) {
+                if ($user->profile) {
+                    Storage::disk('public')->delete($user->profile);
+                }
+                $data['profile'] = $request->file('profile')->store('profiles', 'public');
+            }
+
+            $user->update($data);
+
+            DB::commit();
+
+            return redirect()->route('profile.index')
+                ->with('success', 'Profile updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Profile Update Failed: ' . $e->getMessage());
+
+            if (isset($data['profile'])) {
+                Storage::disk('public')->delete($data['profile']);
+            }
+
+            return back()->withInput()
+                ->with('error', 'Something went wrong. Please try again.');
+        }
+    }
+
+    public function removePhoto()
+    {
+        $user = auth()->user();
+
+        if ($user->profile) {
+            Storage::disk('public')->delete($user->profile);
+            $user->update(['profile' => null]);
         }
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return redirect()->route('profile.index')
+            ->with('success', 'Profile photo removed.');
     }
 
     /**

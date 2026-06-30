@@ -49,8 +49,8 @@
                 <li class="relative group pr-3">
                     <a class="flex items-center gap-2 cursor-pointer py-2" href="#">
                         @if (Auth::user()->profile)
-                            <img src="{{ asset('uploads/user_profile/' . Auth::user()->id . '/' . Auth::user()->profile) }}"
-                                alt="Profile" class="w-8 h-8 rounded-full object-cover border border-gray-200">
+                            <img src="{{ asset('storage/' . auth()->user()->profile) }}" alt="Profile"
+                                class="w-8 h-8 rounded-full object-cover border border-gray-200">
                         @else
                             <img src="{{ asset('assets/img/profile-img.png') }}" alt="Profile"
                                 class="w-8 h-8 rounded-full object-cover border border-gray-200">
@@ -66,7 +66,7 @@
 
                         <li>
                             <a class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors"
-                                href="#">
+                                href="{{ route('profile.index') }}">
                                 <i class="fa-solid fa-user-gear text-lg"></i>
                                 <span>Profile</span>
                             </a>
