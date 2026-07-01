@@ -30,7 +30,7 @@
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table id="employees" class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
                         <th class="px-6 py-3 font-semibold">#</th>
@@ -48,7 +48,7 @@
                             class="transition-colors {{ $employee->trashed() ? 'bg-red-50 opacity-70' : 'hover:bg-gray-50' }}">
 
                             {{-- # --}}
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ $employees->firstItem() + $key }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ $key + 1 }}</td>
 
                             {{-- Employee --}}
                             <td class="px-6 py-4">
@@ -205,11 +205,11 @@
         </div>
 
         {{-- Pagination --}}
-        @if ($employees->hasPages())
+        {{-- @if ($employees->hasPages())
             <div class="px-6 py-4 border-t border-gray-100">
                 {{ $employees->links() }}
             </div>
-        @endif
+        @endif --}}
     </div>
 
 @endsection
@@ -274,4 +274,108 @@
             });
         }
     </script>
+
+    {{-- @push('scripts') --}}
+    <script>
+        $(document).ready(function() {
+            $('#employees').DataTable({
+                destroy: true,
+                // DOM UPDATE: Info (i) aur Length (l) ko ek div mein pack kiya left ke liye, aur Pagination (p) right ke liye
+                dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"Bf>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"li><"flex items-center"p>>',
+                buttons: [{
+                        extend: 'copy',
+                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'print',
+                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
+                    }
+                ],
+                pageLength: 10,
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search here...",
+                    lengthMenu: "Show _MENU_ entries", // Text ko clean kiya
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
+                }
+            });
+        });
+    </script>
+
+    <style>
+        /* 1. Search Box Fix */
+        .dataTables_filter input {
+            border: 1px solid #e5e7eb !important;
+            border-radius: 0.5rem !important;
+            padding: 0.375rem 0.75rem !important;
+            outline: none !important;
+            font-size: 0.875rem !important;
+        }
+
+        .dataTables_filter input:focus {
+            border-color: #4f46e5 !important;
+            box-shadow: 0 0 0 1px #4f46e5 !important;
+        }
+
+        /* 2. Entries Dropdown (Length Menu) Fix */
+        .dataTables_length select {
+            border: 1px solid #e5e7eb !important;
+            border-radius: 0.375rem !important;
+            padding: 0.25rem 1.5rem 0.25rem 0.5rem !important;
+            font-size: 0.875rem !important;
+            outline: none !important;
+            background-color: #f9fafb !important;
+        }
+
+        /* 3. Pagination Fix */
+        .dataTables_paginate {
+            display: flex !important;
+            gap: 0.25rem !important;
+        }
+
+        .dataTables_paginate .paginate_button {
+            padding: 0.25rem 0.75rem !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 0.375rem !important;
+            background: white !important;
+            color: #374151 !important;
+            font-size: 0.875rem !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
+        }
+
+        .dataTables_paginate .paginate_button:hover:not(.disabled) {
+            background: #f3f4f6 !important;
+        }
+
+        .dataTables_paginate .paginate_button.current {
+            background: #4f46e5 !important;
+            color: white !important;
+            border-color: #4f46e5 !important;
+        }
+
+        .dataTables_paginate .paginate_button.disabled {
+            opacity: 0.5 !important;
+            cursor: not-allowed !important;
+        }
+
+        /* 4. Remove Defaults Overlaps */
+        .dataTables_info,
+        .dataTables_length,
+        .dataTables_paginate {
+            float: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+    </style>
+    {{-- @endpush --}}
 @endpush

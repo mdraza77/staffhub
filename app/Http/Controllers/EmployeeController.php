@@ -37,7 +37,7 @@ class EmployeeController extends Controller implements HasMiddleware
             ->with('department')
             ->where('id', '!=', auth()->id())
             ->latest()
-            ->paginate(10);
+            ->get();
         return view('employees.index', compact('employees'));
     }
 

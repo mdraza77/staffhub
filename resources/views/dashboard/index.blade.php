@@ -216,7 +216,7 @@
             </div>
         @endcan
 
-        {{-- ===== RIGHT PANEL (1/3) ===== --}}
+        {{-- ===== RIGHT PANEL ===== --}}
         <div class="flex flex-col gap-5">
 
             {{-- Quick Navigation --}}
@@ -288,7 +288,7 @@
                     @endcan
 
                     @can('Task-Index')
-                        <a href="#"
+                        <a href="{{ route('tasks.index') }}"
                             class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-amber-50 text-gray-700 hover:text-amber-700 transition-all group">
                             <div
                                 class="w-7 h-7 rounded-lg bg-amber-50 group-hover:bg-amber-100 flex items-center justify-center transition-colors">

@@ -25,6 +25,9 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.tailwindcss.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.tailwindcss.min.css">
+
     @stack('styles')
 </head>
 
@@ -36,7 +39,8 @@
         <div class="flex items-center justify-between w-64">
             <a href="{{ route('dashboard') }}"
                 class="flex items-center gap-2 text-xl font-bold text-blue-700 decoration-none">
-                <img src="{{ !empty($globalSetting->logo) ? asset($globalSetting->logo) : asset('img/logo.jpg') }}"
+                <img class="w-16 h-16"
+                    src="{{ !empty($globalSetting->logo) ? asset($globalSetting->logo) : asset('img/logo.png') }}"
                     alt="{{ $globalSetting->name ?? 'StaffHub Logo' }}" class="max-h-8">
             </a>
             <i class="bi bi-list text-2xl cursor-pointer text-gray-800 hover:text-blue-600 transition-colors toggle-sidebar-btn"
@@ -313,6 +317,21 @@
         }
     </script>
     @include('sweetalert2::index')
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.tailwindcss.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.tailwindcss.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+    @stack('scripts')
 </body>
 
 </html>
