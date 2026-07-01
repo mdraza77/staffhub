@@ -9,10 +9,12 @@
             <p class="text-sm text-gray-500 mt-1">Track your tasks and manage delegated work.</p>
         </div>
 
-        <a href="{{ route('tasks.create') }}"
-            class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm">
-            <i class="fa-solid fa-plus"></i> Assign New Task
-        </a>
+        @can('Task-Create')
+            <a href="{{ route('tasks.create') }}"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-plus"></i> Assign New Task
+            </a>
+        @endcan
     </div>
 
     @if (session('success'))
@@ -105,10 +107,12 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-center">
-                                        <button onclick="toggleModal('updateProgressModal{{ $task->id }}')"
-                                            class="text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
-                                            Update
-                                        </button>
+                                        @can('Task-Edit')
+                                            <button onclick="toggleModal('updateProgressModal{{ $task->id }}')"
+                                                class="text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+                                                Update
+                                            </button>
+                                        @endcan
                                     </td>
                                 </tr>
 
@@ -261,22 +265,26 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-center flex justify-center gap-2">
-                                            <button onclick="toggleModal('editDetailsModal{{ $task->id }}')"
-                                                class="text-blue-600 hover:text-blue-800 transition-colors"
-                                                title="Edit Details">
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </button>
-                                            <button type="button" onclick="confirmDelete({{ $task->id }})"
-                                                class="text-red-600 hover:text-red-800 transition-colors"
-                                                title="Delete Task">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                            <form id="delete-form-{{ $task->id }}"
-                                                action="{{ route('tasks.destroy', $task->id) }}" method="POST"
-                                                class="hidden">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form>
+                                            @can('Task-Edit')
+                                                <button onclick="toggleModal('editDetailsModal{{ $task->id }}')"
+                                                    class="text-blue-600 hover:text-blue-800 transition-colors"
+                                                    title="Edit Details">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                            @endcan
+                                            @can('Task-Delete')
+                                                <button type="button" onclick="confirmDelete({{ $task->id }})"
+                                                    class="text-red-600 hover:text-red-800 transition-colors"
+                                                    title="Delete Task">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                                <form id="delete-form-{{ $task->id }}"
+                                                    action="{{ route('tasks.destroy', $task->id) }}" method="POST"
+                                                    class="hidden">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                            @endcan
                                         </td>
                                     </tr>
 

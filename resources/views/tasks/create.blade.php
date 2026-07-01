@@ -92,10 +92,12 @@
         <div class="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-5">
             <a href="{{ route('tasks.index') }}"
                 class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">Cancel</a>
-            <button type="submit"
-                class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-sm flex items-center gap-2">
-                <i class="fa-solid fa-paper-plane"></i> Assign Task
-            </button>
+            @can('Task-Create')
+                <button type="submit"
+                    class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Assign Task
+                </button>
+            @endcan
         </div>
     </form>
 @endsection

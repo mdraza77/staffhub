@@ -37,6 +37,7 @@
                         <th class="px-6 py-3 font-semibold">Employee</th>
                         <th class="px-6 py-3 font-semibold">ID & Role</th>
                         <th class="px-6 py-3 font-semibold">Department</th>
+                        <th class="px-6 py-3 font-semibold">Role</th>
                         <th class="px-6 py-3 font-semibold">Status</th>
                         <th class="px-6 py-3 font-semibold text-center">Actions</th>
                     </tr>
@@ -86,6 +87,17 @@
                             {{-- Department --}}
                             <td class="px-6 py-4 text-sm text-gray-600">
                                 {{ $employee->department->name ?? 'Unassigned' }}
+                            </td>
+
+                            {{-- ROLE --}}
+                            <td class="px-6 py-4 text-sm text-gray-600">
+                                @if ($employee->roles->isNotEmpty())
+                                    <span class="px-2 py-1 rounded-md text-xs font-semibold bg-indigo-50 text-indigo-600">
+                                        {{ $employee->roles->first()->name }}
+                                    </span>
+                                @else
+                                    <span class="text-xs text-gray-400">Unassigned</span>
+                                @endif
                             </td>
 
                             {{-- Status Badge --}}

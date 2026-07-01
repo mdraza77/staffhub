@@ -8,9 +8,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class TaskController extends Controller
+class TaskController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:Task-Index', only: ['index']),
+            new Middleware('permission:Task-Create', only: ['create', 'store']),
+            new Middleware('permission:Task-Edit', only: ['edit', 'update']),
+            new Middleware('permission:Task-Delete', only: ['destroy']),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -108,12 +120,11 @@ class TaskController extends Controller
         $isAssignee = Auth::id() === $task->assigned_to;
 
         try {
-            // Agar employee update kar raha hai (Progress Update)
             if ($isAssignee) {
                 $request->validate([
                     'progress' => 'required|integer|min:0|max:100',
                     'employee_remark' => 'nullable|string',
-                    'media_links' => 'nullable|string', // Employee apna drive/github link add kar sakta hai
+                    'media_links' => 'nullable|string',
                 ]);
 
                 $status = 'in_progress';
@@ -129,9 +140,7 @@ class TaskController extends Controller
                 ]);
 
                 $message = 'Task progress updated successfully.';
-            }
-            // Agar Manager update kar raha hai (Details Update)
-            else {
+            } else {
                 $request->validate([
                     'title' => 'required|string|max:255',
                     'deadline' => 'required|date',
