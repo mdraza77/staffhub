@@ -41,7 +41,7 @@
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table id="leave_types" class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
                         <th class="px-6 py-3 font-semibold w-16">#</th>
@@ -52,7 +52,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @forelse($leaveTypes as $key => $type)
+                    @foreach ($leaveTypes as $key => $type)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $key + 1 }}</td>
                             <td class="px-6 py-4 text-sm font-bold text-gray-800">{{ $type->name }}</td>
@@ -138,13 +138,13 @@
                                 </form>
                             </div>
                         </div>
-                    @empty
+                        {{-- @empty
                         <tr>
                             <td colspan="5" class="px-6 py-8 text-center text-gray-500">
                                 No leave types found. Create one to get started.
                             </td>
-                        </tr>
-                    @endforelse
+                        </tr> --}}
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -195,7 +195,7 @@
 
 @endsection
 
-@push('styles')
+@push('scripts')
     <script>
         // Simple Vanilla JS to toggle Tailwind Modals
         function toggleModal(modalID) {
@@ -219,5 +219,38 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#leave_types').DataTable({
+                destroy: true,
+                dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
+                buttons: [{
+                        extend: 'copy',
+                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'print',
+                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
+                    }
+                ],
+                pageLength: 10,
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search here...",
+                    lengthMenu: "_MENU_",
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
+                }
+            });
+        });
     </script>
 @endpush

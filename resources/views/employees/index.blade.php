@@ -43,7 +43,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @forelse($employees as $key => $employee)
+                    @foreach ($employees as $key => $employee)
                         <tr
                             class="transition-colors {{ $employee->trashed() ? 'bg-red-50 opacity-70' : 'hover:bg-gray-50' }}">
 
@@ -192,14 +192,14 @@
                             </td>
 
                         </tr>
-                    @empty
+                        {{-- @empty
                         <tr>
                             <td colspan="6" class="px-6 py-12 text-center text-gray-400">
                                 <i class="fa-solid fa-users-slash text-3xl mb-3 block"></i>
                                 No employees found. Click "Add Employee" to get started.
                             </td>
-                        </tr>
-                    @endforelse
+                        </tr> --}}
+                    @endforeach
                 </tbody>
             </table>
         </div>

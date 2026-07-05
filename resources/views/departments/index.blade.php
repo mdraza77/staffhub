@@ -63,7 +63,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        @forelse($departments as $key => $department)
+                        @foreach($departments as $key => $department)
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $key + 1 }}</td>
                                 <td class="px-6 py-4 text-sm font-semibold text-gray-900">{{ $department->name }}</td>
@@ -118,7 +118,7 @@
                                     </div>
                                 </td>
                             </tr>
-                        @empty
+                        {{-- @empty
                             <tr>
                                 <td colspan="5" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
@@ -128,8 +128,8 @@
                                             department</p>
                                     </div>
                                 </td>
-                            </tr>
-                        @endforelse
+                            </tr> --}}
+                        @endforeach
                     </tbody>
                 </table>
             </div>
