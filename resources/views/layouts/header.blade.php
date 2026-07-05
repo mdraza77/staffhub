@@ -12,6 +12,8 @@
 
     <link href="{{ asset('assets/img/logo.png') }}" rel="icon">
     <link href="{{ asset('assets/img/logo.png') }}" rel="apple-touch-icon">
+    <link rel="stylesheet" href="resources/css/datatables.css">
+    <link rel="stylesheet" href="{{ asset('css/datatables.css') }}">
 
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link

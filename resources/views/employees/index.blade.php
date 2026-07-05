@@ -203,13 +203,6 @@
                 </tbody>
             </table>
         </div>
-
-        {{-- Pagination --}}
-        {{-- @if ($employees->hasPages())
-            <div class="px-6 py-4 border-t border-gray-100">
-                {{ $employees->links() }}
-            </div>
-        @endif --}}
     </div>
 
 @endsection
@@ -275,13 +268,11 @@
         }
     </script>
 
-    {{-- @push('scripts') --}}
     <script>
         $(document).ready(function() {
             $('#employees').DataTable({
                 destroy: true,
-                // DOM UPDATE: Info (i) aur Length (l) ko ek div mein pack kiya left ke liye, aur Pagination (p) right ke liye
-                dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"Bf>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"li><"flex items-center"p>>',
+                dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
                 buttons: [{
                         extend: 'copy',
                         className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
@@ -303,79 +294,10 @@
                 language: {
                     search: "",
                     searchPlaceholder: "Search here...",
-                    lengthMenu: "Show _MENU_ entries", // Text ko clean kiya
+                    lengthMenu: "_MENU_",
                     info: "Showing _START_ to _END_ of _TOTAL_ entries"
                 }
             });
         });
     </script>
-
-    <style>
-        /* 1. Search Box Fix */
-        .dataTables_filter input {
-            border: 1px solid #e5e7eb !important;
-            border-radius: 0.5rem !important;
-            padding: 0.375rem 0.75rem !important;
-            outline: none !important;
-            font-size: 0.875rem !important;
-        }
-
-        .dataTables_filter input:focus {
-            border-color: #4f46e5 !important;
-            box-shadow: 0 0 0 1px #4f46e5 !important;
-        }
-
-        /* 2. Entries Dropdown (Length Menu) Fix */
-        .dataTables_length select {
-            border: 1px solid #e5e7eb !important;
-            border-radius: 0.375rem !important;
-            padding: 0.25rem 1.5rem 0.25rem 0.5rem !important;
-            font-size: 0.875rem !important;
-            outline: none !important;
-            background-color: #f9fafb !important;
-        }
-
-        /* 3. Pagination Fix */
-        .dataTables_paginate {
-            display: flex !important;
-            gap: 0.25rem !important;
-        }
-
-        .dataTables_paginate .paginate_button {
-            padding: 0.25rem 0.75rem !important;
-            border: 1px solid #e5e7eb !important;
-            border-radius: 0.375rem !important;
-            background: white !important;
-            color: #374151 !important;
-            font-size: 0.875rem !important;
-            font-weight: 500 !important;
-            cursor: pointer !important;
-            transition: all 0.2s !important;
-        }
-
-        .dataTables_paginate .paginate_button:hover:not(.disabled) {
-            background: #f3f4f6 !important;
-        }
-
-        .dataTables_paginate .paginate_button.current {
-            background: #4f46e5 !important;
-            color: white !important;
-            border-color: #4f46e5 !important;
-        }
-
-        .dataTables_paginate .paginate_button.disabled {
-            opacity: 0.5 !important;
-            cursor: not-allowed !important;
-        }
-
-        /* 4. Remove Defaults Overlaps */
-        .dataTables_info,
-        .dataTables_length,
-        .dataTables_paginate {
-            float: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-    </style>
-    {{-- @endpush --}}
 @endpush
