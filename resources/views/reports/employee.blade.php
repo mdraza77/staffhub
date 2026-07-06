@@ -11,7 +11,7 @@
             <p class="text-sm text-gray-500 mt-1">Filter and view detailed employee records</p>
         </div>
         <a href="{{ route('dashboard') }}"
-            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">Back
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">Back to Employees
         </a>
     </div>
 

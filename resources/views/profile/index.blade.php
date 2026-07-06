@@ -11,8 +11,8 @@
             <p class="text-sm text-gray-500 mt-1">Manage your personal account information</p>
         </div>
         <a href="{{ route('dashboard') }}"
-            class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium text-sm">
-            <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">
+            Back to Dashboard
         </a>
     </div>
 

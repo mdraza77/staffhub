@@ -31,13 +31,18 @@ class EmployeeController extends Controller implements HasMiddleware
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $employees = User::withTrashed()
             ->with('department')
-            ->where('id', '!=', auth()->id())
-            ->latest()
-            ->get();
+            ->where('id', '!=', auth()->id());
+
+        if ($request->filled('status')) {
+            $employees->where('status', $request->status);
+        }
+
+        $employees = $employees->latest()->get();
+
         return view('employees.index', compact('employees'));
     }
 

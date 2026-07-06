@@ -15,8 +15,11 @@ class ReportController extends Controller
         $roles       = Role::orderBy('name')->get();
 
         $query = User::with(['department', 'roles'])
-            ->withTrashed() // deleted bhi dikhao agar filter mein ho
-            ->where('id', '!=', auth()->id());
+            ->withTrashed()
+            ->where('id', '!=', auth()->id())
+            ->whereDoesntHave('roles', function ($q) {
+                $q->where('name', 'Super Admin');
+            });
 
         // ===== FILTERS =====
         if ($request->filled('department_id')) {
