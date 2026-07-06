@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('leave_type_id')->constrained()->cascadeOnDelete();
             $table->date('start_date');
             $table->date('end_date');
+            $table->decimal('total_days', 4, 1);
             $table->text('reason');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('admin_remark')->nullable();

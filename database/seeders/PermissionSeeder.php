@@ -85,16 +85,15 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Company-Edit']);
 
         // ===== ROLES =======
-        $superAdmin = Role::firstOrCreate(['name' => 'Super Admin']);
-        $admin      = Role::firstOrCreate(['name' => 'Admin']);
-
-        // New roles
+        $superAdmin  = Role::firstOrCreate(['name' => 'Super Admin']);
+        $admin       = Role::firstOrCreate(['name' => 'Admin']);
         $hrManager   = Role::firstOrCreate(['name' => 'HR Manager']);
         $deptManager = Role::firstOrCreate(['name' => 'Department Manager']);
         $employee    = Role::firstOrCreate(['name' => 'Employee']);
 
         // Super Admin — sab permissions
-        $superAdmin->syncPermissions(Permission::all());
+        $permissions = Permission::all();
+        $superAdmin->syncPermissions($permissions);
 
         // Admin
         $admin->givePermissionTo([
@@ -102,7 +101,7 @@ class PermissionSeeder extends Seeder
         ]);
 
         // HR Manager
-        $hrManager->syncPermissions([
+        $hrManager->givePermissionTo([
             'Dashboard',
             'Employee-Index',
             'Employee-Create',
@@ -116,13 +115,13 @@ class PermissionSeeder extends Seeder
         ]);
 
         // Department Manager
-        $deptManager->syncPermissions([
+        $deptManager->givePermissionTo([
             'Dashboard',
             'Employee-Index',
         ]);
 
         // Employee
-        $employee->syncPermissions([
+        $employee->givePermissionTo([
             'Dashboard',
         ]);
 

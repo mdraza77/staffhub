@@ -65,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Reports Routes
     Route::controller(ReportController::class)->prefix('reports')->name('reports.')->group(function () {
-        Route::get('/employees', 'employeeReport')->name('employees');
+        Route::get('/employees', 'employeesReport')->name('employees');
         Route::get('/attendance', 'attendanceReport')->name('attendance');
         Route::get('/leaves', [ReportController::class, 'leaveReport'])->name('leaves');
         Route::get('/leave-types', [ReportController::class, 'leaveTypeReport'])->name('leave-types');

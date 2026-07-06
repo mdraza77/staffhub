@@ -121,7 +121,7 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Joining Date</label>
-                <input type="date" name="joining_date" value="{{ old('joining_date') }}"
+                <input type="date" name="joining_date" value="{{ old('joining_date', now()->format('Y-m-d')) }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
                 @error('joining_date')
                     <span class="text-xs text-red-500 mt-1">{{ $message }}</span>

@@ -11,7 +11,8 @@
             <p class="text-sm text-gray-500 mt-1">Filter and view detailed employee records</p>
         </div>
         <a href="{{ route('dashboard') }}"
-            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">Back to Employees
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">Back
+            to Employees
         </a>
     </div>
 
@@ -104,14 +105,15 @@
                     <label class="block text-xs font-medium text-gray-500 mb-1">
                         <i class="fa-solid fa-calendar mr-1"></i> Joining Date From
                     </label>
-                    <input type="date" name="joining_from" value="{{ request('joining_from') }}"
+                    <input type="date" name="joining_from"
+                        value="{{ request('joining_from', now()->subMonths(3)->format('Y-m-d')) }}""
                         class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-500 mb-1">
                         <i class="fa-solid fa-calendar mr-1"></i> Joining Date To
                     </label>
-                    <input type="date" name="joining_to" value="{{ request('joining_to') }}"
+                    <input type="date" name="joining_to" value="{{ request('joining_to', now()->format('Y-m-d')) }}""
                         class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
                 </div>
             </div>

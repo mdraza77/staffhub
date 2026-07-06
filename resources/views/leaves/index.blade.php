@@ -161,13 +161,14 @@
                                     class="text-red-500">*</span></label>
                             <input type="date" name="start_date"
                                 class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
-                                required>
+                                min="{{ now()->format('Y-m-d') }}" value="{{ now()->format('Y-m-d') }}" required>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">End Date <span
                                     class="text-red-500">*</span></label>
                             <input type="date" name="end_date"
                                 class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
+                                value="{{ now()->addDays(2)->format('Y-m-d') }}" min="{{ now()->format('Y-m-d') }}"
                                 required>
                         </div>
                     </div>

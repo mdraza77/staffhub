@@ -6,10 +6,19 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Department;
 use Spatie\Permission\Models\Role;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ReportController extends Controller
+class ReportController extends Controller implements HasMiddleware
 {
-    public function employeeReport(Request $request)
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:Employees-Report',  only: ['employeesReport']),
+        ];
+    }
+
+    public function employeesReport(Request $request)
     {
         $departments = Department::orderBy('name')->get();
         $roles       = Role::orderBy('name')->get();
