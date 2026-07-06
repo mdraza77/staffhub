@@ -19,43 +19,59 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/photo', [ProfileController::class, 'removePhoto'])->name('profile.remove-photo');
 });
 
 Route::middleware(['auth'])->group(function () {
+    // Departments Routes
     Route::resource('departments', DepartmentController::class);
-    Route::post('departments/{id}/restore', [DepartmentController::class, 'restore'])->name('departments.restore');
-    Route::delete('departments/{id}/force-delete', [DepartmentController::class, 'forceDelete'])->name('departments.force-delete');
+    Route::controller(DepartmentController::class)->prefix('departments')->name('departments.')->group(function () {
+        Route::post('/{department}/restore', 'restore')->name('restore');
+        Route::delete('/{department}/force-delete', 'forceDelete')->name('force-delete');
+    });
 
+    // Employees Routes
     Route::resource('employees', EmployeeController::class);
-    Route::post('employees/{id}/restore', [EmployeeController::class, 'restore'])->name('employees.restore');
-    Route::delete('employees/{id}/force-delete', [EmployeeController::class, 'forceDelete'])->name('employees.force-delete');
+    Route::controller(EmployeeController::class)->prefix('employees')->name('employees.')->group(function () {
+        Route::post('/{employee}/restore', 'restore')->name('restore');
+        Route::delete('/{employee}/force-delete', 'forceDelete')->name('force-delete');
+    });
 
+    // Attendance Routes
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance/punch', [AttendanceController::class, 'punch'])->name('attendance.punch');
 
+    // Leave Types Routes
     Route::resource('leave-types', LeaveTypeController::class)->except(['create', 'show', 'edit']);
-    // Leaves Routes
-    Route::get('/leaves', [LeaveController::class, 'index'])->name('leaves.index');
-    Route::post('/leaves', [LeaveController::class, 'store'])->name('leaves.store');
-    Route::post('/leaves/{leave}/status', [LeaveController::class, 'updateStatus'])->name('leaves.updateStatus');
 
+    // Leaves Routes
+    Route::controller(LeaveController::class)->prefix('leaves')->name('leaves.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::post('/{leave}/status', 'updateStatus')->name('updateStatus');
+    });
+
+    // Roles Routes
     Route::resource('roles', RoleController::class);
 
+    // Tasks Routes
     Route::resource('tasks', TaskController::class);
 
-    Route::get('/reports/employees', [ReportController::class, 'employeeReport'])->name('reports.employees');
-    Route::get('/reports/attendance', [ReportController::class, 'attendanceReport'])->name('reports.attendance');
-    Route::get('/reports/leaves', [ReportController::class, 'leaveReport'])->name('reports.leaves');
-    Route::get('/reports/leave-types', [ReportController::class, 'leaveReport'])->name('reports.leave-types');
-    Route::get('/reports/tasks', [ReportController::class, 'taskReport'])->name('reports.tasks');
-    Route::get('/reports/departments', [ReportController::class, 'departmentReport'])->name('reports.departments');
+    // Reports Routes
+    Route::controller(ReportController::class)->prefix('reports')->name('reports.')->group(function () {
+        Route::get('/employees', 'employeeReport')->name('employees');
+        Route::get('/attendance', 'attendanceReport')->name('attendance');
+        Route::get('/leaves', [ReportController::class, 'leaveReport'])->name('leaves');
+        Route::get('/leave-types', [ReportController::class, 'leaveTypeReport'])->name('leave-types');
+        Route::get('/tasks', [ReportController::class, 'taskReport'])->name('tasks');
+        Route::get('/departments', [ReportController::class, 'departmentReport'])->name('departments');
+    });
 });
 
 require __DIR__ . '/auth.php';

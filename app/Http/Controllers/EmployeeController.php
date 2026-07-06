@@ -34,8 +34,11 @@ class EmployeeController extends Controller implements HasMiddleware
     public function index(Request $request)
     {
         $employees = User::withTrashed()
-            ->with('department')
-            ->where('id', '!=', auth()->id());
+            ->with(['department', 'roles'])
+            ->where('id', '!=', auth()->id())
+            ->whereDoesntHave('roles', function ($q) {
+                $q->where('name', 'Super Admin');
+            });
 
         if ($request->filled('status')) {
             $employees->where('status', $request->status);
