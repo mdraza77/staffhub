@@ -71,6 +71,14 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Task-View']);
         Permission::firstOrCreate(['name' => 'Task-Delete']);
 
+        // ===== REPORTS =====
+        Permission::firstOrCreate(['name' => 'Employees-Report']);
+        Permission::firstOrCreate(['name' => 'Departments-Report']);
+        Permission::firstOrCreate(['name' => 'Attendance-Report']);
+        Permission::firstOrCreate(['name' => 'LeaveTypes-Report']);
+        Permission::firstOrCreate(['name' => 'Leaves-Report']);
+        Permission::firstOrCreate(['name' => 'Tasks-Report']);
+
         // ===== SETTINGS =====
         Permission::firstOrCreate(['name' => 'Settings-Index']);
         Permission::firstOrCreate(['name' => 'Company-Index']);
@@ -80,7 +88,7 @@ class PermissionSeeder extends Seeder
         $superAdmin = Role::firstOrCreate(['name' => 'Super Admin']);
         $admin      = Role::firstOrCreate(['name' => 'Admin']);
 
-        // Naye roles
+        // New roles
         $hrManager   = Role::firstOrCreate(['name' => 'HR Manager']);
         $deptManager = Role::firstOrCreate(['name' => 'Department Manager']);
         $employee    = Role::firstOrCreate(['name' => 'Employee']);
@@ -88,7 +96,7 @@ class PermissionSeeder extends Seeder
         // Super Admin — sab permissions
         $superAdmin->syncPermissions(Permission::all());
 
-        // Admin — existing same rakha
+        // Admin
         $admin->givePermissionTo([
             'Dashboard',
         ]);

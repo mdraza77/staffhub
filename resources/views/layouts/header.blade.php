@@ -227,8 +227,45 @@
                 </li>
             @endcan
 
-            {{-- ===== SETTINGS =====
+            {{-- ===== REPORTS MANAGEMENT ===== --}}
             @php
+                $reportsActive =
+                    request()->routeIs('reports.employees') ||
+                    request()->routeIs('reports.attendance') ||
+                    request()->routeIs('reports.leaves') ||
+                    request()->routeIs('reports.departments') ||
+                    request()->routeIs('reports.leave-types');
+            @endphp
+
+            @if (auth()->check() && (auth()->user()->can('Employee-Index') || auth()->user()->can('Employee-Create')))
+                <li>
+                    <details class="group" {{ $reportsActive ? 'open' : '' }}>
+                        <summary
+                            class="{{ $reportsActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
+                            <div class="flex items-center gap-3">
+                                <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                                <span>Reports</span>
+                            </div>
+                            <i
+                                class="bi bi-chevron-down transition-transform duration-300 {{ $reportsActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
+                        </summary>
+                        <ul class="pl-9 pr-2 py-2 space-y-1">
+                            @can('Employee-Index')
+                                <li>
+                                    <a href="{{ route('reports.employees') }}"
+                                        class="{{ request()->routeIs('reports.employees') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                        <i class="bi bi-circle text-[8px]"></i>
+                                        <span>Employees</span>
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </details>
+                </li>
+            @endif
+
+            {{-- ===== SETTINGS ===== --}}
+            {{-- @php
                 $settingsActive = request()->routeIs('settings.*') || request()->routeIs('company.*');
             @endphp
 
@@ -257,7 +294,7 @@
                             @can('Settings-Index')
                                 <li>
                                     <a href="{{ route('settings.index') }}"
-                                        class="{{ request()->routeIs('settings.index') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                        class="{{ request()->routeIs('settings.index') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 tran sition-colors">
                                         <i class="bi bi-circle text-[8px]"></i>
                                         <span>General Settings</span>
                                     </a>

@@ -7,6 +7,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,13 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('roles', RoleController::class);
 
     Route::resource('tasks', TaskController::class);
+
+    Route::get('/reports/employees', [ReportController::class, 'employeeReport'])->name('reports.employees');
+    Route::get('/reports/attendance', [ReportController::class, 'attendanceReport'])->name('reports.attendance');
+    Route::get('/reports/leaves', [ReportController::class, 'leaveReport'])->name('reports.leaves');
+    Route::get('/reports/leave-types', [ReportController::class, 'leaveReport'])->name('reports.leave-types');
+    Route::get('/reports/tasks', [ReportController::class, 'taskReport'])->name('reports.tasks');
+    Route::get('/reports/departments', [ReportController::class, 'departmentReport'])->name('reports.departments');
 });
 
 require __DIR__ . '/auth.php';
