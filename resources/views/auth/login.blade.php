@@ -1,47 +1,157 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+    <title>{{ config('app.name', 'StaffHub') }} - Login</title>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:300,450,550,650&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="font-sans antialiased h-full text-slate-900 bg-slate-50 flex items-center justify-center p-4">
+
+    <!-- Primary Centered Card Container (Fully Responsive) -->
+    <div class="w-full max-w-md bg-white p-8 sm:p-10 rounded-2xl shadow-xl border border-slate-100 space-y-8">
+        
+        <!-- Branding and Title -->
+        <div class="text-center space-y-3">
+            <div class="inline-flex p-3 bg-indigo-50 text-indigo-650 rounded-xl">
+                <!-- Portal Emblem -->
+                <svg class="w-8 h-8" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+            </div>
+            
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">StaffHub Portal</h1>
+            <p class="text-sm text-slate-500">Sign in to manage your workspace and team projects.</p>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <!-- Session Status (e.g. password resets logs) -->
+        @if (session('status'))
+            <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex gap-3">
+                <svg class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>{{ session('status') }}</span>
+            </div>
+        @endif
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+        <form method="POST" action="{{ route('login') }}" class="space-y-6">
+            @csrf
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            <!-- Email Address Form Field -->
+            <div class="space-y-2">
+                <label for="email" class="text-sm font-semibold tracking-wide text-slate-700">
+                    Email Address
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <svg class="w-5 h-5" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" />
+                        </svg>
+                    </div>
+                    <input id="email" 
+                           type="email" 
+                           name="email" 
+                           value="{{ old('email') }}" 
+                           required 
+                           autofocus 
+                           autocomplete="username"
+                           placeholder="name@company.com"
+                           class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-150" />
+                </div>
+                <!-- Validation Error display -->
+                @if ($errors->has('email'))
+                    <div class="flex items-center gap-1.5 mt-1.5 text-xs text-rose-600 font-medium">
+                        <svg class="w-4 h-4 shrink-0" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span>{{ $errors->first('email') }}</span>
+                    </div>
+                @endif
+            </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+            <!-- Password Form Field -->
+            <div class="space-y-2" x-data="{ show: false }">
+                <div class="flex items-center justify-between">
+                    <label for="password" class="text-sm font-semibold tracking-wide text-slate-700">
+                        Password
+                    </label>
+                    @if (Route::has('password.request'))
+                        <a class="text-xs font-semibold text-indigo-650 hover:text-indigo-800 transition-colors" href="{{ route('password.request') }}">
+                            Forgot password?
+                        </a>
+                    @endif
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <svg class="w-5 h-5" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <input id="password" 
+                           :type="show ? 'text' : 'password'" 
+                           name="password" 
+                           required 
+                           autocomplete="current-password"
+                           placeholder="••••••••"
+                           class="w-full pl-11 pr-12 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-150" />
+                    
+                    <!-- Password Visibility Toggle trigger -->
+                    <button type="button" 
+                            @click="show = !show" 
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-650 transition-colors focus:outline-none">
+                        <!-- Eye open icon -->
+                        <svg class="w-5 h-5" x-show="!show" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        <!-- Eye closed icon -->
+                        <svg class="w-5 h-5" x-show="show" x-cloak stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+                        </svg>
+                    </button>
+                </div>
+                <!-- Validation Error display -->
+                @if ($errors->has('password'))
+                    <div class="flex items-center gap-1.5 mt-1.5 text-xs text-rose-600 font-medium">
+                        <svg class="w-4 h-4 shrink-0" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span>{{ $errors->first('password') }}</span>
+                    </div>
+                @endif
+            </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+            <!-- Keep me signed in checkbox row -->
+            <div class="flex items-center">
+                <label for="remember_me" class="inline-flex items-center cursor-pointer select-none">
+                    <input id="remember_me" 
+                           type="checkbox" 
+                           name="remember" 
+                           class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500/30" />
+                    <span class="ms-2.5 text-sm text-slate-500 hover:text-slate-700 transition-colors">Keep me signed in</span>
+                </label>
+            </div>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+            <!-- Submission Trigger Button -->
+            <button type="submit" 
+                    class="w-full py-3 px-4 text-sm font-semibold tracking-wide text-white rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] shadow-md shadow-indigo-600/10 hover:shadow-indigo-600/20 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+                Log In
+            </button>
+        </form>
+
+        <!-- Footer Copyright Statement -->
+        <p class="text-center text-xs text-slate-400 pt-4 border-t border-slate-100">
+            &copy; {{ date('Y') }} StaffHub Inc. All rights reserved.
+        </p>
+    </div>
+
+</body>
+</html>
