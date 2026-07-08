@@ -26,7 +26,7 @@ class TaskController extends Controller implements HasMiddleware
             new Middleware('permission:Task-Delete', only: ['destroy']),
             new Middleware('permission:Task-Comment', only: ['storeComment']),
             new Middleware('permission:Task-Document', only: ['storeDocument']),
-            new Middleware('permission:Task-Status', only: ['updateStatus']),
+            new Middleware('permission:Task-ProgressUpdate', only: ['updateStatus']),
         ];
     }
 
