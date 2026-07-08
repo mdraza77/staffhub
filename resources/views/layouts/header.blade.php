@@ -58,7 +58,7 @@
                             <img src="{{ asset('storage/' . auth()->user()->profile) }}" alt="Profile"
                                 class="w-8 h-8 rounded-full object-cover border border-gray-200">
                         @else
-                            <img src="{{ asset('assets/img/profile-img.png') }}" alt="Profile"
+                            <img src="{{ asset('img/profile-img.png') }}" alt="Profile"
                                 class="w-8 h-8 rounded-full object-cover border border-gray-200">
                         @endif
                         <span
