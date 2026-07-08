@@ -62,6 +62,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Tasks Routes
     Route::resource('tasks', TaskController::class);
+    Route::post('tasks/{task}/comments', [TaskController::class, 'storeComment'])->name('tasks.comments.store');
+    Route::post('tasks/{task}/documents', [TaskController::class, 'storeDocument'])->name('tasks.documents.store');
+    Route::post('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.status.update');
 
     // Reports Routes
     Route::controller(ReportController::class)->prefix('reports')->name('reports.')->group(function () {

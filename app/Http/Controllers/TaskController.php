@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\TaskComment;
+use App\Models\TaskDocument;
+use App\Models\TaskStatusHistory;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller implements HasMiddleware
 {
@@ -20,6 +24,9 @@ class TaskController extends Controller implements HasMiddleware
             new Middleware('permission:Task-Create', only: ['create', 'store']),
             new Middleware('permission:Task-Edit', only: ['edit', 'update']),
             new Middleware('permission:Task-Delete', only: ['destroy']),
+            new Middleware('permission:Task-Comment', only: ['storeComment']),
+            new Middleware('permission:Task-Document', only: ['storeDocument']),
+            new Middleware('permission:Task-Status', only: ['updateStatus']),
         ];
     }
 
@@ -30,14 +37,14 @@ class TaskController extends Controller implements HasMiddleware
     {
         $userId = Auth::id();
 
-        // 1. My Tasks (Jo is user ko assign hue hain)
-        $myTasks = Task::with('assignedBy')
+        // 1. My Tasks (assigned to user)
+        $myTasks = Task::with(['assigner', 'engineer', 'tester'])
             ->where('assigned_to', $userId)
             ->latest()
             ->get();
 
-        // 2. Assigned By Me (Jo is user ne dusron ko assign kiye hain - For Managers)
-        $assignedByMe = Task::with('assignedTo')
+        // 2. Assigned By Me (assigned by user)
+        $assignedByMe = Task::with(['assigner', 'engineer', 'tester'])
             ->where('assigned_by', $userId)
             ->latest()
             ->get();
@@ -50,7 +57,7 @@ class TaskController extends Controller implements HasMiddleware
      */
     public function create()
     {
-        $employees = User::where('status', 'active')->get();
+        $employees = User::where('status', 'active')->where('id', '!=', Auth::id())->get();
 
         return view('tasks.create', compact('employees'));
     }
@@ -60,31 +67,37 @@ class TaskController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'project_name' => 'nullable|string|max:255',
             'title' => 'required|string|max:255',
             'assigned_to' => 'required|exists:users,id',
-            'deadline' => 'required|date|after_or_equal:today',
+            'tester_id' => 'nullable|exists:users,id',
+            'deadline' => 'nullable|date|after_or_equal:today',
             'description' => 'required|string',
-            'media_links' => 'nullable|string',
-            'manager_remark' => 'nullable|string',
+            'priority' => 'nullable|in:low,medium,high,critical',
+            'status' => 'nullable|in:open,in_progress,ready_for_test,testing,completed,closed',
         ]);
 
         try {
             DB::beginTransaction();
 
-            Task::create([
+            $task = Task::create([
                 'assigned_by' => Auth::id(),
                 'assigned_to' => $request->assigned_to,
+                'tester_id' => $request->tester_id,
                 'project_name' => $request->project_name,
                 'title' => $request->title,
                 'description' => $request->description,
                 'deadline' => $request->deadline,
-                'progress' => 0,
-                'status' => 'pending',
-                'media_links' => $request->media_links,
-                'manager_remark' => $request->manager_remark,
+                'priority' => $request->priority ?? 'medium',
+                'status' => $request->status ?? 'open',
+            ]);
+
+            // Log the initial status in task_status_histories
+            $task->statusHistories()->create([
+                'old_status' => 'none',
+                'new_status' => $task->status,
+                'changed_by' => Auth::id(),
             ]);
 
             DB::commit();
@@ -101,7 +114,16 @@ class TaskController extends Controller implements HasMiddleware
      */
     public function show(Task $task)
     {
-        //
+        $task->load([
+            'assigner',
+            'engineer',
+            'tester',
+            'comments.user',
+            'documents.user',
+            'statusHistories.user'
+        ]);
+
+        return view('tasks.show', compact('task'));
     }
 
     /**
@@ -109,7 +131,8 @@ class TaskController extends Controller implements HasMiddleware
      */
     public function edit(Task $task)
     {
-        //
+        $employees = User::where('status', 'active')->where('id', '!=', Auth::id())->get();
+        return view('tasks.edit', compact('task', 'employees'));
     }
 
     /**
@@ -117,49 +140,48 @@ class TaskController extends Controller implements HasMiddleware
      */
     public function update(Request $request, Task $task)
     {
-        $isAssignee = Auth::id() === $task->assigned_to;
+        $request->validate([
+            'project_name' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'assigned_to' => 'required|exists:users,id',
+            'tester_id' => 'nullable|exists:users,id',
+            'deadline' => 'nullable|date',
+            'description' => 'required|string',
+            'priority' => 'required|in:low,medium,high,critical',
+            'status' => 'required|in:open,in_progress,ready_for_test,testing,completed,closed',
+        ]);
 
         try {
-            if ($isAssignee) {
-                $request->validate([
-                    'progress' => 'required|integer|min:0|max:100',
-                    'employee_remark' => 'nullable|string',
-                    'media_links' => 'nullable|string',
+            DB::beginTransaction();
+
+            $oldStatus = $task->status;
+            $newStatus = $request->status;
+
+            $task->update([
+                'project_name' => $request->project_name,
+                'title' => $request->title,
+                'assigned_to' => $request->assigned_to,
+                'tester_id' => $request->tester_id,
+                'deadline' => $request->deadline,
+                'description' => $request->description,
+                'priority' => $request->priority,
+                'status' => $newStatus,
+            ]);
+
+            if ($oldStatus !== $newStatus) {
+                $task->statusHistories()->create([
+                    'old_status' => $oldStatus,
+                    'new_status' => $newStatus,
+                    'changed_by' => Auth::id(),
                 ]);
-
-                $status = 'in_progress';
-                if ($request->progress == 0) $status = 'pending';
-                if ($request->progress == 100) $status = 'completed';
-
-                $task->update([
-                    'progress' => $request->progress,
-                    'status' => $status,
-                    'employee_remark' => $request->employee_remark,
-                    // Append new links if provided
-                    'media_links' => $request->media_links ?? $task->media_links,
-                ]);
-
-                $message = 'Task progress updated successfully.';
-            } else {
-                $request->validate([
-                    'title' => 'required|string|max:255',
-                    'deadline' => 'required|date',
-                    'manager_remark' => 'nullable|string',
-                ]);
-
-                $task->update([
-                    'title' => $request->title,
-                    'deadline' => $request->deadline,
-                    'manager_remark' => $request->manager_remark,
-                ]);
-
-                $message = 'Task details updated successfully.';
             }
 
-            return back()->with('success', $message);
+            DB::commit();
+            return redirect()->route('tasks.index')->with('success', 'Task details updated successfully.');
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('Task Update Error: ' . $e->getMessage());
-            return back()->with('error', 'Could not update the task.');
+            return back()->withInput()->with('error', 'Something went wrong while updating the task.');
         }
     }
 
@@ -168,16 +190,120 @@ class TaskController extends Controller implements HasMiddleware
      */
     public function destroy(Task $task)
     {
-        if (Auth::id() !== $task->assigned_by && !Auth::user()->can('manage-all-tasks')) {
+        if (Auth::id() !== $task->assigned_by && !Auth::user()->can('Task-ManageAll')) {
             return back()->with('error', 'You are not authorized to delete this task.');
         }
 
         try {
             $task->delete();
-            return back()->with('success', 'Task deleted successfully.');
+            return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
         } catch (\Exception $e) {
             Log::error('Task Delete Error: ' . $e->getMessage());
             return back()->with('error', 'Could not delete the task.');
+        }
+    }
+
+    /**
+     * Store a comment on the task.
+     */
+    public function storeComment(Request $request, Task $task)
+    {
+        $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+        if (Auth::id() !== $task->assigned_to && Auth::id() !== $task->assigned_by && Auth::id() !== $task->tester_id && !Auth::user()->can('Task-ManageAll')) {
+            return back()->with('error', 'You are not authorized to comment on this task.');
+        }
+
+        try {
+            $task->comments()->create([
+                'user_id' => Auth::id(),
+                'comment' => $request->comment,
+            ]);
+
+            return back()->with('success', 'Comment added successfully.');
+        } catch (\Exception $e) {
+            Log::error('Task Comment Store Error: ' . $e->getMessage());
+            return back()->with('error', 'Could not add comment.');
+        }
+    }
+
+    /**
+     * Upload and store a document on the task.
+     */
+    public function storeDocument(Request $request, Task $task)
+    {
+        $request->validate([
+            'document' => 'required|file|max:10240',  // Max 10MB file
+            'remark' => 'nullable|string|max:255',
+        ]);
+
+        $filePath = null;
+
+        try {
+            DB::beginTransaction();
+
+            if ($request->hasFile('document')) {
+                $file = $request->file('document');
+                $originalName = $file->getClientOriginalName();
+                $filePath = $file->store('task_documents', 'public');
+
+                $task->documents()->create([
+                    'user_id' => Auth::id(),
+                    'file_name' => $originalName,
+                    'file_path' => $filePath,
+                    'remark' => $request->remark,
+                ]);
+            }
+
+            DB::commit();
+            return back()->with('success', 'Document uploaded successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Task Document Store Error: ' . $e->getMessage());
+
+            if (isset($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+
+            return back()->with('error', 'Could not upload document.');
+        }
+    }
+
+    /**
+     * Direct toggle or update of task status.
+     */
+    public function updateStatus(Request $request, Task $task)
+    {
+        $request->validate([
+            'status' => 'required|in:open,in_progress,ready_for_test,testing,completed,closed',
+        ]);
+
+        $oldStatus = $task->status;
+        $newStatus = $request->status;
+
+        if ($oldStatus === $newStatus) {
+            return back()->with('info', 'Status is already ' . $newStatus);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $task->update(['status' => $newStatus]);
+
+            $task->statusHistories()->create([
+                'old_status' => $oldStatus,
+                'new_status' => $newStatus,
+                'changed_by' => Auth::id(),
+            ]);
+
+            DB::commit();
+            return back()->with('success', 'Task status updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Task Status Update Error: ' . $e->getMessage());
+            return back()->with('error', 'Could not update task status.');
         }
     }
 }

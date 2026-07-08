@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
@@ -12,25 +12,43 @@ class Task extends Model
     protected $fillable = [
         'assigned_by',
         'assigned_to',
+        'tester_id',
         'project_name',
         'title',
         'description',
         'deadline',
-        'progress',
+        'priority',
         'status',
-        'media_links',
-        'manager_remark',
-        'employee_remark',
     ];
 
     // Relationships
-    public function assignedBy()
+    public function assigner()
     {
         return $this->belongsTo(User::class, 'assigned_by');
     }
 
-    public function assignedTo()
+    public function engineer()
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function tester()
+    {
+        return $this->belongsTo(User::class, 'tester_id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(TaskComment::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasMany(TaskDocument::class);
+    }
+
+    public function statusHistories()
+    {
+        return $this->hasMany(TaskStatusHistory::class);
     }
 }

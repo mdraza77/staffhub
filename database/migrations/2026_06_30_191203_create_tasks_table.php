@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,28 +13,48 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
 
-            // Relation: Who assigned the task (Manager)
-            $table->foreignId('assigned_by')->constrained('users')->cascadeOnDelete();
+            // Creator / Manager
+            $table
+                ->foreignId('assigned_by')
+                ->constrained('users')
+                ->cascadeOnDelete();
 
-            // Relation: To Whom the task is assigned (Employee)
-            $table->foreignId('assigned_to')->constrained('users')->cascadeOnDelete();
+            // Engineer
+            $table
+                ->foreignId('assigned_to')
+                ->constrained('users')
+                ->cascadeOnDelete();
 
-            // Core Task Details
+            // Tester (optional)
+            $table
+                ->foreignId('tester_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
             $table->string('project_name')->nullable();
+
             $table->string('title');
-            $table->text('description'); // Detailed instructions
-            $table->date('deadline');
+            $table->longText('description');
 
-            // Tracking
-            $table->integer('progress')->default(0); // Percentage: 0 se 100
-            $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
+            $table->date('deadline')->nullable();
 
-            // External Links (Google Drive, GitHub, etc.)
-            $table->text('media_links')->nullable();
+            $table->enum('priority', [
+                'low',
+                'medium',
+                'high',
+                'critical'
+            ])->default('medium');
 
-            // Remarks
-            $table->text('manager_remark')->nullable();
-            $table->text('employee_remark')->nullable();
+            $table->enum('status', [
+                'open',
+                'in_progress',
+                'ready_for_test',
+                'testing',
+                'completed',
+                'closed'
+            ])->default('open');
+
             $table->timestamps();
         });
     }

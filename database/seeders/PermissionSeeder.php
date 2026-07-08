@@ -70,6 +70,9 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Task-Edit']);
         Permission::firstOrCreate(['name' => 'Task-View']);
         Permission::firstOrCreate(['name' => 'Task-Delete']);
+        Permission::firstOrCreate(['name' => 'Task-Comment']);
+        Permission::firstOrCreate(['name' => 'Task-Document']);
+        Permission::firstOrCreate(['name' => 'Task-Status']);
 
         // ===== REPORTS =====
         Permission::firstOrCreate(['name' => 'Employees-Report']);
