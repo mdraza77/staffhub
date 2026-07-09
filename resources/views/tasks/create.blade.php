@@ -81,14 +81,16 @@
                     <option value="low" {{ old('priority', 'medium') == 'low' ? 'selected' : '' }}>Low</option>
                     <option value="medium" {{ old('priority', 'medium') == 'medium' ? 'selected' : '' }}>Medium</option>
                     <option value="high" {{ old('priority', 'medium') == 'high' ? 'selected' : '' }}>High</option>
-                    <option value="critical" {{ old('priority', 'medium') == 'critical' ? 'selected' : '' }}>Critical</option>
+                    <option value="critical" {{ old('priority', 'medium') == 'critical' ? 'selected' : '' }}>Critical
+                    </option>
                 </select>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Deadline <span
                         class="text-red-500">*</span></label>
-                <input type="date" name="deadline" value="{{ old('deadline') }}"
+                <input type="date" name="deadline" value="{{ old('deadline', now()->addDays(1)->format('Y-m-d')) }}"
+                    min="{{ now()->format('Y-m-d') }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
                     required>
             </div>
