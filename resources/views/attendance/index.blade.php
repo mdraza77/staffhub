@@ -67,7 +67,7 @@
         </div>
     @endif
 
-    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex items-center justify-between">
+    {{-- <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex items-center justify-between">
         <div class="font-medium text-gray-700">
             <i class="fa-regular fa-calendar text-blue-600 mr-2"></i>
             Showing records for: <span
@@ -85,7 +85,7 @@
                 <a href="{{ route('attendance.index') }}" class="text-xs text-red-500 hover:underline ml-2">Clear</a>
             @endif
         </form>
-    </div>
+    </div> --}}
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
@@ -94,6 +94,7 @@
                     <tr class="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
                         <th class="px-6 py-3 font-semibold">Employee</th>
                         <th class="px-6 py-3 font-semibold">Department</th>
+                        <th class="px-6 py-3 font-semibold">Date</th>
                         <th class="px-6 py-3 font-semibold text-center">Check-In</th>
                         <th class="px-6 py-3 font-semibold text-center">Check-Out</th>
                         <th class="px-6 py-3 font-semibold text-center">Status</th>
@@ -103,7 +104,7 @@
                 <tbody class="divide-y divide-gray-100">
                     @foreach ($attendances as $attendance)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4">
+                            {{-- <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     @if ($attendance->user->profile)
                                         <img src="{{ asset('storage/' . $attendance->user->profile) }}" alt=""
@@ -120,9 +121,15 @@
                                         </p>
                                     </div>
                                 </div>
+                            </td> --}}
+                            <td class="px-6 py-4 text-sm text-gray-600 font-bold text-xs">
+                                {{ $attendance->user->name ? $attendance->user->name : 'N/A' }} ({{ $attendance->user->employee_id ?? ' ' }})
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600">
                                 {{ $attendance->user->department ? $attendance->user->department->name : 'N/A' }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">
+                                {{ $attendance->date ? \Carbon\Carbon::parse($attendance->date)->format('D, M, Y') : 'N/A' }}
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($attendance->check_in_time)

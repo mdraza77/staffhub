@@ -26,16 +26,15 @@ class AttendanceController extends Controller implements HasMiddleware
      */
     public function index(Request $request)
     {
-        $date = $request->date ? Carbon::parse($request->date)->format('Y-m-d') : Carbon::today()->format('Y-m-d');
+        // $date = $request->date ? Carbon::parse($request->date)->format('Y-m-d') : Carbon::today()->format('Y-m-d');
         $todayAttendance = Attendance::where('user_id', Auth::id())
             ->where('date', Carbon::today()->format('Y-m-d'))
             ->first();
         $attendances = Attendance::with(['user.department'])
-            ->where('date', $date)
             ->latest()
             ->get();
 
-        return view('attendance.index', compact('attendances', 'date', 'todayAttendance'));
+        return view('attendance.index', compact('attendances', 'todayAttendance'));
     }
 
     public function punch(Request $request)
