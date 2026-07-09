@@ -35,7 +35,7 @@
                     <tr class="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
                         <th class="px-6 py-3 font-semibold">#</th>
                         <th class="px-6 py-3 font-semibold">Employee</th>
-                        <th class="px-6 py-3 font-semibold">ID & Role</th>
+                        <th class="px-6 py-3 font-semibold">ID & Designation</th>
                         <th class="px-6 py-3 font-semibold">Department</th>
                         <th class="px-6 py-3 font-semibold">Role</th>
                         <th class="px-6 py-3 font-semibold">Status</th>

@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Department;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -34,25 +35,143 @@ class UserSeeder extends Seeder
             $role->syncPermissions($permissions);
         }
 
+        // 2. Fetch departments for referencing
+        $hrDept = Department::where('slug', 'human-resources')->first();
+        $itDept = Department::where('slug', 'information-technology')->first();
+        $opsDept = Department::where('slug', 'operations')->first();
+        $adminDept = Department::where('slug', 'administration')->first();
+        $rndDept = Department::where('slug', 'research-development')->first();
+
         // 3. Define dummy users for each role
         $users = [
             [
-                'name' => 'Super Admin',
+                'name' => 'Md Raza',
                 'email' => 'admin@gmail.com',
-                'role' => 'Super Admin'
+                'role' => 'Super Admin',
+                'employee_id' => 'EMP001',
+                'phone' => '9876543210',
+                'department_id' => $adminDept?->id,
+                'designation' => 'Chief Executive Officer',
+                'joining_date' => '2026-01-01',
+                'status' => 'active'
+            ],
+            [
+                'name' => 'Jane Smith',
+                'email' => 'admin2@gmail.com',
+                'role' => 'Admin',
+                'employee_id' => 'EMP002',
+                'phone' => '9876543211',
+                'department_id' => $adminDept?->id,
+                'designation' => 'Office Administrator',
+                'joining_date' => '2026-01-15',
+                'status' => 'active'
+            ],
+            [
+                'name' => 'Alice Johnson',
+                'email' => 'hr@gmail.com',
+                'role' => 'HR Manager',
+                'employee_id' => 'EMP003',
+                'phone' => '9876543212',
+                'department_id' => $hrDept?->id,
+                'designation' => 'HR Lead',
+                'joining_date' => '2026-02-01',
+                'status' => 'active'
+            ],
+            [
+                'name' => 'Bob Developer',
+                'email' => 'emp1@gmail.com',
+                'role' => 'Employee',
+                'employee_id' => 'EMP004',
+                'phone' => '9876543213',
+                'department_id' => $itDept?->id,
+                'designation' => 'Lead Laravel Developer',
+                'joining_date' => '2026-02-15',
+                'status' => 'active'
+            ],
+            [
+                'name' => 'Charlie Designer',
+                'email' => 'emp2@gmail.com',
+                'role' => 'Employee',
+                'employee_id' => 'EMP005',
+                'phone' => '9876543214',
+                'department_id' => $itDept?->id,
+                'designation' => 'UI/UX Designer',
+                'joining_date' => '2026-03-01',
+                'status' => 'active'
+            ],
+            [
+                'name' => 'David Tester',
+                'email' => 'emp3@gmail.com',
+                'role' => 'Employee',
+                'employee_id' => 'EMP006',
+                'phone' => '9876543215',
+                'department_id' => $itDept?->id,
+                'designation' => 'QA Engineer',
+                'joining_date' => '2026-03-10',
+                'status' => 'active'
+            ],
+            [
+                'name' => 'Emma Writer',
+                'email' => 'emp4@gmail.com',
+                'role' => 'Employee',
+                'employee_id' => 'EMP007',
+                'phone' => '9876543216',
+                'department_id' => $opsDept?->id,
+                'designation' => 'Content Writer',
+                'joining_date' => '2026-03-20',
+                'status' => 'active'
+            ],
+            [
+                'name' => 'Frank Support',
+                'email' => 'emp5@gmail.com',
+                'role' => 'Employee',
+                'employee_id' => 'EMP008',
+                'phone' => '9876543217',
+                'department_id' => $itDept?->id,
+                'designation' => 'Tech Support Specialist',
+                'joining_date' => '2026-04-01',
+                'status' => 'active'
+            ],
+            [
+                'name' => 'Grace Intern',
+                'email' => 'intern1@gmail.com',
+                'role' => 'Intern',
+                'employee_id' => 'EMP009',
+                'phone' => '9876543218',
+                'department_id' => $itDept?->id,
+                'designation' => 'Web Dev Intern',
+                'joining_date' => '2026-05-01',
+                'status' => 'active'
+            ],
+            [
+                'name' => 'Henry Intern',
+                'email' => 'intern2@gmail.com',
+                'role' => 'Intern',
+                'employee_id' => 'EMP010',
+                'phone' => '9876543219',
+                'department_id' => $rndDept?->id,
+                'designation' => 'R&D Intern',
+                'joining_date' => '2026-05-15',
+                'status' => 'active'
             ]
         ];
 
-        // 4. Create Users and Assign Roles
+        // 4. Create or Update Users and Assign Roles
         foreach ($users as $userData) {
-            $user = User::firstOrCreate(
-                ['email' => $userData['email']], // Unique key to find the user
+            $user = User::updateOrCreate(
+                ['email' => $userData['email']],
                 [
                     'name' => $userData['name'],
-                    'password' => Hash::make('Success2026$')
+                    'password' => Hash::make('Success2026$'),
+                    'employee_id' => $userData['employee_id'],
+                    'phone' => $userData['phone'],
+                    'department_id' => $userData['department_id'],
+                    'designation' => $userData['designation'],
+                    'joining_date' => $userData['joining_date'],
+                    'status' => $userData['status'],
                 ]
             );
-            $user->assignRole($userData['role']);
+            $user->syncRoles([$userData['role']]);
         }
     }
 }

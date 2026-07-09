@@ -49,7 +49,13 @@ class TaskController extends Controller implements HasMiddleware
             ->latest()
             ->get();
 
-        return view('tasks.index', compact('myTasks', 'assignedByMe'));
+        // 3. Tasks to Test (where user is the tester)
+        $tasksToTest = Task::with(['assigner', 'engineer', 'tester'])
+            ->where('tester_id', $userId)
+            ->latest()
+            ->get();
+
+        return view('tasks.index', compact('myTasks', 'assignedByMe', 'tasksToTest'));
     }
 
     /**

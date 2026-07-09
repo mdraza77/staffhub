@@ -160,6 +160,117 @@
             </div>
         </div>
 
+        @if ($tasksToTest->count() > 0)
+            <div class="mt-8">
+                <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-flask text-purple-600"></i> Tasks to Test (I am Tester)
+                    <span class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full">{{ $tasksToTest->count() }}</span>
+                </h2>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table id="tasks_to_test" class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
+                                    <th class="px-6 py-3 font-semibold">Task Details</th>
+                                    <th class="px-6 py-3 font-semibold">Assigned By</th>
+                                    <th class="px-6 py-3 font-semibold">Assignee (Engineer)</th>
+                                    <th class="px-6 py-3 font-semibold text-center">Priority</th>
+                                    <th class="px-6 py-3 font-semibold">Deadline</th>
+                                    <th class="px-6 py-3 font-semibold text-center">Status</th>
+                                    <th class="px-6 py-3 font-semibold text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach($tasksToTest as $task)
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4">
+                                            <p class="text-sm font-bold text-gray-805">
+                                                {{ $task->title }}
+                                            </p>
+                                            @if ($task->project_name)
+                                                <p class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-folder text-gray-400"></i>
+                                                    Project: {{ $task->project_name }}</p>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            {{ $task->assigner->name ?? 'N/A' }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            {{ $task->engineer->name ?? 'N/A' }}
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            @if ($task->priority === 'critical')
+                                                <span
+                                                    class="bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i
+                                                        class="fa-solid fa-circle-exclamation text-xs mr-0.5"></i> Critical</span>
+                                            @elseif($task->priority === 'high')
+                                                <span
+                                                    class="bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">High</span>
+                                            @elseif($task->priority === 'low')
+                                                <span
+                                                    class="bg-gray-150 text-gray-600 text-xs font-semibold px-2.5 py-0.5 rounded-full">Low</span>
+                                            @else
+                                                <span
+                                                    class="bg-indigo-100 text-indigo-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">Medium</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            @php
+                                                $deadline = $task->deadline ? \Carbon\Carbon::parse($task->deadline) : null;
+                                                $isOverdue = $deadline && $deadline->isPast() && !in_array($task->status, ['completed', 'closed']);
+                                            @endphp
+                                            @if ($deadline)
+                                                <span class="{{ $isOverdue ? 'text-red-650 font-bold' : '' }}">
+                                                    {{ $deadline->format('d M, Y') }}
+                                                    @if ($isOverdue)
+                                                        <i class="fa-solid fa-circle-exclamation" title="Overdue"></i>
+                                                    @endif
+                                                </span>
+                                            @else
+                                                <span class="text-gray-400">No Deadline</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 text-center text-sm font-semibold">
+                                            @if ($task->status === 'completed')
+                                                <span
+                                                    class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
+                                            @elseif($task->status === 'in_progress')
+                                                <span class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
+                                                    Progress</span>
+                                            @elseif($task->status === 'ready_for_test')
+                                                <span
+                                                    class="bg-purple-150 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">Ready
+                                                    for Test</span>
+                                            @elseif($task->status === 'testing')
+                                                <span
+                                                    class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
+                                            @elseif($task->status === 'closed')
+                                                <span
+                                                    class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>
+                                            @else
+                                                <span
+                                                    class="bg-yellow-150 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full">Open</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            @can('Task-Edit')
+                                                <a href="{{ route('tasks.show', $task->id) }}"
+                                                    class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    title="Edit Progress Details">
+                                                    <i class="fa-solid fa-pen-to-square text-base"></i>
+                                                </a>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        @endif
+
 
         @if ($assignedByMe->count() > 0)
             <div class="mt-8">
@@ -338,6 +449,38 @@
         <script>
             $(document).ready(function () {
                 $('#assigned_tasks').DataTable({
+                    destroy: true,
+                    dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
+                    buttons: [{
+                        extend: 'copy',
+                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'print',
+                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
+                    }
+                    ],
+                    pageLength: 10,
+                    language: {
+                        search: "",
+                        searchPlaceholder: "Search here...",
+                        lengthMenu: "_MENU_",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries"
+                    }
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('#tasks_to_test').DataTable({
                     destroy: true,
                     dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
                     buttons: [{
