@@ -51,6 +51,7 @@ return new class extends Migration {
                 'in_progress',
                 'ready_for_test',
                 'testing',
+                'failed_testing',
                 'completed',
                 'closed'
             ])->default('open');

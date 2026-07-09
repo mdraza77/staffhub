@@ -81,7 +81,7 @@ class TaskController extends Controller implements HasMiddleware
             'deadline' => 'nullable|date|after_or_equal:today',
             'description' => 'required|string',
             'priority' => 'nullable|in:low,medium,high,critical',
-            'status' => 'nullable|in:open,in_progress,ready_for_test,testing,completed,closed',
+            'status' => 'nullable|in:open,in_progress,ready_for_test,testing,failed_testing,completed,closed',
         ]);
 
         try {
@@ -154,7 +154,7 @@ class TaskController extends Controller implements HasMiddleware
             'deadline' => 'nullable|date',
             'description' => 'required|string',
             'priority' => 'required|in:low,medium,high,critical',
-            'status' => 'required|in:open,in_progress,ready_for_test,testing,completed,closed',
+            'status' => 'required|in:open,in_progress,ready_for_test,testing,failed_testing,completed,closed',
         ]);
 
         try {
@@ -283,11 +283,38 @@ class TaskController extends Controller implements HasMiddleware
     public function updateStatus(Request $request, Task $task)
     {
         $request->validate([
-            'status' => 'required|in:open,in_progress,ready_for_test,testing,completed,closed',
+            'status' => 'required|in:open,in_progress,ready_for_test,testing,failed_testing,completed,closed',
         ]);
 
-        $oldStatus = $task->status;
+        $userId = Auth::id();
+        $isDeveloper = ($userId === $task->assigned_to);
+        $isTester = ($userId === $task->tester_id);
+        $isAssigner = ($userId === $task->assigned_by);
+        $isAdminOrManager = Auth::user()->can('Task-ManageAll') || Auth::user()->hasAnyRole(['Super Admin', 'Admin', 'HR Manager']);
+
         $newStatus = $request->status;
+        $oldStatus = $task->status;
+
+        // Enforce role-based restrictions
+        if (!$isAdminOrManager && !$isAssigner) {
+            if ($isDeveloper) {
+                // Developer can only set to in_progress or ready_for_test
+                if (!in_array($newStatus, ['in_progress', 'ready_for_test'])) {
+                    return back()->with('error', 'Developers can only set task status to In Progress or Ready for Test.');
+                }
+            } elseif ($isTester) {
+                // Tester can only update task status after developer sets the ready to test
+                if (!in_array($oldStatus, ['ready_for_test', 'testing', 'failed_testing', 'completed', 'closed'])) {
+                    return back()->with('error', 'Testers can only update task status after the developer sets it to Ready for Test.');
+                }
+                // Tester can only change to: testing, failed_testing, completed, closed
+                if (!in_array($newStatus, ['testing', 'failed_testing', 'completed', 'closed'])) {
+                    return back()->with('error', 'Testers can only set task status to Testing, Failed in Testing, Completed, or Closed.');
+                }
+            } else {
+                return back()->with('error', 'You are not authorized to update the status of this task.');
+            }
+        }
 
         if ($oldStatus === $newStatus) {
             return back()->with('info', 'Status is already ' . $newStatus);
@@ -301,7 +328,7 @@ class TaskController extends Controller implements HasMiddleware
             $task->statusHistories()->create([
                 'old_status' => $oldStatus,
                 'new_status' => $newStatus,
-                'changed_by' => Auth::id(),
+                'changed_by' => $userId,
             ]);
 
             DB::commit();

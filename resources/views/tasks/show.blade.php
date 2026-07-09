@@ -183,6 +183,9 @@
                         @elseif($task->status === 'testing')
                             <span
                                 class="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full border border-amber-200">Testing</span>
+                        @elseif($task->status === 'failed_testing')
+                            <span
+                                class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full border border-red-200">Failed in Testing</span>
                         @elseif($task->status === 'closed')
                             <span
                                 class="bg-gray-100 text-gray-700 text-xs font-bold px-3 py-1 rounded-full border border-gray-200">Closed</span>
@@ -213,26 +216,70 @@
 
                 <!-- Update status form -->
                 @can('Task-ProgressUpdate')
+                    @php
+                        $userId = Auth::id();
+                        $isDeveloper = ($userId === $task->assigned_to);
+                        $isTester = ($userId === $task->tester_id);
+                        $isAssigner = ($userId === $task->assigned_by);
+                        $isAdminOrManager = Auth::user()->can('Task-ManageAll') || Auth::user()->hasAnyRole(['Super Admin', 'Admin', 'HR Manager']);
+
+                        $isDropdownDisabled = false;
+                        $allowedStatuses = [];
+
+                        if ($isAdminOrManager || $isAssigner) {
+                            $allowedStatuses = ['open', 'in_progress', 'ready_for_test', 'testing', 'failed_testing', 'completed', 'closed'];
+                        } elseif ($isDeveloper) {
+                            $allowedStatuses = ['in_progress', 'ready_for_test'];
+                            if (!in_array($task->status, $allowedStatuses)) {
+                                $allowedStatuses[] = $task->status;
+                            }
+                        } elseif ($isTester) {
+                            $testerAllowedCurrentStatuses = ['ready_for_test', 'testing', 'failed_testing', 'completed', 'closed'];
+                            if (!in_array($task->status, $testerAllowedCurrentStatuses)) {
+                                $isDropdownDisabled = true;
+                            }
+                            $allowedStatuses = ['testing', 'failed_testing', 'completed', 'closed'];
+                            if (!in_array($task->status, $allowedStatuses)) {
+                                $allowedStatuses[] = $task->status;
+                            }
+                        } else {
+                            $isDropdownDisabled = true;
+                        }
+                    @endphp
+
                     <form action="{{ route('tasks.status.update', $task->id) }}" method="POST"
                         class="pt-3 border-t border-gray-100 space-y-2">
                         @csrf
                         <label class="block text-xs font-bold text-gray-700 uppercase">Change Task Status</label>
                         <div class="flex gap-2">
                             <select name="status"
-                                class="flex-1 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-xs"
-                                required>
-                                <option value="open" {{ $task->status === 'open' ? 'selected' : '' }}>Open</option>
-                                <option value="in_progress" {{ $task->status === 'in_progress' ? 'selected' : '' }}>In Progress
-                                </option>
-                                <option value="ready_for_test" {{ $task->status === 'ready_for_test' ? 'selected' : '' }}>Ready
-                                    for Test</option>
-                                <option value="testing" {{ $task->status === 'testing' ? 'selected' : '' }}>Testing</option>
-                                <option value="completed" {{ $task->status === 'completed' ? 'selected' : '' }}>Completed
-                                </option>
-                                <option value="closed" {{ $task->status === 'closed' ? 'selected' : '' }}>Closed</option>
+                                class="flex-1 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-xs {{ $isDropdownDisabled ? 'bg-gray-100 cursor-not-allowed text-gray-500' : '' }}"
+                                required {{ $isDropdownDisabled ? 'disabled' : '' }}>
+                                @if(in_array('open', $allowedStatuses))
+                                    <option value="open" {{ $task->status === 'open' ? 'selected' : '' }}>Open</option>
+                                @endif
+                                @if(in_array('in_progress', $allowedStatuses))
+                                    <option value="in_progress" {{ $task->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                                @endif
+                                @if(in_array('ready_for_test', $allowedStatuses))
+                                    <option value="ready_for_test" {{ $task->status === 'ready_for_test' ? 'selected' : '' }}>Ready for Test</option>
+                                @endif
+                                @if(in_array('testing', $allowedStatuses))
+                                    <option value="testing" {{ $task->status === 'testing' ? 'selected' : '' }}>Testing</option>
+                                @endif
+                                @if(in_array('failed_testing', $allowedStatuses))
+                                    <option value="failed_testing" {{ $task->status === 'failed_testing' ? 'selected' : '' }}>Failed in Testing</option>
+                                @endif
+                                @if(in_array('completed', $allowedStatuses))
+                                    <option value="completed" {{ $task->status === 'completed' ? 'selected' : '' }}>Completed</option>
+                                @endif
+                                @if(in_array('closed', $allowedStatuses))
+                                    <option value="closed" {{ $task->status === 'closed' ? 'selected' : '' }}>Closed</option>
+                                @endif
                             </select>
                             <button type="submit"
-                                class="bg-gray-800 hover:bg-gray-900 border border-gray-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition-colors">Apply</button>
+                                class="bg-gray-800 hover:bg-gray-900 border border-gray-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition-colors {{ $isDropdownDisabled ? 'opacity-50 cursor-not-allowed' : '' }}"
+                                {{ $isDropdownDisabled ? 'disabled' : '' }}>Apply</button>
                         </div>
                     </form>
                 @endcan

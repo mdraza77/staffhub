@@ -128,6 +128,9 @@
                                         @elseif($task->status === 'testing')
                                             <span
                                                 class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
+                                        @elseif($task->status === 'failed_testing')
+                                            <span
+                                                class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed in Testing</span>
                                         @elseif($task->status === 'closed')
                                             <span
                                                 class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>
@@ -245,6 +248,9 @@
                                             @elseif($task->status === 'testing')
                                                 <span
                                                     class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
+                                            @elseif($task->status === 'failed_testing')
+                                                <span
+                                                    class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed in Testing</span>
                                             @elseif($task->status === 'closed')
                                                 <span
                                                     class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>
@@ -347,6 +353,9 @@
                                             @elseif($task->status === 'testing')
                                                 <span
                                                     class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
+                                            @elseif($task->status === 'failed_testing')
+                                                <span
+                                                    class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed in Testing</span>
                                             @elseif($task->status === 'closed')
                                                 <span
                                                     class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>
