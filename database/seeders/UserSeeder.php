@@ -20,20 +20,6 @@ class UserSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // 1. Define roles from your image
-        $roles = [
-            'Super Admin',
-            'Admin',
-            'HR Manager',
-            'Employee',
-            'Intern',
-        ];
-
-        foreach ($roles as $roleName) {
-            $role = Role::firstOrCreate(['name' => $roleName]);
-            $permissions = Permission::pluck('id')->all();
-            $role->syncPermissions($permissions);
-        }
 
         // 2. Fetch departments for referencing
         $hrDept = Department::where('slug', 'human-resources')->first();

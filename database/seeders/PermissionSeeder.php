@@ -93,42 +93,158 @@ class PermissionSeeder extends Seeder
         $hrManager   = Role::firstOrCreate(['name' => 'HR Manager']);
         $deptManager = Role::firstOrCreate(['name' => 'Department Manager']);
         $employee    = Role::firstOrCreate(['name' => 'Employee']);
+        $intern      = Role::firstOrCreate(['name' => 'Intern']);
 
-        // Super Admin — sab permissions
+        // Super Admin — all permissions
         $permissions = Permission::all();
         $superAdmin->syncPermissions($permissions);
 
-        // Admin
-        $admin->givePermissionTo([
+        // Admin — almost all permissions except force delete and settings access
+        $admin->syncPermissions([
             'Dashboard',
-        ]);
-
-        // HR Manager
-        $hrManager->givePermissionTo([
-            'Dashboard',
+            'Department-Index',
+            'Department-Create',
+            'Department-Edit',
+            'Department-Delete',
+            'Department-View',
+            'Department-Restore',
+            'AccessManagement-Index',
+            'AccessManagement-Create',
+            'AccessManagement-Edit',
+            'AccessManagement-View',
+            'AccessManagement-Delete',
             'Employee-Index',
             'Employee-Create',
             'Employee-Edit',
             'Employee-View',
             'Employee-Delete',
             'Employee-Restore',
+            'Employee-Profile-Edit',
+            'Employee-Profile-Index',
+            'Attendance-Index',
+            'Attendance-Marking',
+            'LeaveType-Index',
+            'LeaveType-Create',
+            'LeaveType-Edit',
+            'LeaveType-Delete',
+            'Leave-Index',
+            'Leave-Apply',
+            'Leave-ApproveReject',
+            'Task-Index',
+            'Task-Create',
+            'Task-Edit',
+            'Task-View',
+            'Task-Delete',
+            'Task-ProgressUpdate',
+            'Task-Comment',
+            'Task-Document',
+            'Employees-Report',
+            'Departments-Report',
+            'Attendance-Report',
+            'LeaveTypes-Report',
+            'Leaves-Report',
+            'Tasks-Report',
+            'Settings-Index',
+            'Company-Index',
+            'Company-Edit',
+        ]);
+
+        // HR Manager — department, employee, leaves and attendance management
+        $hrManager->syncPermissions([
+            'Dashboard',
+            'Department-Index',
+            'Department-Create',
+            'Department-Edit',
+            'Department-Delete',
+            'Department-View',
+            'Department-Restore',
+            'Employee-Index',
+            'Employee-Create',
+            'Employee-Edit',
+            'Employee-View',
+            'Employee-Delete',
+            'Employee-Restore',
+            'Employee-Profile-Edit',
+            'Employee-Profile-Index',
+            'Attendance-Index',
+            'Attendance-Marking',
+            'LeaveType-Index',
+            'LeaveType-Create',
+            'LeaveType-Edit',
+            'LeaveType-Delete',
+            'Leave-Index',
+            'Leave-Apply',
+            'Leave-ApproveReject',
+            'Task-Index',
+            'Task-View',
+            'Task-Comment',
+            'Task-Document',
+            'Employees-Report',
+            'Departments-Report',
+            'Attendance-Report',
+            'LeaveTypes-Report',
+            'Leaves-Report',
+            'Tasks-Report',
+        ]);
+
+        // Department Manager — view own department, handle leaves, and manage tasks
+        $deptManager->syncPermissions([
+            'Dashboard',
             'Department-Index',
             'Department-View',
-            'Attendance-Index',
-        ]);
-
-        // Department Manager
-        $deptManager->givePermissionTo([
-            'Dashboard',
             'Employee-Index',
+            'Employee-View',
+            'Employee-Profile-Edit',
+            'Employee-Profile-Index',
+            'Attendance-Index',
+            'Attendance-Marking',
+            'Leave-Index',
+            'Leave-Apply',
+            'Leave-ApproveReject',
+            'Task-Index',
+            'Task-Create',
+            'Task-Edit',
+            'Task-View',
+            'Task-Delete',
+            'Task-ProgressUpdate',
+            'Task-Comment',
+            'Task-Document',
+            'Attendance-Report',
+            'Leaves-Report',
+            'Tasks-Report',
         ]);
 
-        // Employee
-        $employee->givePermissionTo([
+        // Employee — self operations (profile, mark attendance, apply leaves, work on tasks)
+        $employee->syncPermissions([
             'Dashboard',
+            'Employee-Profile-Edit',
+            'Employee-Profile-Index',
+            'Attendance-Marking',
+            'Leave-Index',
+            'Leave-Apply',
+            'Task-Index',
+            'Task-View',
+            'Task-ProgressUpdate',
+            'Task-Comment',
+            'Task-Document',
+        ]);
+
+        // Intern — self operations (profile, mark attendance, apply leaves, work on tasks)
+        $intern->syncPermissions([
+            'Dashboard',
+            'Employee-Profile-Edit',
+            'Employee-Profile-Index',
+            'Attendance-Marking',
+            'Leave-Index',
+            'Leave-Apply',
+            'Task-Index',
+            'Task-View',
+            'Task-ProgressUpdate',
+            'Task-Comment',
+            'Task-Document',
         ]);
 
         $this->command->info('All permissions seeded successfully.');
-        $this->command->info('Roles assigned: Super Admin, Admin, HR Manager, Department Manager, Employee.');
+        $this->command->info('Roles assigned: Super Admin, Admin, HR Manager, Department Manager, Employee, Intern.');
     }
 }
