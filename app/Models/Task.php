@@ -21,6 +21,10 @@ class Task extends Model
         'status',
     ];
 
+    protected $casts = [
+        'deadline' => 'date',
+    ];
+
     // Relationships
     public function assigner()
     {
