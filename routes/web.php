@@ -4,6 +4,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\ProfileController;
@@ -74,6 +75,19 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/leave-types', [ReportController::class, 'leaveTypeReport'])->name('leave-types');
         Route::get('/tasks', [ReportController::class, 'taskReport'])->name('tasks');
         Route::get('/departments', [ReportController::class, 'departmentReport'])->name('departments');
+    });
+
+    // Holidays Routes
+    Route::controller(HolidayController::class)->prefix('holidays')->name('holidays.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{holiday}', 'show')->name('show');
+        Route::get('/{holiday}/edit', 'edit')->name('edit');
+        Route::put('/{holiday}', 'update')->name('update');
+        Route::delete('/{holiday}', 'destroy')->name('destroy');
+        Route::post('/{holiday}/restore', 'restore')->name('restore')->withTrashed();
+        Route::delete('/{holiday}/force-delete', 'forceDelete')->name('force-delete')->withTrashed();
     });
 });
 

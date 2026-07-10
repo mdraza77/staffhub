@@ -205,6 +205,17 @@
                 </li>
             @endcan
 
+            {{-- ===== HOLIDAYS ===== --}}
+            @can('Holiday-Index')
+                <li>
+                    <a href="{{ route('holidays.index') }}"
+                        class="{{ request()->routeIs('holidays.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                        <i class="fa-solid fa-umbrella-beach text-lg"></i>
+                        <span>Holidays</span>
+                    </a>
+                </li>
+            @endcan
+
             {{-- ===== TASKS ===== --}}
             @can('Task-Index')
                 <li>

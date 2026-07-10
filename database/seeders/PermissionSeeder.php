@@ -87,6 +87,15 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Company-Index']);
         Permission::firstOrCreate(['name' => 'Company-Edit']);
 
+        // ===== HOLIDAYS =====
+        Permission::firstOrCreate(['name' => 'Holiday-Index']);
+        Permission::firstOrCreate(['name' => 'Holiday-Create']);
+        Permission::firstOrCreate(['name' => 'Holiday-Edit']);
+        Permission::firstOrCreate(['name' => 'Holiday-View']);
+        Permission::firstOrCreate(['name' => 'Holiday-Delete']);
+        Permission::firstOrCreate(['name' => 'Holiday-Restore']);
+        Permission::firstOrCreate(['name' => 'Holiday-ForceDelete']);
+
         // ===== ROLES =======
         $superAdmin  = Role::firstOrCreate(['name' => 'Super Admin']);
         $admin       = Role::firstOrCreate(['name' => 'Admin']);
@@ -147,6 +156,13 @@ class PermissionSeeder extends Seeder
             'Settings-Index',
             'Company-Index',
             'Company-Edit',
+            'Holiday-Index',
+            'Holiday-Create',
+            'Holiday-Edit',
+            'Holiday-View',
+            'Holiday-Delete',
+            'Holiday-Restore',
+            'Holiday-ForceDelete',
         ]);
 
         // HR Manager — department, employee, leaves and attendance management
@@ -185,6 +201,12 @@ class PermissionSeeder extends Seeder
             'LeaveTypes-Report',
             'Leaves-Report',
             'Tasks-Report',
+            'Holiday-Index',
+            'Holiday-Create',
+            'Holiday-Edit',
+            'Holiday-View',
+            'Holiday-Delete',
+            'Holiday-Restore',
         ]);
 
         // Department Manager — view own department, handle leaves, and manage tasks
@@ -212,6 +234,8 @@ class PermissionSeeder extends Seeder
             'Attendance-Report',
             'Leaves-Report',
             'Tasks-Report',
+            'Holiday-Index',
+            'Holiday-View',
         ]);
 
         // Employee — self operations (profile, mark attendance, apply leaves, work on tasks)
@@ -227,6 +251,8 @@ class PermissionSeeder extends Seeder
             'Task-ProgressUpdate',
             'Task-Comment',
             'Task-Document',
+            'Holiday-Index',
+            'Holiday-View',
         ]);
 
         // Intern — self operations (profile, mark attendance, apply leaves, work on tasks)
@@ -242,6 +268,8 @@ class PermissionSeeder extends Seeder
             'Task-ProgressUpdate',
             'Task-Comment',
             'Task-Document',
+            'Holiday-Index',
+            'Holiday-View',
         ]);
 
         $this->command->info('All permissions seeded successfully.');
