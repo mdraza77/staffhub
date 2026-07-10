@@ -31,6 +31,20 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.tailwindcss.min.css">
 
     @stack('styles')
+
+    <style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        html, body, #sidebar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+            font-size: 14px;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50 text-gray-800 font-sans antialiased transition-all duration-300">
@@ -126,13 +140,13 @@
             @endphp
 
             @if (auth()->check() && (auth()->user()->can('Employee-Index') || auth()->user()->can('Employee-Create')))
-                <li>
+                <li title="Employee Management">
                     <details class="group" {{ $employeeActive ? 'open' : '' }}>
                         <summary
                             class="{{ $employeeActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
                             <div class="flex items-center gap-3">
                                 <i class="fa-solid fa-users text-lg"></i>
-                                <span>Employee Management</span>
+                                <span>Employee Mgmt</span>
                             </div>
                             <i
                                 class="bi bi-chevron-down transition-transform duration-300 {{ $employeeActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
@@ -221,13 +235,13 @@
                 $payrollActive = request()->routeIs('payroll.*');
             @endphp
             @if (auth()->check() && (auth()->user()->can('Salary-View') || auth()->user()->can('Payslip-Index')))
-                <li>
+                <li title="Payroll Management">
                     <details class="group" {{ $payrollActive ? 'open' : '' }}>
                         <summary
                             class="{{ $payrollActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
                             <div class="flex items-center gap-3">
                                 <i class="fa-solid fa-file-invoice-dollar text-lg"></i>
-                                <span>Payroll Management</span>
+                                <span>Payroll Mgmt</span>
                             </div>
                             <i
                                 class="bi bi-chevron-down transition-transform duration-300 {{ $payrollActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
