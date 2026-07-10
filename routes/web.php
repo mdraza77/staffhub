@@ -7,6 +7,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveTypeController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
@@ -88,6 +89,22 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{holiday}', 'destroy')->name('destroy');
         Route::post('/{holiday}/restore', 'restore')->name('restore')->withTrashed();
         Route::delete('/{holiday}/force-delete', 'forceDelete')->name('force-delete')->withTrashed();
+    });
+
+    // Payroll Routes
+    Route::prefix('payroll')->name('payroll.')->group(function () {
+        // Salary Structures
+        Route::get('/salaries', [PayrollController::class, 'salaryIndex'])->name('salaries.index');
+        Route::get('/salaries/{user}/edit', [PayrollController::class, 'salaryEdit'])->name('salaries.edit');
+        Route::put('/salaries/{user}', [PayrollController::class, 'salaryUpdate'])->name('salaries.update');
+
+        // Payslips
+        Route::get('/payslips', [PayrollController::class, 'payslipIndex'])->name('payslips.index');
+        Route::get('/payslips/generate', [PayrollController::class, 'payslipCreate'])->name('payslips.create');
+        Route::post('/payslips/generate', [PayrollController::class, 'payslipStore'])->name('payslips.store');
+        Route::get('/payslips/{payslip}', [PayrollController::class, 'payslipShow'])->name('payslips.show');
+        Route::put('/payslips/{payslip}/status', [PayrollController::class, 'payslipStatusUpdate'])->name('payslips.status.update');
+        Route::delete('/payslips/{payslip}', [PayrollController::class, 'payslipDestroy'])->name('payslips.destroy');
     });
 });
 

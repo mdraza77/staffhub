@@ -216,6 +216,46 @@
                 </li>
             @endcan
 
+            {{-- ===== PAYROLL MANAGEMENT ===== --}}
+            @php
+                $payrollActive = request()->routeIs('payroll.*');
+            @endphp
+            @if (auth()->check() && (auth()->user()->can('Salary-View') || auth()->user()->can('Payslip-Index')))
+                <li>
+                    <details class="group" {{ $payrollActive ? 'open' : '' }}>
+                        <summary
+                            class="{{ $payrollActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-file-invoice-dollar text-lg"></i>
+                                <span>Payroll Management</span>
+                            </div>
+                            <i
+                                class="bi bi-chevron-down transition-transform duration-300 {{ $payrollActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
+                        </summary>
+                        <ul class="pl-9 pr-2 py-2 space-y-1">
+                            @can('Salary-View')
+                                <li>
+                                    <a href="{{ route('payroll.salaries.index') }}"
+                                        class="{{ request()->routeIs('payroll.salaries.*') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                        <i class="bi bi-circle text-[8px]"></i>
+                                        <span>Salary Structures</span>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('Payslip-Index')
+                                <li>
+                                    <a href="{{ route('payroll.payslips.index') }}"
+                                        class="{{ request()->routeIs('payroll.payslips.*') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                        <i class="bi bi-circle text-[8px]"></i>
+                                        <span>Monthly Payslips</span>
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </details>
+                </li>
+            @endif
+
             {{-- ===== TASKS ===== --}}
             @can('Task-Index')
                 <li>

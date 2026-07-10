@@ -66,4 +66,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(TaskDocument::class);
     }
+
+    // User has one Salary Structure
+    public function salaryStructure()
+    {
+        return $this->hasOne(SalaryStructure::class);
+    }
+
+    // User has many Payslips
+    public function payslips()
+    {
+        return $this->hasMany(Payslip::class);
+    }
 }
