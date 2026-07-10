@@ -268,6 +268,7 @@ class PermissionSeeder extends Seeder
             'Dashboard',
             'Employee-Profile-Edit',
             'Employee-Profile-Index',
+            'Attendance-Index',
             'Attendance-Marking',
             'Leave-Index',
             'Leave-Apply',

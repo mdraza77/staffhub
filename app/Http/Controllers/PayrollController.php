@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\SalaryStructure;
-use App\Models\Payslip;
 use App\Models\Attendance;
 use App\Models\Leave;
-use Illuminate\Http\Request;
+use App\Models\Payslip;
+use App\Models\SalaryStructure;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
@@ -151,7 +151,7 @@ class PayrollController extends Controller implements HasMiddleware
                     ->first();
 
                 if ($exists && $exists->status === 'paid') {
-                    continue; // Skip paid payslips
+                    continue;  // Skip paid payslips
                 }
 
                 // If exists and unpaid, delete to regenerate
@@ -173,12 +173,14 @@ class PayrollController extends Controller implements HasMiddleware
                 $leaves = Leave::where('user_id', $employee->id)
                     ->where('status', 'approved')
                     ->where(function ($q) use ($startDate, $endDate) {
-                        $q->whereBetween('start_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-                          ->orWhereBetween('end_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-                          ->orWhere(function ($q2) use ($startDate, $endDate) {
-                              $q2->where('start_date', '<=', $startDate->format('Y-m-d'))
-                                 ->where('end_date', '>=', $endDate->format('Y-m-d'));
-                          });
+                        $q
+                            ->whereBetween('start_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
+                            ->orWhereBetween('end_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
+                            ->orWhere(function ($q2) use ($startDate, $endDate) {
+                                $q2
+                                    ->where('start_date', '<=', $startDate->format('Y-m-d'))
+                                    ->where('end_date', '>=', $endDate->format('Y-m-d'));
+                            });
                     })
                     ->with('leaveType')
                     ->get();
@@ -211,16 +213,24 @@ class PayrollController extends Controller implements HasMiddleware
                 $grossSalary = $salary->base_salary + $salary->hra + $salary->other_allowances;
                 $totalDeductions = $salary->pf_deduction + $salary->tax_deduction;
 
-                // Prorate for unpaid leaves
-                $unpaidDeduction = 0;
-                if ($unpaidLeaves > 0 && $workingDays > 0) {
-                    $unpaidDeduction = round(($grossSalary / $workingDays) * $unpaidLeaves, 2);
+                // NAYA LOGIC: Calculate Total Absent Days
+                // Absent = Total Working Days mein se (Present Days + Paid Leaves) nikal do
+                $absentDays = $workingDays - ($presentDays + $paidLeaves);
+
+                // Safety check (Negative nahi hona chahiye)
+                if ($absentDays < 0) {
+                    $absentDays = 0;
                 }
 
-                // If present days is 0 and no leaves are applied, should they get base salary?
-                // Depending on company policy. Let's calculate net salary as:
-                // Net Salary = (Gross Salary - Unpaid Deduction) - Total Deductions
-                $netSalary = ($grossSalary - $unpaidDeduction) - $totalDeductions;
+                // Unpaid Deduction Calculation (Per day salary * Absent Days)
+                $unpaidDeduction = 0;
+                if ($absentDays > 0 && $workingDays > 0) {
+                    $unpaidDeduction = round(($grossSalary / $workingDays) * $absentDays, 2);
+                }
+
+                // Net Salary = Gross - Absent Deduction - PF/Tax
+                $netSalary = $grossSalary - $unpaidDeduction - $totalDeductions;
+
                 if ($netSalary < 0) {
                     $netSalary = 0;
                 }
