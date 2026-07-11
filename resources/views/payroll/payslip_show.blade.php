@@ -273,17 +273,23 @@
 
         {{-- Signatures --}}
         <div
-            class="flex justify-between items-center mt-12 pt-8 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
-            <div class="w-1/3">
-                <div class="border-b border-gray-300 h-10 mb-2"></div>
+            class="flex justify-between items-end mt-12 pt-8 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center gap-6">
+            <div class="w-1/3 flex flex-col items-center">
+                <img src="{{ asset('storage/signatures/dummy_signature.png') }}" alt="Employee Signature"
+                    class="h-12 object-contain mb-1 mix-blend-multiply" draggable="false">
+                <div class="border-b border-gray-300 w-full mb-2"></div>
                 <p>Employee Signature</p>
             </div>
-            <div class="w-1/3">
-                <div class="border-b border-gray-300 h-10 mb-2"></div>
+            <div class="w-1/3 flex flex-col items-center">
+                <img src="{{ asset('storage/signatures/dummy_signature.png') }}" alt="HR Manager Signature"
+                    class="h-12 object-contain mb-1 mix-blend-multiply" draggable="false">
+                <div class="border-b border-gray-300 w-full mb-2"></div>
                 <p>Prepared By (HR Manager)</p>
             </div>
-            <div class="w-1/3">
-                <div class="border-b border-gray-300 h-10 mb-2"></div>
+            <div class="w-1/3 flex flex-col items-center">
+                <img src="{{ asset('storage/signatures/dummy_signature.png') }}" alt="Authorized Signature"
+                    class="h-12 object-contain mb-1 mix-blend-multiply" draggable="false">
+                <div class="border-b border-gray-300 w-full mb-2"></div>
                 <p>Authorized Signatory</p>
             </div>
         </div>
