@@ -7,6 +7,7 @@ use App\Models\Leave;
 use App\Models\Payslip;
 use App\Models\SalaryStructure;
 use App\Models\User;
+use App\Models\Holiday;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -129,6 +130,38 @@ class PayrollController extends Controller implements HasMiddleware
             }
             $temp->addDay();
         }
+
+        // Deduct active public and company holidays in the month (excluding Sundays to avoid double deduction)
+        $holidays = Holiday::where('status', 'active')
+            ->where(function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('start_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
+                  ->orWhereBetween('end_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
+                  ->orWhere(function ($q2) use ($startDate, $endDate) {
+                      $q2->where('start_date', '<=', $startDate->format('Y-m-d'))
+                         ->where('end_date', '>=', $endDate->format('Y-m-d'));
+                  });
+            })
+            ->whereIn('type', ['public', 'company'])
+            ->get();
+
+        $holidayDays = 0;
+        foreach ($holidays as $holiday) {
+            $holidayStart = Carbon::parse($holiday->start_date);
+            $holidayEnd = Carbon::parse($holiday->end_date ?? $holiday->start_date);
+
+            $overlapStart = $holidayStart->max($startDate);
+            $overlapEnd = $holidayEnd->min($endDate);
+
+            $tempDay = clone $overlapStart;
+            while ($tempDay->lte($overlapEnd)) {
+                if (!$tempDay->isSunday()) {
+                    $holidayDays++;
+                }
+                $tempDay->addDay();
+            }
+        }
+
+        $workingDays = max(0, $workingDays - $holidayDays);
 
         // Get all employees who have a salary structure
         $employees = User::whereDoesntHave('roles', function ($q) {

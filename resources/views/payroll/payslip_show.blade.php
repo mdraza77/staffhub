@@ -5,40 +5,71 @@
 @section('content')
     @php
         if (!function_exists('convertNumberToWords')) {
-            function convertNumberToWords($number) {
+            function convertNumberToWords($number)
+            {
                 $no = floor($number);
                 $point = round($number - $no, 2) * 100;
                 $hundred = null;
                 $digits_1 = strlen($no);
                 $i = 0;
-                $str = array();
-                $words = array(
-                    0 => '', 1 => 'One', 2 => 'Two',
-                    3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six',
-                    7 => 'Seven', 8 => 'Eight', 9 => 'Nine',
-                    10 => 'Ten', 11 => 'Eleven', 12 => 'Twelve',
-                    13 => 'Thirteen', 14 => 'Fourteen', 15 => 'Fifteen',
-                    16 => 'Sixteen', 17 => 'Seventeen', 18 => 'Eighteen',
-                    19 => 'Nineteen', 20 => 'Twenty', 30 => 'Thirty',
-                    40 => 'Forty', 50 => 'Fifty', 60 => 'Sixty',
-                    70 => 'Seventy', 80 => 'Eighty', 90 => 'Ninety'
-                );
-                $digits = array('', 'Hundred', 'Thousand', 'Lakh', 'Crore');
+                $str = [];
+                $words = [
+                    0 => '',
+                    1 => 'One',
+                    2 => 'Two',
+                    3 => 'Three',
+                    4 => 'Four',
+                    5 => 'Five',
+                    6 => 'Six',
+                    7 => 'Seven',
+                    8 => 'Eight',
+                    9 => 'Nine',
+                    10 => 'Ten',
+                    11 => 'Eleven',
+                    12 => 'Twelve',
+                    13 => 'Thirteen',
+                    14 => 'Fourteen',
+                    15 => 'Fifteen',
+                    16 => 'Sixteen',
+                    17 => 'Seventeen',
+                    18 => 'Eighteen',
+                    19 => 'Nineteen',
+                    20 => 'Twenty',
+                    30 => 'Thirty',
+                    40 => 'Forty',
+                    50 => 'Fifty',
+                    60 => 'Sixty',
+                    70 => 'Seventy',
+                    80 => 'Eighty',
+                    90 => 'Ninety',
+                ];
+                $digits = ['', 'Hundred', 'Thousand', 'Lakh', 'Crore'];
                 while ($i < $digits_1) {
-                    $divider = ($i == 2) ? 10 : 100;
+                    $divider = $i == 2 ? 10 : 100;
                     $number = floor($no % $divider);
                     $no = floor($no / $divider);
-                    $i += ($divider == 10) ? 1 : 2;
+                    $i += $divider == 10 ? 1 : 2;
                     if ($number) {
-                        $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
-                        $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
-                        $str [] = ($number < 21) ? $words[$number].' '. $digits[$counter].$plural.' '.$hundred : $words[floor($number / 10) * 10].' '.$words[$number % 10]. ' '.$digits[$counter].$plural.' '.$hundred;
+                        $plural = ($counter = count($str)) && $number > 9 ? 's' : null;
+                        $hundred = $counter == 1 && $str[0] ? ' and ' : null;
+                        $str[] =
+                            $number < 21
+                                ? $words[$number] . ' ' . $digits[$counter] . $plural . ' ' . $hundred
+                                : $words[floor($number / 10) * 10] .
+                                    ' ' .
+                                    $words[$number % 10] .
+                                    ' ' .
+                                    $digits[$counter] .
+                                    $plural .
+                                    ' ' .
+                                    $hundred;
                     } else {
-                        $str [] = null;
+                        $str[] = null;
                     }
                 }
                 $Rupees = implode('', array_reverse($str));
-                $paise = ($point > 0) ? "and " . ($words[floor($point / 10) * 10] . " " . $words[$point % 10]) . ' Paise' : '';
+                $paise =
+                    $point > 0 ? 'and ' . ($words[floor($point / 10) * 10] . ' ' . $words[$point % 10]) . ' Paise' : '';
                 return ($Rupees ? $Rupees . 'Rupees ' : '') . $paise . ' Only';
             }
         }
@@ -48,7 +79,8 @@
     <div class="mb-6 flex justify-between items-center no-print">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">Payslip Details</h1>
-            <p class="text-sm text-gray-500 mt-1">Review employee salary slip for {{ $payslip->month }} {{ $payslip->year }}</p>
+            <p class="text-sm text-gray-500 mt-1">Review employee salary slip for {{ $payslip->month }} {{ $payslip->year }}
+            </p>
         </div>
         <div class="flex items-center gap-3">
             <button onclick="window.print()"
@@ -64,7 +96,7 @@
 
     {{-- Payslip Container --}}
     <div id="payslip-card" class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 max-w-4xl mx-auto print-card">
-        
+
         {{-- Header block --}}
         <div class="flex justify-between items-start border-b border-gray-200 pb-6 mb-6">
             <div>
@@ -75,7 +107,8 @@
             <div class="text-right">
                 <h3 class="text-lg font-bold text-gray-800 uppercase tracking-wider">Salary Slip</h3>
                 <p class="text-sm text-gray-500 font-semibold mt-1">{{ $payslip->month }} - {{ $payslip->year }}</p>
-                <span class="mt-2 inline-block text-xs font-bold px-3 py-1 rounded-full uppercase
+                <span
+                    class="mt-2 inline-block text-xs font-bold px-3 py-1 rounded-full uppercase
                     {{ $payslip->status === 'paid' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-yellow-50 text-yellow-700 border border-yellow-200' }}">
                     {{ $payslip->status }}
                 </span>
@@ -103,9 +136,19 @@
                         <td class="text-gray-400 font-medium py-1">Department:</td>
                         <td class="text-gray-700 py-1">{{ $payslip->user->department->name ?? 'Unassigned' }}</td>
                     </tr>
+                    <tr>
+                        <td class="text-gray-400 font-medium py-1">Phone Number:</td>
+                        <td class="text-gray-700 py-1">{{ $payslip->user->phone ?? 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-gray-400 font-medium py-1">Joining Date:</td>
+                        <td class="text-gray-700 py-1">
+                            {{ $payslip->user->joining_date ? \Carbon\Carbon::parse($payslip->user->joining_date)->format('d M Y') : 'N/A' }}
+                        </td>
+                    </tr>
                 </table>
             </div>
-            
+
             <div>
                 <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Attendance Metrics</h4>
                 <table class="w-full text-left space-y-1">
@@ -125,13 +168,20 @@
                         <td class="text-gray-400 font-medium py-1">Unpaid Leaves:</td>
                         <td class="text-red-600 font-semibold py-1">{{ $payslip->unpaid_leaves }}</td>
                     </tr>
+                    @php
+                        $absentDays = max(0, $payslip->working_days - ($payslip->present_days + $payslip->paid_leaves));
+                    @endphp
+                    <tr>
+                        <td class="text-gray-400 font-medium py-1">Absent Days:</td>
+                        <td class="text-red-600 font-bold py-1">{{ $absentDays }}</td>
+                    </tr>
                 </table>
             </div>
         </div>
 
         {{-- Breakdown Table --}}
         <div class="grid grid-cols-1 md:grid-cols-2 border border-gray-200 rounded-xl overflow-hidden mb-8 text-sm">
-            
+
             {{-- Earnings Block --}}
             <div class="border-b md:border-b-0 md:border-r border-gray-200">
                 <div class="bg-gray-50 px-5 py-3 border-b border-gray-200 font-bold text-gray-800 flex justify-between">
@@ -141,15 +191,18 @@
                 <div class="p-5 space-y-3">
                     <div class="flex justify-between">
                         <span class="text-gray-500">Basic Salary</span>
-                        <span class="font-semibold text-gray-800">₹{{ number_format($salaryStructure->base_salary ?? 0, 2) }}</span>
+                        <span
+                            class="font-semibold text-gray-800">₹{{ number_format($salaryStructure->base_salary ?? 0, 2) }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">House Rent Allowance (HRA)</span>
-                        <span class="font-semibold text-gray-800">₹{{ number_format($salaryStructure->hra ?? 0, 2) }}</span>
+                        <span
+                            class="font-semibold text-gray-800">₹{{ number_format($salaryStructure->hra ?? 0, 2) }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Other Allowances</span>
-                        <span class="font-semibold text-gray-800">₹{{ number_format($salaryStructure->other_allowances ?? 0, 2) }}</span>
+                        <span
+                            class="font-semibold text-gray-800">₹{{ number_format($salaryStructure->other_allowances ?? 0, 2) }}</span>
                     </div>
                 </div>
             </div>
@@ -163,24 +216,31 @@
                 <div class="p-5 space-y-3">
                     <div class="flex justify-between">
                         <span class="text-gray-500">Provident Fund (PF)</span>
-                        <span class="font-semibold text-red-600">₹{{ number_format($salaryStructure->pf_deduction ?? 0, 2) }}</span>
+                        <span
+                            class="font-semibold text-red-600">₹{{ number_format($salaryStructure->pf_deduction ?? 0, 2) }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Income Tax / Prof. Tax</span>
-                        <span class="font-semibold text-red-600">₹{{ number_format($salaryStructure->tax_deduction ?? 0, 2) }}</span>
+                        <span
+                            class="font-semibold text-red-600">₹{{ number_format($salaryStructure->tax_deduction ?? 0, 2) }}</span>
                     </div>
-                    
-                    {{-- Unpaid Leave Deduction calculated dynamically --}}
+
+                    {{-- Unpaid Leave/Absent Deduction calculated dynamically --}}
                     @php
                         $unpaidLeaveDeduction = 0;
-                        $standardDeductions = ($salaryStructure->pf_deduction ?? 0) + ($salaryStructure->tax_deduction ?? 0);
+                        $standardDeductions =
+                            ($salaryStructure->pf_deduction ?? 0) + ($salaryStructure->tax_deduction ?? 0);
                         if ($payslip->total_deductions > $standardDeductions) {
                             $unpaidLeaveDeduction = $payslip->total_deductions - $standardDeductions;
                         }
                     @endphp
                     @if ($unpaidLeaveDeduction > 0)
                         <div class="flex justify-between">
-                            <span class="text-red-500 font-medium">Unpaid Leave (LWP) Deduction</span>
+                            <div>
+                                <span class="text-red-500 font-medium block">Absent / LWP Deduction</span>
+                                <span class="text-[10px] text-gray-400 font-normal">({{ $absentDays }} day(s)
+                                    absent)</span>
+                            </div>
                             <span class="font-bold text-red-600">₹{{ number_format($unpaidLeaveDeduction, 2) }}</span>
                         </div>
                     @endif
@@ -212,7 +272,8 @@
         </div>
 
         {{-- Signatures --}}
-        <div class="flex justify-between items-center mt-12 pt-8 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
+        <div
+            class="flex justify-between items-center mt-12 pt-8 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
             <div class="w-1/3">
                 <div class="border-b border-gray-300 h-10 mb-2"></div>
                 <p>Employee Signature</p>
@@ -232,13 +293,17 @@
     {{-- Styling for print mode --}}
     <style>
         @media print {
+
             /* Hide everything in layout except our payslip card */
             body * {
                 visibility: hidden;
             }
-            #payslip-card, #payslip-card * {
+
+            #payslip-card,
+            #payslip-card * {
                 visibility: visible;
             }
+
             /* Position card at the top-left */
             #payslip-card {
                 position: absolute;
@@ -251,6 +316,7 @@
                 padding: 0 !important;
                 margin: 0 !important;
             }
+
             .no-print {
                 display: none !important;
             }

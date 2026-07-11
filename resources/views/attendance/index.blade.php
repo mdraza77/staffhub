@@ -123,13 +123,14 @@
                                 </div>
                             </td> --}}
                             <td class="px-6 py-4 text-sm text-gray-600 font-bold text-xs">
-                                {{ $attendance->user->name ? $attendance->user->name : 'N/A' }} ({{ $attendance->user->employee_id ?? ' ' }})
+                                {{ $attendance->user->name ? $attendance->user->name : 'N/A' }}
+                                ({{ $attendance->user->employee_id ?? ' ' }})
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600">
                                 {{ $attendance->user->department ? $attendance->user->department->name : 'N/A' }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600">
-                                {{ $attendance->date ? \Carbon\Carbon::parse($attendance->date)->format('D, M, Y') : 'N/A' }}
+                                {{ $attendance->date ? \Carbon\Carbon::parse($attendance->date)->format('D d, M, Y') : 'N/A' }}
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($attendance->check_in_time)

@@ -3,24 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 
 class AttendanceController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Attendance-Index',  only: ['index']),
+            new Middleware('permission:Attendance-Index', only: ['index']),
             new Middleware('permission:Attendance-Marking', only: ['punch']),
-            new Middleware('permission:Attendance-View',   only: ['show']),
+            new Middleware('permission:Attendance-View', only: ['show']),
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,9 +31,18 @@ class AttendanceController extends Controller implements HasMiddleware
         $todayAttendance = Attendance::where('user_id', Auth::id())
             ->where('date', Carbon::today()->format('Y-m-d'))
             ->first();
-        $attendances = Attendance::with(['user.department'])
-            ->latest()
-            ->get();
+
+        $user = Auth::user();
+        if ($user->hasRole('Super Admin') || $user->hasRole('Admin') || $user->hasRole('HR Manager')) {
+            $attendances = Attendance::with(['user.department'])
+                ->latest()
+                ->get();
+        } else {
+            $attendances = Attendance::where('user_id', $user->id)
+                ->with(['user.department'])
+                ->latest()
+                ->get();
+        }
 
         return view('attendance.index', compact('attendances', 'todayAttendance'));
     }
@@ -44,16 +54,16 @@ class AttendanceController extends Controller implements HasMiddleware
         ]);
 
         try {
-            DB::beginTransaction(); // Start Transaction
+            DB::beginTransaction();  // Start Transaction
 
             $user = Auth::user();
             $today = Carbon::today()->format('Y-m-d');
-            $currentTime = Carbon::now()->format('H:i:s'); // Current Time (e.g., 09:30:00)
+            $currentTime = Carbon::now()->format('H:i:s');  // Current Time (e.g., 09:30:00)
 
             // Check if there's already an attendance record for today for this user
             $attendance = Attendance::where('user_id', $user->id)
                 ->where('date', $today)
-                ->lockForUpdate() // Prevent race conditions
+                ->lockForUpdate()  // Prevent race conditions
                 ->first();
 
             if (!$attendance) {
@@ -83,10 +93,10 @@ class AttendanceController extends Controller implements HasMiddleware
                 $message = 'Successfully checked out at ' . Carbon::now()->format('h:i A');
             }
 
-            DB::commit(); // Save changes to database
+            DB::commit();  // Save changes to database
             return back()->with('success', $message);
         } catch (\Exception $e) {
-            DB::rollBack(); // If any error occurs, rollback the transaction to maintain data integrity
+            DB::rollBack();  // If any error occurs, rollback the transaction to maintain data integrity
 
             // Log file for debugging purposes
             Log::error('Attendance Punch Failed for User ' . Auth::id() . ' : ' . $e->getMessage());

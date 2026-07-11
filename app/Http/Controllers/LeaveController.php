@@ -2,33 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Leave;
 use App\Models\LeaveType;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 
 class LeaveController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Leave-Index',  only: ['index']),
-            new Middleware('permission:Leave-Apply',  only: ['store']),
-            new Middleware('permission:Leave-ApproveReject',  only: ['updateStatus']),
+            new Middleware('permission:Leave-Index', only: ['index']),
+            new Middleware('permission:Leave-Apply', only: ['store']),
+            new Middleware('permission:Leave-ApproveReject', only: ['updateStatus']),
         ];
     }
+
     public function index()
     {
-        // $all_leaves = Leave::with(['user', 'leaveType'])->latest()->get();
-        // dd($all_leaves);
-        // Admin ke liye saari leaves, but normally employee ko sirf apni dikhti hain.
-        // MVP ke liye hum sabhi leaves list kar rahe hain.
-        $leaves = Leave::with(['user', 'leaveType'])->latest()->get();
+        $user = Auth::user();
+        if ($user->hasRole('Super Admin') || $user->hasRole('Admin') || $user->hasRole('HR Manager')) {
+            $leaves = Leave::with(['user', 'leaveType'])->latest()->get();
+        } else {
+            $leaves = Leave::where('user_id', $user->id)
+                ->with(['user', 'leaveType'])
+                ->latest()
+                ->get();
+        }
 
         // Modal dropdown ke liye sirf active leave types bhejo
         $leaveTypes = LeaveType::where('is_active', true)->get();
@@ -50,18 +55,18 @@ class LeaveController extends Controller implements HasMiddleware
         // 1. Parse dates using Carbon and calculate total requested days
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date);
-        $requestedDays = $startDate->diffInDays($endDate) + 1; // +1 ensures same-day leave counts as 1 day
+        $requestedDays = $startDate->diffInDays($endDate) + 1;  // +1 ensures same-day leave counts as 1 day
 
         // 2. Fetch the selected Leave Type quota configuration
         $leaveType = LeaveType::findOrFail($request->leave_type_id);
-        $maxAllowed = (float) $leaveType->days_allowed; // Cast to float to avoid calculation type mismatch
+        $maxAllowed = (float) $leaveType->days_allowed;  // Cast to float to avoid calculation type mismatch
 
         // 3. Calculate used/pending days for the current user and leave category in the current year
         $currentYear = Carbon::now()->year;
 
         $usedLeaves = (float) Leave::where('user_id', Auth::id())
             ->where('leave_type_id', $leaveType->id)
-            ->whereIn('status', ['approved', 'pending']) // Include pending to prevent double-applying
+            ->whereIn('status', ['approved', 'pending'])  // Include pending to prevent double-applying
             ->whereYear('start_date', $currentYear)
             ->sum('total_days');
 
@@ -86,7 +91,7 @@ class LeaveController extends Controller implements HasMiddleware
                 'leave_type_id' => $request->leave_type_id,
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
-                'total_days' => $requestedDays, // Store calculated range total
+                'total_days' => $requestedDays,  // Store calculated range total
                 'reason' => $request->reason,
                 'status' => 'pending',
             ]);
