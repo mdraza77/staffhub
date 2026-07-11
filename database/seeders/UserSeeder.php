@@ -155,6 +155,7 @@ class UserSeeder extends Seeder
                     'designation' => $userData['designation'],
                     'joining_date' => $userData['joining_date'],
                     'status' => $userData['status'],
+                    'signature' => 'signatures/dummy_signature.png',
                 ]
             );
             $user->syncRoles([$userData['role']]);

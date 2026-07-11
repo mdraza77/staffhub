@@ -111,6 +111,19 @@
                 </ul>
             </div>
 
+            {{-- Signature Card --}}
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+                <h3 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Signature</h3>
+                @if ($employee->signature)
+                    <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg border border-gray-100">
+                        <img src="{{ asset('storage/' . $employee->signature) }}" alt="Signature"
+                            class="max-h-16 object-contain mix-blend-multiply" draggable="false">
+                    </div>
+                @else
+                    <p class="text-sm text-gray-400 text-center py-4">No signature uploaded</p>
+                @endif
+            </div>
+
             {{-- Danger Zone --}}
             @can('Employee-Delete')
                 <div class="bg-white rounded-xl border border-red-100 shadow-sm p-5">

@@ -94,8 +94,18 @@ class PayrollController extends Controller implements HasMiddleware
     public function payslipCreate()
     {
         $months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
         ];
         $years = range(now()->year - 2, now()->year + 1);
 
@@ -135,11 +145,11 @@ class PayrollController extends Controller implements HasMiddleware
         $holidays = Holiday::where('status', 'active')
             ->where(function ($q) use ($startDate, $endDate) {
                 $q->whereBetween('start_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-                  ->orWhereBetween('end_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-                  ->orWhere(function ($q2) use ($startDate, $endDate) {
-                      $q2->where('start_date', '<=', $startDate->format('Y-m-d'))
-                         ->where('end_date', '>=', $endDate->format('Y-m-d'));
-                  });
+                    ->orWhereBetween('end_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
+                    ->orWhere(function ($q2) use ($startDate, $endDate) {
+                        $q2->where('start_date', '<=', $startDate->format('Y-m-d'))
+                            ->where('end_date', '>=', $endDate->format('Y-m-d'));
+                    });
             })
             ->whereIn('type', ['public', 'company'])
             ->get();
@@ -313,7 +323,20 @@ class PayrollController extends Controller implements HasMiddleware
         // Get salary structure for reference
         $salaryStructure = $payslip->user->salaryStructure;
 
-        return view('payroll.payslip_show', compact('payslip', 'salaryStructure'));
+        // Fetch HR Manager and Admin for signatures
+        $hrManager = User::whereHas('roles', function ($q) {
+            $q->where('name', 'HR Manager');
+        })
+            ->whereNotNull('signature')
+            ->first();
+
+        $adminUser = User::whereHas('roles', function ($q) {
+            $q->whereIn('name', ['Admin', 'Super Admin']);
+        })
+            ->whereNotNull('signature')
+            ->first();
+
+        return view('payroll.payslip_show', compact('payslip', 'salaryStructure', 'hrManager', 'adminUser'));
     }
 
     /**

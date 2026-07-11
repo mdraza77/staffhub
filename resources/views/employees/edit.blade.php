@@ -171,7 +171,7 @@
             </div>
 
             {{-- ===================== PROFILE PICTURE ===================== --}}
-            <div class="md:col-span-2">
+            <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Profile Picture</label>
 
                 {{-- Current profile preview --}}
@@ -181,7 +181,7 @@
                             class="w-16 h-16 rounded-full object-cover border-2 border-gray-200">
                         <div>
                             <p class="text-sm font-medium text-gray-700">Current Photo</p>
-                            <p class="text-xs text-gray-500">Upload a new image below to replace it</p>
+                            <p class="text-xs text-gray-500 font-normal">Upload a new image below to replace it</p>
                         </div>
                     </div>
                 @endif
@@ -190,6 +190,30 @@
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
                 <p class="text-xs text-gray-500 mt-1">Max size: 2MB. Allowed formats: JPG, PNG, GIF.</p>
                 @error('profile')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+
+            {{-- ===================== SIGNATURE ===================== --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Signature Image</label>
+
+                {{-- Current signature preview --}}
+                @if ($employee->signature)
+                    <div class="flex items-center gap-4 mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <img src="{{ asset('storage/' . $employee->signature) }}" alt="Current Signature"
+                            class="w-16 h-16 object-contain border-2 border-gray-200 bg-white mix-blend-multiply" draggable="false">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">Current Signature</p>
+                            <p class="text-xs text-gray-500 font-normal">Upload a new signature below to replace it</p>
+                        </div>
+                    </div>
+                @endif
+
+                <input type="file" name="signature" accept="image/*"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                <p class="text-xs text-gray-500 mt-1">Max size: 2MB. Allowed formats: JPG, PNG, GIF.</p>
+                @error('signature')
                     <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
                 @enderror
             </div>

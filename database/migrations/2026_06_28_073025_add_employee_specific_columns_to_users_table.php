@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('designation')->nullable(); // e.g., Laravel Developer, HR Manager
             $table->date('joining_date')->nullable();
             $table->string('profile')->nullable(); // For profile image
+            $table->string('signature')->nullable(); // For signature image
             $table->enum('status', ['active', 'inactive', 'terminated'])->default('active');
             $table->softDeletes(); // For soft deletion of employee records
         });

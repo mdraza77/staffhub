@@ -54,15 +54,15 @@
                         $hundred = $counter == 1 && $str[0] ? ' and ' : null;
                         $str[] =
                             $number < 21
-                                ? $words[$number] . ' ' . $digits[$counter] . $plural . ' ' . $hundred
-                                : $words[floor($number / 10) * 10] .
-                                    ' ' .
-                                    $words[$number % 10] .
-                                    ' ' .
-                                    $digits[$counter] .
-                                    $plural .
-                                    ' ' .
-                                    $hundred;
+                            ? $words[$number] . ' ' . $digits[$counter] . $plural . ' ' . $hundred
+                            : $words[floor($number / 10) * 10] .
+                            ' ' .
+                            $words[$number % 10] .
+                            ' ' .
+                            $digits[$counter] .
+                            $plural .
+                            ' ' .
+                            $hundred;
                     } else {
                         $str[] = null;
                     }
@@ -101,7 +101,7 @@
         <div class="flex justify-between items-start border-b border-gray-200 pb-6 mb-6">
             <div>
                 <h2 class="text-2xl font-extrabold text-blue-700 tracking-tight">StaffHub Technologies</h2>
-                <p class="text-xs text-gray-400 mt-1">123 Business Hub, Sector-62, Noida, UP, India</p>
+                <p class="text-xs text-gray-400 mt-1">Teen Pool, Islampur, WB, India</p>
                 <p class="text-xs text-gray-400">Email: payroll@staffhub.com | Web: www.staffhub.com</p>
             </div>
             <div class="text-right">
@@ -109,7 +109,7 @@
                 <p class="text-sm text-gray-500 font-semibold mt-1">{{ $payslip->month }} - {{ $payslip->year }}</p>
                 <span
                     class="mt-2 inline-block text-xs font-bold px-3 py-1 rounded-full uppercase
-                    {{ $payslip->status === 'paid' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-yellow-50 text-yellow-700 border border-yellow-200' }}">
+                        {{ $payslip->status === 'paid' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-yellow-50 text-yellow-700 border border-yellow-200' }}">
                     {{ $payslip->status }}
                 </span>
             </div>
@@ -196,8 +196,7 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">House Rent Allowance (HRA)</span>
-                        <span
-                            class="font-semibold text-gray-800">₹{{ number_format($salaryStructure->hra ?? 0, 2) }}</span>
+                        <span class="font-semibold text-gray-800">₹{{ number_format($salaryStructure->hra ?? 0, 2) }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Other Allowances</span>
@@ -275,20 +274,26 @@
         <div
             class="flex justify-between items-end mt-12 pt-8 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center gap-6">
             <div class="w-1/3 flex flex-col items-center">
-                <img src="{{ asset('storage/signatures/dummy_signature.png') }}" alt="Employee Signature"
-                    class="h-12 object-contain mb-1 mix-blend-multiply" draggable="false">
+                <img src="{{ $payslip->user->signature ? asset('storage/' . $payslip->user->signature) : '' }}"
+                    alt="Employee Signature"
+                    class="h-12 object-contain mb-1 mix-blend-multiply {{ !$payslip->user->signature ? 'hidden' : '' }}"
+                    draggable="false">
                 <div class="border-b border-gray-300 w-full mb-2"></div>
                 <p>Employee Signature</p>
             </div>
             <div class="w-1/3 flex flex-col items-center">
-                <img src="{{ asset('storage/signatures/dummy_signature.png') }}" alt="HR Manager Signature"
-                    class="h-12 object-contain mb-1 mix-blend-multiply" draggable="false">
+                <img src="{{ $hrManager?->signature ? asset('storage/' . $hrManager->signature) : '' }}"
+                    alt="HR Manager Signature"
+                    class="h-12 object-contain mb-1 mix-blend-multiply {{ !$hrManager?->signature ? 'hidden' : '' }}"
+                    draggable="false">
                 <div class="border-b border-gray-300 w-full mb-2"></div>
                 <p>Prepared By (HR Manager)</p>
             </div>
             <div class="w-1/3 flex flex-col items-center">
-                <img src="{{ asset('storage/signatures/dummy_signature.png') }}" alt="Authorized Signature"
-                    class="h-12 object-contain mb-1 mix-blend-multiply" draggable="false">
+                <img src="{{ $adminUser?->signature ? asset('storage/' . $adminUser->signature) : '' }}"
+                    alt="Authorized Signature"
+                    class="h-12 object-contain mb-1 mix-blend-multiply {{ !$adminUser?->signature ? 'hidden' : '' }}"
+                    draggable="false">
                 <div class="border-b border-gray-300 w-full mb-2"></div>
                 <p>Authorized Signatory</p>
             </div>

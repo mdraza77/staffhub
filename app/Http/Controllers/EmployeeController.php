@@ -75,6 +75,7 @@ class EmployeeController extends Controller implements HasMiddleware
             'joining_date' => 'nullable|date',
             'status' => 'required|in:active,inactive,terminated',
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB image
+            'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB signature
             'role' => 'nullable|exists:roles,name',
         ]);
 
@@ -82,11 +83,18 @@ class EmployeeController extends Controller implements HasMiddleware
             DB::beginTransaction(); // Start Transaction
 
             $profilePath = null;
+            $signaturePath = null;
 
             // Handle Profile Image Upload
             if ($request->hasFile('profile')) {
                 // public/storage/profiles mein save hoga
                 $profilePath = $request->file('profile')->store('profiles', 'public');
+            }
+
+            // Handle Signature Upload
+            if ($request->hasFile('signature')) {
+                // public/storage/signatures mein save hoga
+                $signaturePath = $request->file('signature')->store('signatures', 'public');
             }
 
             // Create Employee/User
@@ -101,6 +109,7 @@ class EmployeeController extends Controller implements HasMiddleware
                 'joining_date' => $request->joining_date,
                 'status' => $request->status,
                 'profile' => $profilePath,
+                'signature' => $signaturePath,
             ]);
 
             if ($request->filled('role')) {
@@ -118,6 +127,10 @@ class EmployeeController extends Controller implements HasMiddleware
 
             if (isset($profilePath)) {
                 Storage::disk('public')->delete($profilePath);
+            }
+
+            if (isset($signaturePath)) {
+                Storage::disk('public')->delete($signaturePath);
             }
 
             return back()->withInput()->with('error', 'Something went wrong while creating the employee. Please try again.');
@@ -160,6 +173,7 @@ class EmployeeController extends Controller implements HasMiddleware
             'joining_date'  => 'nullable|date',
             'status'        => 'required|in:active,inactive,terminated',
             'profile'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'signature'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'role'          => 'nullable|exists:roles,name',
         ]);
 
@@ -189,6 +203,15 @@ class EmployeeController extends Controller implements HasMiddleware
                     Storage::disk('public')->delete($employee->profile);
                 }
                 $data['profile'] = $request->file('profile')->store('profiles', 'public');
+            }
+
+            // Naya signature image upload hua toh purana delete karo
+            if ($request->hasFile('signature')) {
+                // Purani signature delete karo agar exist karti hai
+                if ($employee->signature) {
+                    Storage::disk('public')->delete($employee->signature);
+                }
+                $data['signature'] = $request->file('signature')->store('signatures', 'public');
             }
 
             $employee->update($data);
