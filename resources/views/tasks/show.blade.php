@@ -64,15 +64,24 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-b border-gray-100 py-5">
                     <div>
                         <p class="text-xs text-gray-400 font-medium">Assigned By</p>
-                        <p class="text-sm font-bold text-gray-700 mt-0.5">{{ $task->assigner->name ?? 'N/A' }}</p>
+                        <a href="{{ route('employees.show', $task->assigned_by) }}">
+                            <p class="text-sm font-bold text-gray-700 mt-0.5">{{ $task->assigner->name ?? 'N/A' }}
+                                ({{ $task->assigner->roles->first()->name ?? '' }})</p>
+                        </a>
                     </div>
                     <div>
                         <p class="text-xs text-gray-400 font-medium">Assigned To</p>
-                        <p class="text-sm font-bold text-gray-700 mt-0.5">{{ $task->engineer->name ?? 'N/A' }}</p>
+                        <a href="{{ route('employees.show', $task->assigned_to) }}">
+                            <p class="text-sm font-bold text-gray-700 mt-0.5">{{ $task->engineer->name ?? 'N/A' }}
+                                ({{ $task->engineer->roles->first()->name ?? '' }})</p>
+                        </a>
                     </div>
                     <div>
                         <p class="text-xs text-gray-400 font-medium">Tester</p>
-                        <p class="text-sm font-bold text-gray-700 mt-0.5">{{ $task->tester->name ?? 'None' }}</p>
+                        <a href="{{ route('employees.show', $task->tester_id) }}">
+                            <p class="text-sm font-bold text-gray-700 mt-0.5">{{ $task->tester->name ?? 'None' }}
+                                ({{ $task->tester->roles->first()->name ?? '' }})</p>
+                        </a>
                     </div>
                     <div>
                         <p class="text-xs text-gray-400 font-medium">Deadline & Status</p>
@@ -185,7 +194,8 @@
                                 class="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full border border-amber-200">Testing</span>
                         @elseif($task->status === 'failed_testing')
                             <span
-                                class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full border border-red-200">Failed in Testing</span>
+                                class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full border border-red-200">Failed
+                                in Testing</span>
                         @elseif($task->status === 'closed')
                             <span
                                 class="bg-gray-100 text-gray-700 text-xs font-bold px-3 py-1 rounded-full border border-gray-200">Closed</span>
@@ -218,23 +228,39 @@
                 @can('Task-ProgressUpdate')
                     @php
                         $userId = Auth::id();
-                        $isDeveloper = ($userId === $task->assigned_to);
-                        $isTester = ($userId === $task->tester_id);
-                        $isAssigner = ($userId === $task->assigned_by);
-                        $isAdminOrManager = Auth::user()->can('Task-ManageAll') || Auth::user()->hasAnyRole(['Super Admin', 'Admin', 'HR Manager']);
+                        $isDeveloper = $userId === $task->assigned_to;
+                        $isTester = $userId === $task->tester_id;
+                        $isAssigner = $userId === $task->assigned_by;
+                        $isAdminOrManager =
+                            Auth::user()->can('Task-ManageAll') ||
+                            Auth::user()->hasAnyRole(['Super Admin', 'Admin', 'HR Manager']);
 
                         $isDropdownDisabled = false;
                         $allowedStatuses = [];
 
                         if ($isAdminOrManager || $isAssigner) {
-                            $allowedStatuses = ['open', 'in_progress', 'ready_for_test', 'testing', 'failed_testing', 'completed', 'closed'];
+                            $allowedStatuses = [
+                                'open',
+                                'in_progress',
+                                'ready_for_test',
+                                'testing',
+                                'failed_testing',
+                                'completed',
+                                'closed',
+                            ];
                         } elseif ($isDeveloper) {
                             $allowedStatuses = ['in_progress', 'ready_for_test'];
                             if (!in_array($task->status, $allowedStatuses)) {
                                 $allowedStatuses[] = $task->status;
                             }
                         } elseif ($isTester) {
-                            $testerAllowedCurrentStatuses = ['ready_for_test', 'testing', 'failed_testing', 'completed', 'closed'];
+                            $testerAllowedCurrentStatuses = [
+                                'ready_for_test',
+                                'testing',
+                                'failed_testing',
+                                'completed',
+                                'closed',
+                            ];
                             if (!in_array($task->status, $testerAllowedCurrentStatuses)) {
                                 $isDropdownDisabled = true;
                             }
@@ -255,25 +281,30 @@
                             <select name="status"
                                 class="flex-1 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-xs {{ $isDropdownDisabled ? 'bg-gray-100 cursor-not-allowed text-gray-500' : '' }}"
                                 required {{ $isDropdownDisabled ? 'disabled' : '' }}>
-                                @if(in_array('open', $allowedStatuses))
+                                @if (in_array('open', $allowedStatuses))
                                     <option value="open" {{ $task->status === 'open' ? 'selected' : '' }}>Open</option>
                                 @endif
-                                @if(in_array('in_progress', $allowedStatuses))
-                                    <option value="in_progress" {{ $task->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                                @if (in_array('in_progress', $allowedStatuses))
+                                    <option value="in_progress" {{ $task->status === 'in_progress' ? 'selected' : '' }}>In
+                                        Progress</option>
                                 @endif
-                                @if(in_array('ready_for_test', $allowedStatuses))
-                                    <option value="ready_for_test" {{ $task->status === 'ready_for_test' ? 'selected' : '' }}>Ready for Test</option>
+                                @if (in_array('ready_for_test', $allowedStatuses))
+                                    <option value="ready_for_test" {{ $task->status === 'ready_for_test' ? 'selected' : '' }}>
+                                        Ready for Test</option>
                                 @endif
-                                @if(in_array('testing', $allowedStatuses))
-                                    <option value="testing" {{ $task->status === 'testing' ? 'selected' : '' }}>Testing</option>
+                                @if (in_array('testing', $allowedStatuses))
+                                    <option value="testing" {{ $task->status === 'testing' ? 'selected' : '' }}>Testing
+                                    </option>
                                 @endif
-                                @if(in_array('failed_testing', $allowedStatuses))
-                                    <option value="failed_testing" {{ $task->status === 'failed_testing' ? 'selected' : '' }}>Failed in Testing</option>
+                                @if (in_array('failed_testing', $allowedStatuses))
+                                    <option value="failed_testing" {{ $task->status === 'failed_testing' ? 'selected' : '' }}>
+                                        Failed in Testing</option>
                                 @endif
-                                @if(in_array('completed', $allowedStatuses))
-                                    <option value="completed" {{ $task->status === 'completed' ? 'selected' : '' }}>Completed</option>
+                                @if (in_array('completed', $allowedStatuses))
+                                    <option value="completed" {{ $task->status === 'completed' ? 'selected' : '' }}>Completed
+                                    </option>
                                 @endif
-                                @if(in_array('closed', $allowedStatuses))
+                                @if (in_array('closed', $allowedStatuses))
                                     <option value="closed" {{ $task->status === 'closed' ? 'selected' : '' }}>Closed</option>
                                 @endif
                             </select>

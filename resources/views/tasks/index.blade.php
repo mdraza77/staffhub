@@ -65,28 +65,32 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
-                            @foreach($myTasks as $task)
+                            @foreach ($myTasks as $task)
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4">
                                         <p class="text-sm font-bold text-gray-805">
                                             {{ $task->title }}
                                         </p>
                                         @if ($task->project_name)
-                                            <p class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-folder text-gray-400"></i>
+                                            <p class="text-xs text-gray-500 mt-1"><i
+                                                    class="fa-solid fa-folder text-gray-400"></i>
                                                 Project: {{ $task->project_name }}</p>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-700">
                                         {{ $task->assigner->name ?? 'N/A' }}
+                                        ({{ $task->assigner->roles->first()->name ?? '' }})
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-700">
                                         {{ $task->tester->name ?? 'None' }}
+                                        ({{ $task->tester->roles->first()->name ?? '' }})
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         @if ($task->priority === 'critical')
                                             <span
                                                 class="bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i
-                                                    class="fa-solid fa-circle-exclamation text-xs mr-0.5"></i> Critical</span>
+                                                    class="fa-solid fa-circle-exclamation text-xs mr-0.5"></i>
+                                                Critical</span>
                                         @elseif($task->priority === 'high')
                                             <span
                                                 class="bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">High</span>
@@ -101,7 +105,10 @@
                                     <td class="px-6 py-4 text-sm text-gray-700">
                                         @php
                                             $deadline = $task->deadline ? \Carbon\Carbon::parse($task->deadline) : null;
-                                            $isOverdue = $deadline && $deadline->isPast() && !in_array($task->status, ['completed', 'closed']);
+                                            $isOverdue =
+                                                $deadline &&
+                                                $deadline->isPast() &&
+                                                !in_array($task->status, ['completed', 'closed']);
                                         @endphp
                                         @if ($deadline)
                                             <span class="{{ $isOverdue ? 'text-red-650 font-bold' : '' }}">
@@ -119,7 +126,8 @@
                                             <span
                                                 class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
                                         @elseif($task->status === 'in_progress')
-                                            <span class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
+                                            <span
+                                                class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
                                                 Progress</span>
                                         @elseif($task->status === 'ready_for_test')
                                             <span
@@ -130,7 +138,8 @@
                                                 class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
                                         @elseif($task->status === 'failed_testing')
                                             <span
-                                                class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed in Testing</span>
+                                                class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed
+                                                in Testing</span>
                                         @elseif($task->status === 'closed')
                                             <span
                                                 class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>
@@ -167,7 +176,8 @@
             <div class="mt-8">
                 <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
                     <i class="fa-solid fa-flask text-purple-600"></i> Tasks to Test (I am Tester)
-                    <span class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full">{{ $tasksToTest->count() }}</span>
+                    <span
+                        class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full">{{ $tasksToTest->count() }}</span>
                 </h2>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -185,14 +195,15 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
-                                @foreach($tasksToTest as $task)
+                                @foreach ($tasksToTest as $task)
                                     <tr class="hover:bg-gray-50 transition-colors">
                                         <td class="px-6 py-4">
                                             <p class="text-sm font-bold text-gray-805">
                                                 {{ $task->title }}
                                             </p>
                                             @if ($task->project_name)
-                                                <p class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-folder text-gray-400"></i>
+                                                <p class="text-xs text-gray-500 mt-1"><i
+                                                        class="fa-solid fa-folder text-gray-400"></i>
                                                     Project: {{ $task->project_name }}</p>
                                             @endif
                                         </td>
@@ -206,7 +217,8 @@
                                             @if ($task->priority === 'critical')
                                                 <span
                                                     class="bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i
-                                                        class="fa-solid fa-circle-exclamation text-xs mr-0.5"></i> Critical</span>
+                                                        class="fa-solid fa-circle-exclamation text-xs mr-0.5"></i>
+                                                    Critical</span>
                                             @elseif($task->priority === 'high')
                                                 <span
                                                     class="bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">High</span>
@@ -220,8 +232,13 @@
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-700">
                                             @php
-                                                $deadline = $task->deadline ? \Carbon\Carbon::parse($task->deadline) : null;
-                                                $isOverdue = $deadline && $deadline->isPast() && !in_array($task->status, ['completed', 'closed']);
+                                                $deadline = $task->deadline
+                                                    ? \Carbon\Carbon::parse($task->deadline)
+                                                    : null;
+                                                $isOverdue =
+                                                    $deadline &&
+                                                    $deadline->isPast() &&
+                                                    !in_array($task->status, ['completed', 'closed']);
                                             @endphp
                                             @if ($deadline)
                                                 <span class="{{ $isOverdue ? 'text-red-650 font-bold' : '' }}">
@@ -239,7 +256,8 @@
                                                 <span
                                                     class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
                                             @elseif($task->status === 'in_progress')
-                                                <span class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
+                                                <span
+                                                    class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
                                                     Progress</span>
                                             @elseif($task->status === 'ready_for_test')
                                                 <span
@@ -250,7 +268,8 @@
                                                     class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
                                             @elseif($task->status === 'failed_testing')
                                                 <span
-                                                    class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed in Testing</span>
+                                                    class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed
+                                                    in Testing</span>
                                             @elseif($task->status === 'closed')
                                                 <span
                                                     class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>
@@ -260,7 +279,7 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            @can('Task-Edit')
+                                            @can('Task-ProgressUpdate')
                                                 <a href="{{ route('tasks.show', $task->id) }}"
                                                     class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
                                                     title="Edit Progress Details">
@@ -282,7 +301,8 @@
             <div class="mt-8">
                 <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
                     <i class="fa-solid fa-users-gear text-teal-600"></i> Delegated Tasks (Assigned By Me)
-                    <span class="bg-teal-100 text-teal-700 text-xs px-2 py-0.5 rounded-full">{{ $assignedByMe->count() }}</span>
+                    <span
+                        class="bg-teal-100 text-teal-700 text-xs px-2 py-0.5 rounded-full">{{ $assignedByMe->count() }}</span>
                 </h2>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -304,7 +324,8 @@
                                 @foreach ($assignedByMe as $task)
                                     <tr class="hover:bg-gray-50 transition-colors">
                                         <td class="px-6 py-4">
-                                            <p class="text-sm font-bold text-gray-800">{{ $task->project_name ?? 'N/A' }}</p>
+                                            <p class="text-sm font-bold text-gray-800">{{ $task->project_name ?? 'N/A' }}
+                                            </p>
                                         </td>
                                         <td class="px-6 py-4">
                                             <p class="text-sm font-bold text-gray-850">
@@ -324,7 +345,8 @@
                                             @if ($task->priority === 'critical')
                                                 <span
                                                     class="bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i
-                                                        class="fa-solid fa-circle-exclamation text-xs mr-0.5"></i> Critical</span>
+                                                        class="fa-solid fa-circle-exclamation text-xs mr-0.5"></i>
+                                                    Critical</span>
                                             @elseif($task->priority === 'high')
                                                 <span
                                                     class="bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">High</span>
@@ -344,7 +366,8 @@
                                                 <span
                                                     class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
                                             @elseif($task->status === 'in_progress')
-                                                <span class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
+                                                <span
+                                                    class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
                                                     Progress</span>
                                             @elseif($task->status === 'ready_for_test')
                                                 <span
@@ -355,7 +378,8 @@
                                                     class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
                                             @elseif($task->status === 'failed_testing')
                                                 <span
-                                                    class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed in Testing</span>
+                                                    class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed
+                                                    in Testing</span>
                                             @elseif($task->status === 'closed')
                                                 <span
                                                     class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>
@@ -385,8 +409,9 @@
                                                     title="Delete Task">
                                                     <i class="fa-solid fa-trash text-base"></i>
                                                 </button>
-                                                <form id="delete-form-{{ $task->id }}" action="{{ route('tasks.destroy', $task->id) }}"
-                                                    method="POST" class="hidden">
+                                                <form id="delete-form-{{ $task->id }}"
+                                                    action="{{ route('tasks.destroy', $task->id) }}" method="POST"
+                                                    class="hidden">
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
@@ -424,26 +449,26 @@
 
     @push('scripts')
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $('#my_tasks').DataTable({
                     destroy: true,
                     dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
                     buttons: [{
-                        extend: 'copy',
-                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                    }
+                            extend: 'copy',
+                            className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
+                        },
+                        {
+                            extend: 'excel',
+                            className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                        },
+                        {
+                            extend: 'pdf',
+                            className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                        },
+                        {
+                            extend: 'print',
+                            className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
+                        }
                     ],
                     pageLength: 10,
                     language: {
@@ -456,26 +481,26 @@
             });
         </script>
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $('#assigned_tasks').DataTable({
                     destroy: true,
                     dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
                     buttons: [{
-                        extend: 'copy',
-                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                    }
+                            extend: 'copy',
+                            className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
+                        },
+                        {
+                            extend: 'excel',
+                            className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                        },
+                        {
+                            extend: 'pdf',
+                            className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                        },
+                        {
+                            extend: 'print',
+                            className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
+                        }
                     ],
                     pageLength: 10,
                     language: {
@@ -488,26 +513,26 @@
             });
         </script>
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $('#tasks_to_test').DataTable({
                     destroy: true,
                     dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
                     buttons: [{
-                        extend: 'copy',
-                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                    }
+                            extend: 'copy',
+                            className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
+                        },
+                        {
+                            extend: 'excel',
+                            className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                        },
+                        {
+                            extend: 'pdf',
+                            className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                        },
+                        {
+                            extend: 'print',
+                            className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
+                        }
                     ],
                     pageLength: 10,
                     language: {

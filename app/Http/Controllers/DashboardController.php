@@ -56,6 +56,21 @@ class DashboardController extends Controller implements HasMiddleware
             ->take(5)
             ->get();
 
-        return view('dashboard.index', compact('stats', 'recentEmployees'));
+        $todayAttendance = Attendance::where('user_id', auth()->id())
+            ->where('date', now()->format('Y-m-d'))
+            ->first();
+
+        $recentAnnouncements = \App\Models\Announcement::where('status', 'published')
+            ->latest()
+            ->take(3)
+            ->get();
+
+        $myTasks = auth()->user()->workingTasks()
+            ->with('assigner')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('dashboard.index', compact('stats', 'recentEmployees', 'todayAttendance', 'recentAnnouncements', 'myTasks'));
     }
 }
