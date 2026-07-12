@@ -1,58 +1,154 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 💼 StaffHub — Enterprise Employee & HR Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+StaffHub is a modern, and feature-rich **Employee and HR Management System (HRMS)** built on Laravel 11. It is designed to streamline day-to-day HR workflows including employee lifecycle tracking, attendance logging, department structuring, leave approvals, task monitoring, announcements, payroll generation, and advanced reporting.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Key Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+StaffHub consists of several fully integrated modules that cover all operational aspects of human resources:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🔒 1. Role-Based Access Control (RBAC)
+* Powered by `spatie/laravel-permission`.
+* Fine-grained permission mapping for roles: `Super Admin`, `Admin`, `HR Manager`, `Department Manager`, `Employee`, and `Intern`.
+* Middleware protected routes ensuring secure operational boundaries.
 
-## Learning Laravel
+### 👥 2. Employee Lifecycle Management
+* Complete profile management including personal details, designation, department, joining date, and status.
+* Support for profile photo uploads and digital signature archiving.
+* Safe-delete architecture (Soft Deletes) to ensure accidental deletions are recoverable.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🏢 3. Department Management
+* Structured department organization with slug-based routing.
+* Auto-calculates active employee headcounts per department.
+* Restore capabilities for soft-deleted departments.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### ⏱️ 4. Daily Attendance Logs
+* Interactive, one-click Daily Punch-In / Punch-Out logging system.
+* Computes active work duration automatically.
+* Visual indicators of attendance logs with daily records.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 🏖️ 5. Leave & Holiday Systems
+* **Leave Management:** Dynamic leave type policies, application submission portal for employees, and HR approvals/rejections workflow.
+* **Holidays Calendar:** Manage public, optional, and company-specific holidays. Includes soft-delete recovery mechanisms.
 
-## Agentic Development
+### 📋 6. Task Management
+* Create, delegate, and monitor projects and tasks across teams.
+* Stage-based workflow: Assignee updates progress, tester validates task completion.
+* Built-in file attachment uploading (documents) and comments history on individual tasks.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 💰 7. Payroll & Payslip Engine
+* Custom salary structure allocation (Basic, HRA, Medical, Allowances, PF, Tax).
+* Automatic generation of monthly payslips.
+* Payslip publishing, visual preview layouts, and status tracking (Draft, Published, Paid).
 
-```bash
-composer require laravel/boost --dev
+### 📢 8. Announcements (Internal Newsroom)
+* Internal news broadcasting system for all employees.
+* Supports publication scheduling, priority flags (Low, Medium, High), and active status (Draft vs. Published).
+* Form date selection restricted to present and past dates to maintain historical logging integrity.
 
-php artisan boost:install
-```
+### 📊 9. Advanced Reporting & Exports
+* Integrates `datatables` (Tailwind Theme) for lightning-fast table queries, pagination, global searches, and styling.
+* One-click data exports to **Excel**, **PDF**, **Printable formats**, or system clipboard.
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## 🛠️ Technology Stack
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+* **Back-end:** Laravel 13 (PHP 8.2), Eloquent ORM
+* **Security & Roles:** Spatie Laravel-Permission
+* **Front-end:** Tailwind CSS, HTML5
+* **Interactivity:** SweetAlert2 (Premium popup dialogs), FontAwesome Icons
+* **Data Management:** DataTables (Tailwind CSS Integration)
+* **Database:** PostgreSQL
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## ⚙️ Installation & Setup
 
-## Security Vulnerabilities
+Follow these steps to set up StaffHub locally:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Prerequisites
+Make sure you have PHP 8.2+, Composer, Node.js (with npm), and MySQL/Laragon installed on your system.
 
-## License
+### Steps
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/mdraza77/staffhub.git
+   cd staffhub
+   ```
+
+2. **Install Dependencies:**
+   ```bash
+   composer install
+   npm install
+   ```
+
+3. **Configure Environment Variables:**
+   * Duplicate the env template:
+     ```bash
+     cp .env.example .env
+     ```
+   * Set up your database details inside `.env`:
+     ```env
+     DB_CONNECTION=mysql
+     DB_HOST=127.0.0.1
+     DB_PORT=3306
+     DB_DATABASE=staffhub
+     DB_USERNAME=root
+     DB_PASSWORD=
+     ```
+
+4. **Generate Application Key:**
+   ```bash
+   php artisan key:generate
+   ```
+
+5. **Run Migrations & Seed Database:**
+   This sets up all permissions, default departments, holidays, and seeded users:
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
+
+6. **Link Storage (for profile photos & signatures):**
+   ```bash
+   php artisan storage:link
+   ```
+
+7. **Compile Assets & Run Local Server:**
+   * In terminal 1 (Vite Dev Server):
+     ```bash
+     npm run dev
+     ```
+   * In terminal 2 (PHP Dev Server):
+     ```bash
+     php artisan serve
+     ```
+   * Open `http://localhost:8000` in your browser.
+
+---
+
+## 🔑 Seeder User Credentials
+
+To make evaluation easy, the database seeder creates default accounts for every key system role.
+
+| Role | Email | Password | Primary Functions |
+|---|---|---|---|
+| **Super Admin** | `admin@gmail.com` | `Success2026$` | Full system overrides, role editing, force-deletes. |
+| **Admin** | `admin2@gmail.com` | `Success2026$` | Core operations, department/employee edits. |
+| **HR Manager** | `hr@gmail.com` | `Success2026$` | Employee registration, leave approvals, payroll, attendance. |
+| **Employee** | `emp1@gmail.com` | `Success2026$` | Daily attendance punching, task updates, leave applications. |
+| **Intern** | `intern1@gmail.com` | `Success2026$` | Task reporting, dashboard metrics, basic logging. |
+
+---
+
+## 📈 Architecture Highlights
+
+* **Repository / Controller Workflow:** Thin controllers delegating queries using Eloquent model scopes.
+* **Component-Based Main Layout:** Centralized sidebar system utilizing `@can` authorizations to dynamically render menu options based on current user privileges.
+* **Robust Soft Deletes:** Standardized soft-delete safety boundaries across critical assets (Employees, Departments, Holidays, Announcements).
+* **Validation & Data Cleanliness:** High-security validation criteria (e.g. date limits like `before_or_equal:today` on announcement publish parameters) preventing invalid state changes.
+* **Dynamic Table Controls:** Multi-format file exporter configured with HTML5 Buttons for high fidelity reports.
+
+---
