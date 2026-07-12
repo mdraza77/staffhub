@@ -28,13 +28,11 @@ class LeaveController extends Controller implements HasMiddleware
         $user = Auth::user();
 
         if ($user->hasRole('Super Admin') || $user->hasRole('Admin') || $user->hasRole('HR Manager')) {
-            $leaves = Leave::withTrashed()
-                ->with(['user', 'leaveType'])
+            $leaves = Leave::with(['user', 'leaveType'])
                 ->latest()
                 ->get();
         } else {
             $leaves = Leave::where('user_id', $user->id)
-                ->withTrashed()
                 ->with(['user', 'leaveType'])
                 ->latest()
                 ->get();
