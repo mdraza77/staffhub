@@ -105,6 +105,15 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Payslip-View']);
         Permission::firstOrCreate(['name' => 'Payslip-Delete']);
 
+        // ===== ANNOUNCEMENTS =====
+        Permission::firstOrCreate(['name' => 'Announcement-Index']);
+        Permission::firstOrCreate(['name' => 'Announcement-Create']);
+        Permission::firstOrCreate(['name' => 'Announcement-Edit']);
+        Permission::firstOrCreate(['name' => 'Announcement-View']);
+        Permission::firstOrCreate(['name' => 'Announcement-Delete']);
+        Permission::firstOrCreate(['name' => 'Announcement-Restore']);
+        Permission::firstOrCreate(['name' => 'Announcement-ForceDelete']);
+
         // ===== ROLES =======
         $superAdmin  = Role::firstOrCreate(['name' => 'Super Admin']);
         $admin       = Role::firstOrCreate(['name' => 'Admin']);
@@ -179,6 +188,13 @@ class PermissionSeeder extends Seeder
             'Payslip-Edit',
             'Payslip-View',
             'Payslip-Delete',
+            'Announcement-Index',
+            'Announcement-Create',
+            'Announcement-Edit',
+            'Announcement-View',
+            'Announcement-Delete',
+            'Announcement-Restore',
+            'Announcement-ForceDelete',
         ]);
 
         // HR Manager — department, employee, leaves and attendance management
@@ -230,6 +246,13 @@ class PermissionSeeder extends Seeder
             'Payslip-Edit',
             'Payslip-View',
             'Payslip-Delete',
+            'Announcement-Index',
+            'Announcement-Create',
+            'Announcement-Edit',
+            'Announcement-View',
+            'Announcement-Delete',
+            'Announcement-Restore',
+            'Announcement-ForceDelete',
         ]);
 
         // Department Manager — view own department, handle leaves, and manage tasks
@@ -261,6 +284,8 @@ class PermissionSeeder extends Seeder
             'Holiday-View',
             'Payslip-Index',
             'Payslip-View',
+            'Announcement-Index',
+            'Announcement-View',
         ]);
 
         // Employee — self operations (profile, mark attendance, apply leaves, work on tasks)
@@ -281,6 +306,8 @@ class PermissionSeeder extends Seeder
             'Holiday-View',
             'Payslip-Index',
             'Payslip-View',
+            'Announcement-Index',
+            'Announcement-View',
         ]);
 
         // Intern — self operations (profile, mark attendance, apply leaves, work on tasks)
@@ -300,6 +327,8 @@ class PermissionSeeder extends Seeder
             'Holiday-View',
             'Payslip-Index',
             'Payslip-View',
+            'Announcement-Index',
+            'Announcement-View',
         ]);
 
         $this->command->info('All permissions seeded successfully.');

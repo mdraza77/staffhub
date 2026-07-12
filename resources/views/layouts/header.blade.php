@@ -230,6 +230,17 @@
                 </li>
             @endcan
 
+            {{-- ===== ANNOUNCEMENTS ===== --}}
+            @can('Announcement-Index')
+                <li>
+                    <a href="{{ route('announcements.index') }}"
+                        class="{{ request()->routeIs('announcements.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                        <i class="fa-solid fa-bullhorn text-lg"></i>
+                        <span>Announcements</span>
+                    </a>
+                </li>
+            @endcan
+
             {{-- ===== PAYROLL MANAGEMENT ===== --}}
             @php
                 $payrollActive = request()->routeIs('payroll.*');

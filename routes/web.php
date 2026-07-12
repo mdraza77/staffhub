@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
@@ -105,6 +106,19 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/payslips/{payslip}', [PayrollController::class, 'payslipShow'])->name('payslips.show');
         Route::put('/payslips/{payslip}/status', [PayrollController::class, 'payslipStatusUpdate'])->name('payslips.status.update');
         Route::delete('/payslips/{payslip}', [PayrollController::class, 'payslipDestroy'])->name('payslips.destroy');
+    });
+
+    // Announcements Routes
+    Route::controller(AnnouncementController::class)->prefix('announcements')->name('announcements.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{announcement}', 'show')->name('show');
+        Route::get('/{announcement}/edit', 'edit')->name('edit');
+        Route::put('/{announcement}', 'update')->name('update');
+        Route::delete('/{announcement}', 'destroy')->name('destroy');
+        Route::post('/{announcement}/restore', 'restore')->name('restore')->withTrashed();
+        Route::delete('/{announcement}/force-delete', 'forceDelete')->name('force-delete')->withTrashed();
     });
 });
 
