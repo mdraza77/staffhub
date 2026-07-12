@@ -56,12 +56,12 @@
                     @foreach ($leaves as $leave)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4">
-                                <p class="text-sm font-bold text-gray-800">{{ $leave->user->name }}</p>
+                                <p class="text-sm font-bold text-gray-800">{{ $leave->user->name ?? 'User Deleted' }}</p>
                             </td>
                             <td class="px-6 py-4">
                                 <span
                                     class="bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded border border-blue-100">
-                                    {{ $leave->leaveType->name }}
+                                    {{ $leave->leaveType->name ?? 'Leave Type Deleted' }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-700">
