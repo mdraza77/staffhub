@@ -21,12 +21,14 @@
 
     {{-- Flash Messages --}}
     @if (session('success'))
-        <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
+        <div
+            class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
             <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
         </div>
     @endif
     @if (session('error'))
-        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
+        <div
+            class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
             <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
         </div>
     @endif
@@ -114,6 +116,22 @@
             </a>
         @endcan
 
+        {{-- Employees on Break --}}
+        @can('Break-Room-Access')
+            <a href="{{ route('break-room.index') }}"
+                class="bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex items-center gap-4 hover:shadow-md hover:border-indigo-100 transition-all group">
+                <div
+                    class="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
+                    <i class="fa-solid fa-mug-hot text-indigo-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Taking Break</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ $stats['taking_break'] ?? 0 }}</p>
+                    <p class="text-xs text-indigo-500 mt-0.5">currently in lounge</p>
+                </div>
+            </a>
+        @endcan
+
     </div>
 
     {{-- ===== MAIN CONTENT GRID ===== --}}
@@ -129,23 +147,29 @@
                         <i class="fa-solid fa-bullhorn text-blue-500 text-base"></i>
                         <h2 class="text-base font-semibold text-gray-800">Latest Announcements</h2>
                     </div>
-                    <a href="{{ route('announcements.index') }}" class="text-sm text-blue-600 hover:underline font-medium">View All</a>
+                    <a href="{{ route('announcements.index') }}"
+                        class="text-sm text-blue-600 hover:underline font-medium">View All</a>
                 </div>
                 <div class="space-y-4">
                     @forelse ($recentAnnouncements as $announcement)
-                        <div class="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-all relative overflow-hidden pl-5">
+                        <div
+                            class="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-all relative overflow-hidden pl-5">
                             {{-- Priority Indicator Bar --}}
-                            <div class="absolute left-0 top-0 bottom-0 w-1.5 
+                            <div
+                                class="absolute left-0 top-0 bottom-0 w-1.5 
                                 {{ $announcement->priority === 'high' ? 'bg-red-500' : '' }}
                                 {{ $announcement->priority === 'medium' ? 'bg-amber-500' : '' }}
                                 {{ $announcement->priority === 'low' ? 'bg-blue-500' : '' }}
-                            "></div>
-                            
+                            ">
+                            </div>
+
                             <div class="flex items-start justify-between gap-4 mb-2">
-                                <a href="{{ route('announcements.show', $announcement->id) }}" class="font-semibold text-gray-800 hover:text-blue-600 transition-colors text-sm">
+                                <a href="{{ route('announcements.show', $announcement->id) }}"
+                                    class="font-semibold text-gray-800 hover:text-blue-600 transition-colors text-sm">
                                     {{ $announcement->title }}
                                 </a>
-                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border
+                                <span
+                                    class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border
                                     {{ $announcement->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
                                     {{ $announcement->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
                                     {{ $announcement->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
@@ -157,7 +181,8 @@
                                 {{ Str::limit($announcement->message, 150) }}
                             </p>
                             <div class="flex items-center justify-between text-[11px] text-gray-400">
-                                <span>By <strong class="text-gray-600">{{ $announcement->creator->name ?? 'System' }}</strong></span>
+                                <span>By <strong
+                                        class="text-gray-600">{{ $announcement->creator->name ?? 'System' }}</strong></span>
                                 <span>{{ $announcement->publish_date ? \Carbon\Carbon::parse($announcement->publish_date)->diffForHumans() : $announcement->created_at->diffForHumans() }}</span>
                             </div>
                         </div>
@@ -177,7 +202,8 @@
                         <i class="fa-solid fa-list-check text-amber-500 text-base"></i>
                         <h2 class="text-base font-semibold text-gray-800">My Assigned Tasks</h2>
                     </div>
-                    <a href="{{ route('tasks.index') }}" class="text-sm text-blue-600 hover:underline font-medium">View All</a>
+                    <a href="{{ route('tasks.index') }}" class="text-sm text-blue-600 hover:underline font-medium">View
+                        All</a>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
@@ -194,21 +220,25 @@
                             @forelse ($myTasks as $task)
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-3.5">
-                                        <a href="{{ route('tasks.show', $task->id) }}" class="font-semibold text-gray-800 hover:text-blue-600 transition-colors text-xs block">
+                                        <a href="{{ route('tasks.show', $task->id) }}"
+                                            class="font-semibold text-gray-800 hover:text-blue-600 transition-colors text-xs block">
                                             {{ $task->title }}
                                         </a>
-                                        <span class="text-[10px] text-gray-400">Assigned by {{ $task->assigner->name ?? 'Manager' }}</span>
+                                        <span class="text-[10px] text-gray-400">Assigned by
+                                            {{ $task->assigner->name ?? 'Manager' }}</span>
                                     </td>
                                     <td class="px-6 py-3.5 text-gray-600 text-xs font-medium">
                                         {{ $task->project_name ?? '—' }}
                                     </td>
                                     <td class="px-6 py-3.5 text-gray-600 text-xs">
-                                        <span class="{{ $task->deadline && $task->deadline->isPast() ? 'text-red-600 font-bold' : '' }}">
+                                        <span
+                                            class="{{ $task->deadline && $task->deadline->isPast() ? 'text-red-600 font-bold' : '' }}">
                                             {{ $task->deadline ? $task->deadline->format('d M Y') : 'No Deadline' }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-3.5">
-                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border
+                                        <span
+                                            class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border
                                             {{ $task->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
                                             {{ $task->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
                                             {{ $task->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
@@ -217,7 +247,8 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-3.5">
-                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase
+                                        <span
+                                            class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase
                                             {{ $task->status === 'completed' ? 'bg-green-100 text-green-700' : '' }}
                                             {{ $task->status === 'testing' ? 'bg-purple-100 text-purple-700' : '' }}
                                             {{ $task->status === 'working' ? 'bg-blue-100 text-blue-700' : '' }}
@@ -248,7 +279,8 @@
                             <i class="fa-solid fa-users text-blue-500 text-base"></i>
                             <h2 class="text-base font-semibold text-gray-800">Recently Added Employees</h2>
                         </div>
-                        <a href="{{ route('employees.index') }}" class="text-sm text-blue-600 hover:underline font-medium">View All</a>
+                        <a href="{{ route('employees.index') }}"
+                            class="text-sm text-blue-600 hover:underline font-medium">View All</a>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
@@ -360,18 +392,20 @@
 
                         <div class="space-y-4">
                             @if ($hasPunchedIn)
-                                <div class="bg-gray-50 border border-gray-100 p-3 rounded-lg flex items-center justify-between text-xs text-gray-600">
-                                    <span>Check-In: <strong>{{ \Carbon\Carbon::parse($todayAttendance->check_in_time)->format('h:i A') }}</strong></span>
+                                <div
+                                    class="bg-gray-50 border border-gray-100 p-3 rounded-lg flex items-center justify-between text-xs text-gray-600">
+                                    <span>Check-In:
+                                        <strong>{{ \Carbon\Carbon::parse($todayAttendance->check_in_time)->format('h:i A') }}</strong></span>
                                     @if ($hasPunchedOut)
-                                        <span>Check-Out: <strong>{{ \Carbon\Carbon::parse($todayAttendance->check_out_time)->format('h:i A') }}</strong></span>
+                                        <span>Check-Out:
+                                            <strong>{{ \Carbon\Carbon::parse($todayAttendance->check_out_time)->format('h:i A') }}</strong></span>
                                     @endif
                                 </div>
                             @endif
 
                             @if (!$hasPunchedOut)
                                 <div>
-                                    <input type="text" name="note"
-                                        placeholder="Add note (optional)..."
+                                    <input type="text" name="note" placeholder="Add note (optional)..."
                                         class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400 bg-gray-50">
                                 </div>
                             @endif
@@ -389,7 +423,8 @@
                                     Punch Out
                                 </button>
                             @else
-                                <div class="w-full bg-green-50 border border-green-100 text-green-700 py-2.5 rounded-lg font-semibold text-xs flex items-center justify-center gap-2">
+                                <div
+                                    class="w-full bg-green-50 border border-green-100 text-green-700 py-2.5 rounded-lg font-semibold text-xs flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-circle-check text-sm"></i>
                                     Attendance Logged For Today
                                 </div>
@@ -415,7 +450,8 @@
                                 <i class="fa-solid fa-users text-blue-500 text-xs"></i>
                             </div>
                             <span class="text-xs font-medium">All Employees</span>
-                            <i class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-blue-400"></i>
+                            <i
+                                class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-blue-400"></i>
                         </a>
                     @endcan
 
@@ -427,7 +463,8 @@
                                 <i class="fa-solid fa-user-plus text-blue-500 text-xs"></i>
                             </div>
                             <span class="text-xs font-medium">Add Employee</span>
-                            <i class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-blue-400"></i>
+                            <i
+                                class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-blue-400"></i>
                         </a>
                     @endcan
 
@@ -439,7 +476,8 @@
                                 <i class="fa-solid fa-building text-purple-500 text-xs"></i>
                             </div>
                             <span class="text-xs font-medium">Departments</span>
-                            <i class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-purple-400"></i>
+                            <i
+                                class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-purple-400"></i>
                         </a>
                     @endcan
 
@@ -451,7 +489,8 @@
                                 <i class="fa-solid fa-calendar-check text-teal-500 text-xs"></i>
                             </div>
                             <span class="text-xs font-medium">Attendance</span>
-                            <i class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-teal-400"></i>
+                            <i
+                                class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-teal-400"></i>
                         </a>
                     @endcan
 
@@ -463,7 +502,8 @@
                                 <i class="fa-solid fa-person-walking-arrow-right text-orange-500 text-xs"></i>
                             </div>
                             <span class="text-xs font-medium">Leaves</span>
-                            <i class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-orange-400"></i>
+                            <i
+                                class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-orange-400"></i>
                         </a>
                     @endcan
 
@@ -475,7 +515,8 @@
                                 <i class="fa-solid fa-list-check text-amber-500 text-xs"></i>
                             </div>
                             <span class="text-xs font-medium">Tasks</span>
-                            <i class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-amber-400"></i>
+                            <i
+                                class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-amber-400"></i>
                         </a>
                     @endcan
 
@@ -488,7 +529,8 @@
                                 <i class="fa-solid fa-shield-halved text-indigo-500 text-xs"></i>
                             </div>
                             <span class="text-xs font-medium">Roles & Permissions</span>
-                            <i class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-indigo-400"></i>
+                            <i
+                                class="fa-solid fa-chevron-right ml-auto text-[10px] text-gray-300 group-hover:text-indigo-400"></i>
                         </a>
                     @endcan
 
