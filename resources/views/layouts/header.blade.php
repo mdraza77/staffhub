@@ -71,7 +71,7 @@
                 class="flex items-center gap-2 text-xl font-bold text-blue-700 decoration-none">
                 <img class="w-16 h-16"
                     src="{{ !empty($globalSetting->logo) ? asset($globalSetting->logo) : asset('img/logo.png') }}"
-                    alt="{{ $globalSetting->name ?? 'StaffHub Logo' }}" class="max-h-8">
+                    alt="{{ $globalSetting->name ?? 'StaffHub Logo' }}" class="max-h-8">StaffHub
             </a>
             <i class="bi bi-list text-2xl cursor-pointer text-gray-800 hover:text-blue-600 transition-colors toggle-sidebar-btn"
                 onclick="toggleSidebar()"></i>
