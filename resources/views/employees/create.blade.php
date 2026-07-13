@@ -9,7 +9,7 @@
             <p class="text-sm text-gray-500 mt-1">Fill in the details to onboard a new staff member</p>
         </div>
         <a href="{{ route('employees.index') }}"
-            class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium">
+            class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
             <i class="fa-solid fa-arrow-left"></i> Back to List
         </a>
     </div>
@@ -76,10 +76,11 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Employee ID</label>
-                <input type="text" name="employee_id" value="{{ old('employee_id') }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
-                    placeholder="e.g. WP-001">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Employee ID <span
+                        class="text-xs text-gray-400 font-normal">(Auto-generated)</span></label>
+                <input type="text" name="employee_id" value="{{ old('employee_id', $nextEmployeeId) }}"
+                    class="w-full cursor-not-allowed border border-gray-300 rounded-lg px-4 py-2 outline-none transition-all placeholder-gray-400 bg-gray-50 font-mono text-sm"
+                    placeholder="e.g. SH-2607-001" required readonly>
                 @error('employee_id')
                     <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
                 @enderror

@@ -18,7 +18,7 @@
                 </a>
             @endcan
             <a href="{{ route('employees.index') }}"
-                class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium text-sm">
+                class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
                 <i class="fa-solid fa-arrow-left"></i> Back to List
             </a>
         </div>

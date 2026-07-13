@@ -9,7 +9,7 @@
             <p class="text-sm text-gray-500 mt-1">Update the details for {{ $employee->name }}</p>
         </div>
         <a href="{{ route('employees.index') }}"
-            class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium">
+            class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
             <i class="fa-solid fa-arrow-left"></i> Back to List
         </a>
     </div>
@@ -81,8 +81,8 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Employee ID</label>
                 <input type="text" name="employee_id" value="{{ old('employee_id', $employee->employee_id) }}"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400 @error('employee_id') border-red-500 @enderror"
-                    placeholder="e.g. WP-001">
+                    class="w-full cursor-not-allowed border border-gray-300 rounded-lg px-4 py-2 outline-none transition-all placeholder-gray-400 bg-gray-50 font-mono text-sm @error('employee_id') border-red-500 @enderror"
+                    placeholder="e.g. WP-001" readonly>
                 @error('employee_id')
                     <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
                 @enderror
@@ -202,7 +202,8 @@
                 @if ($employee->signature)
                     <div class="flex items-center gap-4 mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
                         <img src="{{ asset('storage/' . $employee->signature) }}" alt="Current Signature"
-                            class="w-16 h-16 object-contain border-2 border-gray-200 bg-white mix-blend-multiply" draggable="false">
+                            class="w-16 h-16 object-contain border-2 border-gray-200 bg-white mix-blend-multiply"
+                            draggable="false">
                         <div>
                             <p class="text-sm font-medium text-gray-700">Current Signature</p>
                             <p class="text-xs text-gray-500 font-normal">Upload a new signature below to replace it</p>

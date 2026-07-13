@@ -2,32 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Department;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Spatie\Permission\Models\Role;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Role;
 
 class EmployeeController extends Controller implements HasMiddleware
 {
-
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Employee-Index',  only: ['index']),
+            new Middleware('permission:Employee-Index', only: ['index']),
             new Middleware('permission:Employee-Create', only: ['create', 'store']),
-            new Middleware('permission:Employee-Edit',   only: ['edit', 'update']),
+            new Middleware('permission:Employee-Edit', only: ['edit', 'update']),
             new Middleware('permission:Employee-Delete', only: ['destroy']),
             new Middleware('permission:Employee-Restore', only: ['Restore']),
             new Middleware('permission:Employee-ForceDelete', only: ['ForceDelete']),
-            new Middleware('permission:Employee-View',   only: ['show']),
+            new Middleware('permission:Employee-View', only: ['show']),
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -56,7 +57,26 @@ class EmployeeController extends Controller implements HasMiddleware
     {
         $departments = Department::orderBy('name')->get();
         $roles = Role::orderBy('name')->get();
-        return view('employees.create', compact('departments', 'roles'));
+
+        // Auto-generate employee ID
+        $todayYear = Carbon::now()->format('y');  // e.g., 26
+        $todayMonth = Carbon::now()->format('m');  // e.g., 07
+        $prefix = "SH-{$todayYear}{$todayMonth}-";
+
+        $lastEmployee = User::where('employee_id', 'LIKE', $prefix . '%')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($lastEmployee) {
+            $lastSerial = (int) substr($lastEmployee->employee_id, -3);
+            $nextSeq = $lastSerial + 1;
+        } else {
+            $nextSeq = 1;
+        }
+
+        $nextEmployeeId = $prefix . str_pad($nextSeq, 3, '0', STR_PAD_LEFT);
+
+        return view('employees.create', compact('departments', 'roles', 'nextEmployeeId'));
     }
 
     /**
@@ -64,23 +84,44 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
+        // Auto-populate if not explicitly filled
+        if (!$request->filled('employee_id')) {
+            $todayYear = \Carbon\Carbon::now()->format('y');
+            $todayMonth = \Carbon\Carbon::now()->format('m');
+            $prefix = "SH-{$todayYear}{$todayMonth}-";
+
+            $lastEmployee = User::where('employee_id', 'LIKE', $prefix . '%')
+                ->orderBy('id', 'desc')
+                ->first();
+
+            if ($lastEmployee) {
+                $lastSerial = (int) substr($lastEmployee->employee_id, -3);
+                $nextSeq = $lastSerial + 1;
+            } else {
+                $nextSeq = 1;
+            }
+
+            $generatedEmployeeId = $prefix . str_pad($nextSeq, 3, '0', STR_PAD_LEFT);
+            $request->merge(['employee_id' => $generatedEmployeeId]);
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'employee_id' => 'nullable|string|unique:users,employee_id',
+            'employee_id' => 'required|string|unique:users,employee_id',
             'phone' => 'nullable|string|max:20',
             'department_id' => 'nullable|exists:departments,id',
             'designation' => 'nullable|string|max:255',
             'joining_date' => 'nullable|date',
             'status' => 'required|in:active,inactive,terminated',
-            'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB image
-            'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB signature
+            'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // Max 2MB image
+            'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // Max 2MB signature
             'role' => 'nullable|exists:roles,name',
         ]);
 
         try {
-            DB::beginTransaction(); // Start Transaction
+            DB::beginTransaction();  // Start Transaction
 
             $profilePath = null;
             $signaturePath = null;
@@ -116,7 +157,7 @@ class EmployeeController extends Controller implements HasMiddleware
                 $employee->assignRole($request->role);
             }
 
-            DB::commit(); // Save changes to database
+            DB::commit();  // Save changes to database
 
             return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
         } catch (\Exception $e) {
@@ -163,32 +204,32 @@ class EmployeeController extends Controller implements HasMiddleware
     public function update(Request $request, User $employee)
     {
         $request->validate([
-            'name'          => 'required|string|max:255',
-            'email'         => 'required|string|email|max:255|unique:users,email,' . $employee->id,
-            'password'      => 'nullable|string|min:8|confirmed',
-            'employee_id'   => 'nullable|string|unique:users,employee_id,' . $employee->id,
-            'phone'         => 'nullable|string|max:20',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $employee->id,
+            'password' => 'nullable|string|min:8|confirmed',
+            'employee_id' => 'nullable|string|unique:users,employee_id,' . $employee->id,
+            'phone' => 'nullable|string|max:20',
             'department_id' => 'nullable|exists:departments,id',
-            'designation'   => 'nullable|string|max:255',
-            'joining_date'  => 'nullable|date',
-            'status'        => 'required|in:active,inactive,terminated',
-            'profile'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'signature'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'role'          => 'nullable|exists:roles,name',
+            'designation' => 'nullable|string|max:255',
+            'joining_date' => 'nullable|date',
+            'status' => 'required|in:active,inactive,terminated',
+            'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'role' => 'nullable|exists:roles,name',
         ]);
 
         try {
             DB::beginTransaction();
 
             $data = [
-                'name'          => $request->name,
-                'email'         => $request->email,
-                'employee_id'   => $request->employee_id,
-                'phone'         => $request->phone,
+                'name' => $request->name,
+                'email' => $request->email,
+                'employee_id' => $request->employee_id,
+                'phone' => $request->phone,
                 'department_id' => $request->department_id,
-                'designation'   => $request->designation,
-                'joining_date'  => $request->joining_date,
-                'status'        => $request->status,
+                'designation' => $request->designation,
+                'joining_date' => $request->joining_date,
+                'status' => $request->status,
             ];
 
             // Password sirf tab update hoga jab user ne naya diya ho
@@ -219,7 +260,7 @@ class EmployeeController extends Controller implements HasMiddleware
             if ($request->filled('role')) {
                 $employee->syncRoles([$request->role]);
             } else {
-                $employee->syncRoles([]); // koi role nahi
+                $employee->syncRoles([]);  // koi role nahi
             }
 
             DB::commit();
@@ -244,7 +285,7 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     public function destroy(User $employee)
     {
-        $employee->delete(); // Soft Delete
+        $employee->delete();  // Soft Delete
         return redirect()->route('employees.index')->with('success', 'Employee soft deleted successfully.');
     }
 
