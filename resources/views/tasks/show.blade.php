@@ -94,7 +94,7 @@
                             {{ $deadline ? $deadline->format('d M, Y') : 'No Deadline' }}
                             @if ($isOverdue)
                                 <span
-                                    class="bg-red-50 text-red-750 text-[10px] font-bold px-1.5 py-0.5 rounded ml-1 uppercase">Overdue</span>
+                                    class="bg-red-50 text-red-755 text-[10px] font-bold px-1.5 py-0.5 rounded ml-1 uppercase">Overdue</span>
                             @endif
                         </p>
                     </div>
@@ -104,7 +104,7 @@
                 <div>
                     <h3 class="text-sm font-bold text-gray-750 mb-2 uppercase tracking-wide">Detailed Instructions</h3>
                     <div
-                        class="bg-gray-50 border border-gray-150 p-5 rounded-xl text-sm leading-relaxed text-gray-750 prose prose-sm max-w-none">
+                        class="bg-gray-50 border border-gray-150 p-5 rounded-xl text-sm leading-relaxed text-gray-755 prose prose-sm max-w-none">
                         {!! $task->description !!}
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                 <h3 class="text-base font-bold text-gray-800 flex items-center gap-2">
                     <i class="fa-solid fa-comments text-indigo-650"></i> Discussion & Comments
                     <span
-                        class="bg-gray-100 text-gray-650 text-xs px-2 py-0.5 rounded-full">{{ $task->comments->count() }}</span>
+                        class="bg-gray-100 text-gray-655 text-xs px-2 py-0.5 rounded-full">{{ $task->comments->count() }}</span>
                 </h3>
 
                 <!-- list of comments -->
@@ -145,27 +145,98 @@
 
                 <!-- comment post form -->
                 @can('Task-Comment')
-                    <form action="{{ route('tasks.comments.store', $task->id) }}" method="POST"
-                        class="flex items-start gap-3 border-t border-gray-50 pt-5">
-                        @csrf
-                        <div
-                            class="h-9 w-9 bg-gray-105 border border-gray-200 rounded-full flex items-center justify-center font-bold text-gray-550 text-sm flex-shrink-0 uppercase">
-                            {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
+                    @php
+                        $userId = Auth::id();
+                        $isAdminOrManager = Auth::user()->can('Task-ManageAll') || Auth::user()->hasAnyRole(['Super Admin', 'Admin', 'HR Manager']);
+                        $isAssigner = ($userId === $task->assigned_by);
+                    @endphp
+
+                    @if ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
+                        <div class="mt-4 bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
+                            <i class="fa-solid fa-lock text-gray-400"></i> Discussion is closed because this task is closed.
                         </div>
-                        <div class="flex-1">
-                            <textarea name="comment" rows="2" placeholder="Write a comment, remark, queries etc..."
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-sm"
-                                required></textarea>
-                            <div class="flex justify-end mt-2">
-                                <button type="submit"
-                                    class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium text-xs shadow-sm transition-colors flex items-center gap-1">
-                                    <i class="fa-solid fa-paper-plane"></i> Post Comment
-                                </button>
+                    @else
+                        <form action="{{ route('tasks.comments.store', $task->id) }}" method="POST"
+                            class="flex items-start gap-3 border-t border-gray-50 pt-5">
+                            @csrf
+                            <div
+                                class="h-9 w-9 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center font-bold text-gray-550 text-sm flex-shrink-0 uppercase">
+                                {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
                             </div>
-                        </div>
-                    </form>
+                            <div class="flex-1">
+                                <textarea name="comment" rows="2" placeholder="Write a comment, remark, queries etc..."
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-sm"
+                                    required></textarea>
+                                <div class="flex justify-end mt-2">
+                                    <button type="submit"
+                                        class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium text-xs shadow-sm transition-colors flex items-center gap-1">
+                                        <i class="fa-solid fa-paper-plane"></i> Post Comment
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    @endif
                 @endcan
             </div>
+
+            <!-- ===== STATUS TRANSITION TIMELINE HISTORY (JIRA/GITHUB STYLE) ===== -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+                <h3 class="text-base font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-timeline text-indigo-600"></i> Status Timeline History
+                    <span
+                        class="bg-gray-100 text-gray-655 text-xs px-2 py-0.5 rounded-full">{{ $task->statusHistories->count() }}</span>
+                </h3>
+
+                @if ($task->statusHistories->count() > 0)
+                    <div class="relative border-l-2 border-indigo-100 pl-6 ml-4 space-y-6 py-2">
+                        @foreach ($task->statusHistories as $history)
+                            <div class="relative text-xs">
+                                {{-- Timeline Icon/Dot --}}
+                                <div
+                                    class="absolute -left-[31px] top-1 h-4 w-4 rounded-full bg-white border-2 border-indigo-500 flex items-center justify-center">
+                                    <i class="fa-solid fa-arrow-right-arrow-left text-[8px] text-indigo-500"></i>
+                                </div>
+
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-1 text-[11px] text-gray-400">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="font-bold text-gray-700 text-sm">{{ $history->user->name ?? 'System' }}</span>
+                                        @if ($history->user && $history->user->roles->isNotEmpty())
+                                            <span class="px-1.5 py-0.2 bg-gray-100 text-gray-500 rounded text-[9px] font-medium border border-gray-200">
+                                                {{ $history->user->roles->first()->name }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <span>{{ $history->created_at->format('d M Y, g:i A') }} ({{ $history->created_at->diffForHumans() }})</span>
+                                </div>
+
+                                <p class="text-gray-700 mt-2 text-xs flex items-center gap-1.5 flex-wrap">
+                                    Transitioned status from
+                                    <span class="bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded-full font-semibold uppercase text-[10px]">
+                                        {{ str_replace('_', ' ', $history->old_status) }}
+                                    </span>
+                                    to
+                                    <span class="bg-indigo-50 text-indigo-750 border border-indigo-100 px-2 py-0.5 rounded-full font-bold uppercase text-[10px]">
+                                        {{ str_replace('_', ' ', $history->new_status) }}
+                                    </span>
+                                </p>
+
+                                @if ($history->remark)
+                                    <div class="mt-3 p-3.5 bg-gray-50 border border-gray-150 rounded-xl text-gray-700 leading-relaxed relative max-w-3xl shadow-3xs">
+                                        <div class="flex items-center gap-1 mb-1.5 text-[9px] font-bold uppercase text-gray-400 tracking-wider">
+                                            <i class="fa-solid fa-comment-dots text-indigo-400 text-xs"></i>
+                                            Change Remark / Explanation
+                                        </div>
+                                        <p class="font-light text-xs whitespace-pre-line">{{ $history->remark }}</p>
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-xs text-gray-400 italic">No transition changes logged for this task.</p>
+                @endif
+            </div>
+
         </div>
 
         <!-- Right Side: Status transitions & uploads & logs (Col Span 1) -->
@@ -180,28 +251,19 @@
                         <span class="text-gray-500">Current Status:</span>
                         @if ($task->status === 'completed')
                             <span
-                                class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full border border-green-200">Completed</span>
+                                class="bg-green-50 text-green-700 text-xs font-bold px-3 py-1 rounded-full border border-green-200 uppercase">Completed</span>
                         @elseif($task->status === 'in_progress')
                             <span
-                                class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full border border-blue-200">In
-                                Progress</span>
-                        @elseif($task->status === 'ready_for_test')
-                            <span
-                                class="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full border border-purple-200">Ready
-                                for Test</span>
+                                class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full border border-blue-200 uppercase">In Progress</span>
                         @elseif($task->status === 'testing')
                             <span
-                                class="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full border border-amber-200">Testing</span>
-                        @elseif($task->status === 'failed_testing')
-                            <span
-                                class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full border border-red-200">Failed
-                                in Testing</span>
+                                class="bg-amber-50 text-amber-700 text-xs font-bold px-3 py-1 rounded-full border border-amber-200 uppercase">Testing</span>
                         @elseif($task->status === 'closed')
                             <span
-                                class="bg-gray-100 text-gray-700 text-xs font-bold px-3 py-1 rounded-full border border-gray-200">Closed</span>
+                                class="bg-gray-50 text-gray-700 text-xs font-bold px-3 py-1 rounded-full border border-gray-200 uppercase">Closed</span>
                         @else
                             <span
-                                class="bg-yellow-105 text-yellow-750 text-xs font-bold px-3 py-1 rounded-full border border-yellow-150">Open</span>
+                                class="bg-yellow-50 text-yellow-750 text-xs font-bold px-3 py-1 rounded-full border border-yellow-150 uppercase">Open</span>
                         @endif
                     </div>
 
@@ -209,7 +271,7 @@
                         <span class="text-gray-500">Priority Level:</span>
                         @if ($task->priority === 'critical')
                             <span
-                                class="bg-red-50 border border-red-150 text-red-750 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i
+                                class="bg-red-50 border border-red-150 text-red-755 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i
                                     class="fa-solid fa-triangle-exclamation mr-0.5"></i> Critical</span>
                         @elseif($task->priority === 'high')
                             <span
@@ -238,80 +300,76 @@
                         $isDropdownDisabled = false;
                         $allowedStatuses = [];
 
-                        if ($isAdminOrManager || $isAssigner) {
-                            $allowedStatuses = [
-                                'open',
-                                'in_progress',
-                                'ready_for_test',
-                                'testing',
-                                'failed_testing',
-                                'completed',
-                                'closed',
-                            ];
-                        } elseif ($isDeveloper) {
-                            $allowedStatuses = ['in_progress', 'ready_for_test'];
-                            if (!in_array($task->status, $allowedStatuses)) {
-                                $allowedStatuses[] = $task->status;
-                            }
-                        } elseif ($isTester) {
-                            $testerAllowedCurrentStatuses = [
-                                'ready_for_test',
-                                'testing',
-                                'failed_testing',
-                                'completed',
-                                'closed',
-                            ];
-                            if (!in_array($task->status, $testerAllowedCurrentStatuses)) {
+                        if ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner) {
+                            $isDropdownDisabled = true;
+                        } else {
+                            if ($isAdminOrManager || $isAssigner) {
+                                $allowedStatuses = [
+                                    'open',
+                                    'in_progress',
+                                    'testing',
+                                    'completed',
+                                    'closed',
+                                ];
+                            } elseif ($isDeveloper) {
+                                $allowedStatuses = ['in_progress', 'testing'];
+                                if (!in_array($task->status, $allowedStatuses)) {
+                                    $allowedStatuses[] = $task->status;
+                                }
+                            } elseif ($isTester) {
+                                $allowedStatuses = ['completed', 'in_progress'];
+                                if (!in_array($task->status, $allowedStatuses)) {
+                                    $allowedStatuses[] = $task->status;
+                                }
+                            } else {
                                 $isDropdownDisabled = true;
                             }
-                            $allowedStatuses = ['testing', 'failed_testing', 'completed', 'closed'];
-                            if (!in_array($task->status, $allowedStatuses)) {
-                                $allowedStatuses[] = $task->status;
-                            }
-                        } else {
-                            $isDropdownDisabled = true;
                         }
                     @endphp
 
                     <form action="{{ route('tasks.status.update', $task->id) }}" method="POST"
-                        class="pt-3 border-t border-gray-100 space-y-2">
+                        class="pt-3 border-t border-gray-100 space-y-3">
                         @csrf
-                        <label class="block text-xs font-bold text-gray-700 uppercase">Change Task Status</label>
-                        <div class="flex gap-2">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Change Task Status</label>
                             <select name="status"
-                                class="flex-1 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-xs {{ $isDropdownDisabled ? 'bg-gray-100 cursor-not-allowed text-gray-500' : '' }}"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-xs {{ $isDropdownDisabled ? 'bg-gray-100 cursor-not-allowed text-gray-500' : '' }}"
                                 required {{ $isDropdownDisabled ? 'disabled' : '' }}>
                                 @if (in_array('open', $allowedStatuses))
                                     <option value="open" {{ $task->status === 'open' ? 'selected' : '' }}>Open</option>
                                 @endif
                                 @if (in_array('in_progress', $allowedStatuses))
-                                    <option value="in_progress" {{ $task->status === 'in_progress' ? 'selected' : '' }}>In
-                                        Progress</option>
-                                @endif
-                                @if (in_array('ready_for_test', $allowedStatuses))
-                                    <option value="ready_for_test" {{ $task->status === 'ready_for_test' ? 'selected' : '' }}>
-                                        Ready for Test</option>
+                                    <option value="in_progress" {{ $task->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
                                 @endif
                                 @if (in_array('testing', $allowedStatuses))
-                                    <option value="testing" {{ $task->status === 'testing' ? 'selected' : '' }}>Testing
-                                    </option>
-                                @endif
-                                @if (in_array('failed_testing', $allowedStatuses))
-                                    <option value="failed_testing" {{ $task->status === 'failed_testing' ? 'selected' : '' }}>
-                                        Failed in Testing</option>
+                                    <option value="testing" {{ $task->status === 'testing' ? 'selected' : '' }}>Testing</option>
                                 @endif
                                 @if (in_array('completed', $allowedStatuses))
-                                    <option value="completed" {{ $task->status === 'completed' ? 'selected' : '' }}>Completed
-                                    </option>
+                                    <option value="completed" {{ $task->status === 'completed' ? 'selected' : '' }}>Completed</option>
                                 @endif
                                 @if (in_array('closed', $allowedStatuses))
                                     <option value="closed" {{ $task->status === 'closed' ? 'selected' : '' }}>Closed</option>
                                 @endif
                             </select>
-                            <button type="submit"
-                                class="bg-gray-800 hover:bg-gray-900 border border-gray-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition-colors {{ $isDropdownDisabled ? 'opacity-50 cursor-not-allowed' : '' }}"
-                                {{ $isDropdownDisabled ? 'disabled' : '' }}>Apply</button>
                         </div>
+
+                        @if ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
+                            <div class="bg-gray-50 border border-gray-250 text-gray-550 text-[10px] px-3 py-2 rounded-lg flex items-center gap-1.5 justify-center font-medium italic">
+                                <i class="fa-solid fa-lock text-gray-450"></i> Reopening this task is restricted.
+                            </div>
+                        @endif
+
+                        @if (!$isDropdownDisabled)
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Status Change Remark / Note</label>
+                                <textarea name="remark" rows="2" placeholder="Describe progress or reasons for status change..."
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder-gray-400 bg-gray-50"></textarea>
+                            </div>
+                        @endif
+
+                        <button type="submit"
+                            class="w-full bg-gray-800 hover:bg-gray-900 border border-gray-700 text-white py-2 rounded-lg text-xs font-bold transition-colors {{ $isDropdownDisabled ? 'opacity-50 cursor-not-allowed' : '' }}"
+                            {{ $isDropdownDisabled ? 'disabled' : '' }}>Apply Status Change</button>
                     </form>
                 @endcan
             </div>
@@ -325,25 +383,37 @@
                             class="bg-teal-50 border border-teal-100 text-teal-700 text-xs px-2 py-0.5 rounded-full">{{ $task->documents->count() }}</span>
                     </h3>
 
-                    <!-- Upload Attachment Form -->
-                    <form action="{{ route('tasks.documents.store', $task->id) }}" method="POST"
-                        enctype="multipart/form-data" class="space-y-3 p-3 bg-gray-50 border border-gray-200 rounded-xl">
-                        @csrf
-                        <div>
-                            <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Choose File</label>
-                            <input type="file" name="document"
-                                class="w-full text-xs text-gray-700 border border-gray-300 rounded-lg bg-white px-2 py-1.5 focus:ring-1 focus:ring-indigo-500"
-                                required>
+                    @php
+                        $userId = Auth::id();
+                        $isAdminOrManager = Auth::user()->can('Task-ManageAll') || Auth::user()->hasAnyRole(['Super Admin', 'Admin', 'HR Manager']);
+                        $isAssigner = ($userId === $task->assigned_by);
+                    @endphp
+
+                    @if ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
+                        <div class="bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
+                            <i class="fa-solid fa-lock text-gray-450"></i> File uploads are locked because this task is closed.
                         </div>
-                        <div>
-                            <input type="text" name="remark" placeholder="Note / Brief remark (Optional)"
-                                class="w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
-                        </div>
-                        <button type="submit"
-                            class="w-full bg-teal-600 hover:bg-teal-700 text-white py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-upload"></i> Upload Attachment
-                        </button>
-                    </form>
+                    @else
+                        <!-- Upload Attachment Form -->
+                        <form action="{{ route('tasks.documents.store', $task->id) }}" method="POST"
+                            enctype="multipart/form-data" class="space-y-3 p-3 bg-gray-50 border border-gray-200 rounded-xl">
+                            @csrf
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Choose File</label>
+                                <input type="file" name="document"
+                                    class="w-full text-xs text-gray-700 border border-gray-300 rounded-lg bg-white px-2 py-1.5 focus:ring-1 focus:ring-indigo-500"
+                                    required>
+                            </div>
+                            <div>
+                                <input type="text" name="remark" placeholder="Note / Brief remark (Optional)"
+                                    class="w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-1 focus:ring-indigo-500 bg-white">
+                            </div>
+                            <button type="submit"
+                                class="w-full bg-teal-600 hover:bg-teal-700 text-white py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-upload"></i> Upload Attachment
+                            </button>
+                        </form>
+                    @endif
 
                     <!-- list of uploaded documents -->
                     <div class="space-y-2.5 max-h-[220px] overflow-y-auto pr-1">
@@ -353,7 +423,7 @@
                                 <div class="flex justify-between items-start gap-1">
                                     <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
                                         class="text-indigo-650 hover:underline font-bold text-xs truncate flex-1 flex items-center gap-1.5">
-                                        <i class="fa-solid fa-file-pdf text-[13px] text-red-500 flex-shrink-0"></i>
+                                        <i class="fa-solid fa-file text-[13px] text-red-500 flex-shrink-0"></i>
                                         {{ $doc->file_name }}
                                     </a>
                                 </div>
@@ -377,42 +447,6 @@
                 </div>
             @endcan
 
-            <!-- History log / Transitions -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
-                <h3 class="text-xs font-bold text-gray-805 uppercase tracking-wider mb-2">Status Timeline History</h3>
-
-                @if ($task->statusHistories->count() > 0)
-                    <div class="relative border-l-2 border-indigo-100 pl-4 ml-1 space-y-4">
-                        @foreach ($task->statusHistories as $history)
-                            <div class="relative text-xs">
-                                <div
-                                    class="absolute -left-[23px] top-1.5 h-2.5 w-2.5 rounded-full bg-indigo-505 border-2 border-white ring-4 ring-indigo-50">
-                                </div>
-                                <div class="flex justify-between items-center text-[10px] text-gray-400">
-                                    <span class="font-bold text-gray-650">{{ $history->user->name ?? 'System' }}</span>
-                                    <span>{{ $history->created_at->format('d M, g:i a') }}</span>
-                                </div>
-                                <p class="text-gray-700 mt-0.5">
-                                    Transitioned from
-
-                                    <span class="bg-gray-100 px-1 py-0.5 rounded font-mono text-[10px]">
-                                        {{ ucwords(str_replace('_', ' ', $history->old_status)) }}
-                                    </span>
-
-                                    to
-
-                                    <span
-                                        class="bg-indigo-50 text-indigo-700 font-bold px-1 py-0.5 rounded font-mono text-[10px]">
-                                        {{ ucwords(str_replace('_', ' ', $history->new_status)) }}
-                                    </span>
-                                </p>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <p class="text-xs text-gray-400 italic">No transition changes logged.</p>
-                @endif
-            </div>
         </div>
     </div>
 @endsection

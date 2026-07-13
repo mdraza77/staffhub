@@ -127,19 +127,10 @@
                                                 class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
                                         @elseif($task->status === 'in_progress')
                                             <span
-                                                class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
-                                                Progress</span>
-                                        @elseif($task->status === 'ready_for_test')
-                                            <span
-                                                class="bg-purple-150 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">Ready
-                                                for Test</span>
+                                                class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In Progress</span>
                                         @elseif($task->status === 'testing')
                                             <span
                                                 class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
-                                        @elseif($task->status === 'failed_testing')
-                                            <span
-                                                class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed
-                                                in Testing</span>
                                         @elseif($task->status === 'closed')
                                             <span
                                                 class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>
@@ -149,7 +140,7 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-center">
-                                        @can('Task-Edit')
+                                        @can('Task-ProgressUpdate')
                                             <a href="{{ route('tasks.show', $task->id) }}"
                                                 class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
                                                 title="Edit Progress Details">
@@ -257,19 +248,10 @@
                                                     class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
                                             @elseif($task->status === 'in_progress')
                                                 <span
-                                                    class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
-                                                    Progress</span>
-                                            @elseif($task->status === 'ready_for_test')
-                                                <span
-                                                    class="bg-purple-150 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">Ready
-                                                    for Test</span>
+                                                    class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In Progress</span>
                                             @elseif($task->status === 'testing')
                                                 <span
                                                     class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
-                                            @elseif($task->status === 'failed_testing')
-                                                <span
-                                                    class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed
-                                                    in Testing</span>
                                             @elseif($task->status === 'closed')
                                                 <span
                                                     class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>
@@ -367,19 +349,10 @@
                                                     class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
                                             @elseif($task->status === 'in_progress')
                                                 <span
-                                                    class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
-                                                    Progress</span>
-                                            @elseif($task->status === 'ready_for_test')
-                                                <span
-                                                    class="bg-purple-150 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">Ready
-                                                    for Test</span>
+                                                    class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In Progress</span>
                                             @elseif($task->status === 'testing')
                                                 <span
                                                     class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
-                                            @elseif($task->status === 'failed_testing')
-                                                <span
-                                                    class="bg-red-150 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Failed
-                                                    in Testing</span>
                                             @elseif($task->status === 'closed')
                                                 <span
                                                     class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>

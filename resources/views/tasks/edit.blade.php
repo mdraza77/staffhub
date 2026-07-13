@@ -98,18 +98,10 @@
                 <select name="status"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
                     required>
-                    <option value="open" {{ old('status', $task->status) == 'open' ? 'selected' : '' }}>Open / Pending
-                    </option>
-                    <option value="in_progress" {{ old('status', $task->status) == 'in_progress' ? 'selected' : '' }}>In
-                        Progress</option>
-                    <option value="ready_for_test"
-                        {{ old('status', $task->status) == 'ready_for_test' ? 'selected' : '' }}>Ready for Test</option>
-                    <option value="testing" {{ old('status', $task->status) == 'testing' ? 'selected' : '' }}>Testing
-                    </option>
-                    <option value="failed_testing"
-                        {{ old('status', $task->status) == 'failed_testing' ? 'selected' : '' }}>Failed in Testing</option>
-                    <option value="completed" {{ old('status', $task->status) == 'completed' ? 'selected' : '' }}>Completed
-                    </option>
+                    <option value="open" {{ old('status', $task->status) == 'open' ? 'selected' : '' }}>Open</option>
+                    <option value="in_progress" {{ old('status', $task->status) == 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                    <option value="testing" {{ old('status', $task->status) == 'testing' ? 'selected' : '' }}>Testing</option>
+                    <option value="completed" {{ old('status', $task->status) == 'completed' ? 'selected' : '' }}>Completed</option>
                     <option value="closed" {{ old('status', $task->status) == 'closed' ? 'selected' : '' }}>Closed</option>
                 </select>
             </div>

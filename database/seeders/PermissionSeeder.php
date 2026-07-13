@@ -73,6 +73,7 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Task-ProgressUpdate']);
         Permission::firstOrCreate(['name' => 'Task-Comment']);
         Permission::firstOrCreate(['name' => 'Task-Document']);
+        Permission::firstOrCreate(['name'=> 'Task-ManageAll']);
 
         // ===== REPORTS =====
         Permission::firstOrCreate(['name' => 'Employees-Report']);
@@ -223,6 +224,7 @@ class PermissionSeeder extends Seeder
             'Leave-Index',
             'Leave-Apply',
             'Leave-ApproveReject',
+            'Task-ProgressUpdate',
             'Task-Index',
             'Task-View',
             'Task-Comment',
@@ -331,7 +333,7 @@ class PermissionSeeder extends Seeder
             'Announcement-View',
         ]);
 
-        $this->command->info('All permissions seeded successfully.');
-        $this->command->info('Roles assigned: Super Admin, Admin, HR Manager, Department Manager, Employee, Intern.');
+        // $this->command->info('All permissions seeded successfully.');
+        // $this->command->info('Roles assigned: Super Admin, Admin, HR Manager, Department Manager, Employee, Intern.');
     }
 }

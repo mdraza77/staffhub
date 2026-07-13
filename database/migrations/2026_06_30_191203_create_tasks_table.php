@@ -49,9 +49,7 @@ return new class extends Migration {
             $table->enum('status', [
                 'open',
                 'in_progress',
-                'ready_for_test',
                 'testing',
-                'failed_testing',
                 'completed',
                 'closed'
             ])->default('open');

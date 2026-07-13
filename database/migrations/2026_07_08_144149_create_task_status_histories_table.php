@@ -20,6 +20,8 @@ return new class extends Migration {
             $table->string('old_status');
             $table->string('new_status');
 
+            $table->text('remark')->nullable();
+
             $table
                 ->foreignId('changed_by')
                 ->constrained('users')
