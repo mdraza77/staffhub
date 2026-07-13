@@ -125,16 +125,36 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Defects Routes
-    Route::resource('defects', App\Http\Controllers\DefectController::class);
-    Route::post('defects/{defect}/restore', [App\Http\Controllers\DefectController::class, 'restore'])->name('defects.restore')->withTrashed();
-    Route::post('defects/{defect}/attachments', [App\Http\Controllers\DefectController::class, 'storeAttachment'])->name('defects.attachments.store');
-    Route::post('defects/{defect}/status', [App\Http\Controllers\DefectController::class, 'updateStatus'])->name('defects.status.update');
+    Route::controller(DefectController::class)->prefix('defects')->name('defects.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{defect}', 'show')->name('show');
+        Route::get('/{defect}/edit', 'edit')->name('edit');
+        Route::put('/{defect}', 'update')->name('update');
+        Route::delete('/{defect}', 'destroy')->name('destroy');
 
-    // Break Room & Break Types Routes
-    Route::resource('break-types', BreakTypeController::class)->except(['show']);
-    Route::get('break-room', [EmployeeBreakController::class, 'index'])->name('break-room.index');
-    Route::post('break-room/start', [EmployeeBreakController::class, 'startBreak'])->name('break-room.start');
-    Route::post('break-room/end', [EmployeeBreakController::class, 'endBreak'])->name('break-room.end');
+        Route::post('/{defect}/restore', 'restore')->name('restore')->withTrashed();
+        Route::post('/{defect}/status', 'updateStatus')->name('status.update');
+        Route::post('/{defect}/attachments', 'storeAttachment')->name('attachments.store');
+    });
+
+    // Break Types Routes
+    Route::controller(BreakTypeController::class)->prefix('break-types')->name('break-types.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{break_type}/edit', 'edit')->name('edit');
+        Route::put('/{break_type}', 'update')->name('update');
+        Route::delete('/{break_type}', 'destroy')->name('destroy');
+    });
+
+    // Break Room Routes
+    Route::controller(EmployeeBreakController::class)->prefix('break-room')->name('break-room.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/start', 'startBreak')->name('start');
+        Route::post('/end', 'endBreak')->name('end');
+    });
     Route::get('breaks-history', [EmployeeBreakController::class, 'history'])->name('breaks.history');
 });
 
