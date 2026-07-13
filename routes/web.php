@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BreakTypeController;
+use App\Http\Controllers\CompanySettingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefectController;
 use App\Http\Controllers\DepartmentController;
@@ -158,8 +159,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('breaks-history', [EmployeeBreakController::class, 'history'])->name('breaks.history');
 
     // Company Settings Routes
-    Route::get('company-settings', [App\Http\Controllers\CompanySettingController::class, 'edit'])->name('company');
-    Route::put('company-settings', [App\Http\Controllers\CompanySettingController::class, 'update'])->name('company.update');
+    Route::get('company-settings', [CompanySettingController::class, 'edit'])->name('company');
+    Route::put('company-settings', [CompanySettingController::class, 'update'])->name('company.update');
 });
 
 require __DIR__ . '/auth.php';
