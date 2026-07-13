@@ -102,7 +102,8 @@
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-2.5">
                                             <div
-                                                class="w-7 h-7 rounded-full bg-gray-100 text-gray-650 flex items-center justify-center font-bold text-[9px] border border-gray-200">
+                                                class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border
+                                            {{ $log->user->trashed() ? 'bg-gray-200 text-gray-400 border-gray-300' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
                                                 {{ strtoupper(substr($log->user->name, 0, 2)) }}
                                             </div>
                                             <div>

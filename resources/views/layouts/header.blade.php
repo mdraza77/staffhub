@@ -10,6 +10,16 @@
     <meta content="" name="keywords">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <script>
+        // Check localStorage or system settings for theme preferences immediately
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia(
+                '(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     <link href="{{ asset('assets/img/logo.png') }}" rel="icon">
     <link href="{{ asset('assets/img/logo.png') }}" rel="apple-touch-icon">
 
@@ -50,7 +60,8 @@
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 font-sans antialiased transition-all duration-300">
+<body
+    class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-slate-100 font-sans antialiased transition-all duration-300">
 
     <header id="header"
         class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm h-16 flex items-center px-4 md:px-6 transition-all duration-300">
@@ -67,7 +78,15 @@
         </div>
 
         <nav class="ml-auto flex items-center">
-            <ul class="flex items-center m-0 p-0 list-none">
+            <ul class="flex items-center m-0 p-0 list-none gap-5">
+
+                <li class="pr-3 flex items-center">
+                    <button id="theme-toggle" onclick="toggleTheme()"
+                        class="text-gray-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 focus:outline-none transition-colors duration-200">
+                        <i id="theme-toggle-light-icon" class="fa-solid fa-sun text-xl hidden"></i>
+                        <i id="theme-toggle-dark-icon" class="fa-solid fa-moon text-xl"></i>
+                    </button>
+                </li>
 
                 <li class="relative group pr-3">
                     <a class="flex items-center gap-2 cursor-pointer py-2" href="#">
@@ -505,7 +524,7 @@
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.querySelector('.toggle-sidebar-btn');
-            
+
             // Only trigger on mobile/tablet viewports (< 768px)
             if (window.innerWidth < 768) {
                 // If sidebar is currently open (doesn't contain -translate-x-full)
@@ -517,4 +536,40 @@
                 }
             }
         });
+
+        // Toggle light/dark theme
+        function toggleTheme() {
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            }
+        }
+
+        // Initialize icons based on theme
+        function initThemeIcon() {
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+
+            if (lightIcon && darkIcon) {
+                if (document.documentElement.classList.contains('dark')) {
+                    lightIcon.classList.remove('hidden');
+                    darkIcon.classList.add('hidden');
+                } else {
+                    lightIcon.classList.add('hidden');
+                    darkIcon.classList.remove('hidden');
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initThemeIcon);
     </script>
