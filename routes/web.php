@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\BreakTypeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefectController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmployeeBreakController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\LeaveController;
@@ -15,7 +17,6 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
-
 
 Route::get('/', function () {
     return view('welcome');
@@ -128,6 +129,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('defects/{defect}/restore', [App\Http\Controllers\DefectController::class, 'restore'])->name('defects.restore')->withTrashed();
     Route::post('defects/{defect}/attachments', [App\Http\Controllers\DefectController::class, 'storeAttachment'])->name('defects.attachments.store');
     Route::post('defects/{defect}/status', [App\Http\Controllers\DefectController::class, 'updateStatus'])->name('defects.status.update');
+
+    // Break Room & Break Types Routes
+    Route::resource('break-types', BreakTypeController::class)->except(['show']);
+    Route::get('break-room', [EmployeeBreakController::class, 'index'])->name('break-room.index');
+    Route::post('break-room/start', [EmployeeBreakController::class, 'startBreak'])->name('break-room.start');
+    Route::post('break-room/end', [EmployeeBreakController::class, 'endBreak'])->name('break-room.end');
+    Route::get('breaks-history', [EmployeeBreakController::class, 'history'])->name('breaks.history');
 });
 
 require __DIR__ . '/auth.php';

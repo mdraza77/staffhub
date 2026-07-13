@@ -303,6 +303,55 @@
                 </li>
             @endcan
 
+            {{-- ===== BREAKS MANAGEMENT ===== --}}
+            @php
+                $breaksActive = request()->routeIs('break-room.*') || request()->routeIs('break-types.*') || request()->routeIs('breaks.history');
+            @endphp
+            @if (auth()->check() && (auth()->user()->can('Break-Room-Access') || auth()->user()->can('BreakType-Manage') || auth()->user()->can('Break-History-View')))
+                <li>
+                    <details class="group" {{ $breaksActive ? 'open' : '' }}>
+                        <summary
+                            class="{{ $breaksActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-mug-hot text-lg"></i>
+                                <span>Break Room</span>
+                            </div>
+                            <i
+                                class="bi bi-chevron-down transition-transform duration-300 {{ $breaksActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
+                        </summary>
+                        <ul class="pl-9 pr-2 py-2 space-y-1">
+                            @can('Break-Room-Access')
+                                <li>
+                                    <a href="{{ route('break-room.index') }}"
+                                        class="{{ request()->routeIs('break-room.index') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                        <i class="bi bi-circle text-[8px]"></i>
+                                        <span>Enter Break Room</span>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('Break-History-View')
+                                <li>
+                                    <a href="{{ route('breaks.history') }}"
+                                        class="{{ request()->routeIs('breaks.history') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                        <i class="bi bi-circle text-[8px]"></i>
+                                        <span>Break History</span>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('BreakType-Manage')
+                                <li>
+                                    <a href="{{ route('break-types.index') }}"
+                                        class="{{ request()->routeIs('break-types.*') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                        <i class="bi bi-circle text-[8px]"></i>
+                                        <span>Break Types (Admin)</span>
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </details>
+                </li>
+            @endif
+
             {{-- ===== ROLES & PERMISSIONS ===== --}}
             @can('AccessManagement-Index')
                 <li>

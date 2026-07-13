@@ -73,7 +73,7 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Task-ProgressUpdate']);
         Permission::firstOrCreate(['name' => 'Task-Comment']);
         Permission::firstOrCreate(['name' => 'Task-Document']);
-        Permission::firstOrCreate(['name'=> 'Task-ManageAll']);
+        Permission::firstOrCreate(['name' => 'Task-ManageAll']);
 
         // ===== REPORTS =====
         Permission::firstOrCreate(['name' => 'Employees-Report']);
@@ -123,13 +123,18 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Defect-Delete']);
         Permission::firstOrCreate(['name' => 'Defect-Restore']);
 
+        // ===== BREAKS & BREAK ROOM =====
+        Permission::firstOrCreate(['name' => 'BreakType-Manage']);
+        Permission::firstOrCreate(['name' => 'Break-Room-Access']);
+        Permission::firstOrCreate(['name' => 'Break-History-View']);
+
         // ===== ROLES =======
-        $superAdmin  = Role::firstOrCreate(['name' => 'Super Admin']);
-        $admin       = Role::firstOrCreate(['name' => 'Admin']);
-        $hrManager   = Role::firstOrCreate(['name' => 'HR Manager']);
+        $superAdmin = Role::firstOrCreate(['name' => 'Super Admin']);
+        $admin = Role::firstOrCreate(['name' => 'Admin']);
+        $hrManager = Role::firstOrCreate(['name' => 'HR Manager']);
         $deptManager = Role::firstOrCreate(['name' => 'Department Manager']);
-        $employee    = Role::firstOrCreate(['name' => 'Employee']);
-        $intern      = Role::firstOrCreate(['name' => 'Intern']);
+        $employee = Role::firstOrCreate(['name' => 'Employee']);
+        $intern = Role::firstOrCreate(['name' => 'Intern']);
 
         // Super Admin — all permissions
         $permissions = Permission::all();
@@ -210,6 +215,9 @@ class PermissionSeeder extends Seeder
             'Defect-View',
             'Defect-Delete',
             'Defect-Restore',
+            'BreakType-Manage',
+            'Break-Room-Access',
+            'Break-History-View',
         ]);
 
         // HR Manager — department, employee, leaves and attendance management
@@ -275,6 +283,9 @@ class PermissionSeeder extends Seeder
             'Defect-View',
             'Defect-Delete',
             'Defect-Restore',
+            'BreakType-Manage',
+            'Break-Room-Access',
+            'Break-History-View',
         ]);
 
         // Department Manager — view own department, handle leaves, and manage tasks
@@ -314,6 +325,8 @@ class PermissionSeeder extends Seeder
             'Defect-View',
             'Defect-Delete',
             'Defect-Restore',
+            'Break-Room-Access',
+            'Break-History-View',
         ]);
 
         // Employee — self operations (profile, mark attendance, apply leaves, work on tasks)
@@ -340,6 +353,8 @@ class PermissionSeeder extends Seeder
             'Defect-Create',
             'Defect-Edit',
             'Defect-View',
+            'Break-Room-Access',
+            'Break-History-View',
         ]);
 
         // Intern — self operations (profile, mark attendance, apply leaves, work on tasks)
@@ -364,6 +379,8 @@ class PermissionSeeder extends Seeder
             'Defect-Index',
             'Defect-Create',
             'Defect-View',
+            'Break-Room-Access',
+            'Break-History-View',
         ]);
 
         // $this->command->info('All permissions seeded successfully.');
