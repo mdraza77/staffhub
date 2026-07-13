@@ -156,6 +156,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/end', 'endBreak')->name('end');
     });
     Route::get('breaks-history', [EmployeeBreakController::class, 'history'])->name('breaks.history');
+
+    // Company Settings Routes
+    Route::get('company-settings', [App\Http\Controllers\CompanySettingController::class, 'edit'])->name('company');
+    Route::put('company-settings', [App\Http\Controllers\CompanySettingController::class, 'update'])->name('company.update');
 });
 
 require __DIR__ . '/auth.php';

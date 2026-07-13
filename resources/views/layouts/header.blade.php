@@ -69,9 +69,9 @@
         <div class="flex items-center justify-between w-auto md:w-64 gap-4 md:gap-0">
             <a href="{{ route('dashboard') }}"
                 class="flex items-center gap-2 text-xl font-bold text-blue-700 decoration-none">
-                <img class="w-16 h-16"
-                    src="{{ !empty($globalSetting->logo) ? asset($globalSetting->logo) : asset('img/logo.png') }}"
-                    alt="{{ $globalSetting->name ?? 'StaffHub Logo' }}" class="max-h-8">StaffHub
+                <img class="max-h-10 w-auto object-contain"
+                    src="{{ !empty($globalSetting->logo) ? asset('storage/' . $globalSetting->logo) : asset('img/logo.png') }}"
+                    alt="{{ $globalSetting->name ?? 'StaffHub Logo' }}"> {{ $globalSetting->name ?? 'StaffHub' }}
             </a>
             <i class="bi bi-list text-2xl cursor-pointer text-gray-800 hover:text-blue-600 transition-colors toggle-sidebar-btn"
                 onclick="toggleSidebar()"></i>
@@ -429,7 +429,7 @@
             @endif
 
             {{-- ===== SETTINGS ===== --}}
-            {{-- @php
+            @php
                 $settingsActive = request()->routeIs('settings.*') || request()->routeIs('company.*');
             @endphp
 
@@ -455,19 +455,19 @@
                                     </a>
                                 </li>
                             @endcan
-                            @can('Settings-Index')
+                            {{-- @can('Settings-Index')
                                 <li>
                                     <a href="{{ route('settings.index') }}"
-                                        class="{{ request()->routeIs('settings.index') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 tran sition-colors">
+                                        class="{{ request()->routeIs('settings.index') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
                                         <i class="bi bi-circle text-[8px]"></i>
                                         <span>General Settings</span>
                                     </a>
                                 </li>
-                            @endcan
+                            @endcan --}}
                         </ul>
                     </details>
                 </li>
-            @endif --}}
+            @endif
 
         </ul>
     </aside>
