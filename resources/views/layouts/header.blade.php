@@ -55,7 +55,7 @@
     <header id="header"
         class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm h-16 flex items-center px-4 md:px-6 transition-all duration-300">
 
-        <div class="flex items-center justify-between w-64">
+        <div class="flex items-center justify-between w-auto md:w-64 gap-4 md:gap-0">
             <a href="{{ route('dashboard') }}"
                 class="flex items-center gap-2 text-xl font-bold text-blue-700 decoration-none">
                 <img class="w-16 h-16"
@@ -118,7 +118,7 @@
 
     </header>
     <aside id="sidebar"
-        class="fixed top-16 left-0 bottom-0 w-64 bg-white border-r border-gray-200 overflow-y-auto z-40 transition-transform duration-300 transform translate-x-0">
+        class="fixed top-16 left-0 bottom-0 w-64 bg-white border-r border-gray-200 overflow-y-auto z-40 transition-transform duration-300 transform md:translate-x-0 -translate-x-full">
 
         <ul class="p-4 space-y-1" id="sidebar-nav">
 
@@ -486,17 +486,35 @@
             const sidebar = document.getElementById('sidebar');
             const main = document.getElementById('main');
 
-            sidebar.classList.toggle('-translate-x-full'); // Hides/Shows sidebar
+            sidebar.classList.toggle('-translate-x-full'); // Hides/Shows sidebar on mobile
+            sidebar.classList.toggle('md:translate-x-0'); // Toggle state on desktop
 
             // Adjust main content margin based on screen size
             if (window.innerWidth >= 768) { // md breakpoint in tailwind
-                if (sidebar.classList.contains('-translate-x-full')) {
-                    main.classList.remove('ml-64');
+                if (main.classList.contains('md:ml-64')) {
+                    main.classList.remove('md:ml-64');
                     main.classList.add('ml-0');
                 } else {
                     main.classList.remove('ml-0');
-                    main.classList.add('ml-64');
+                    main.classList.add('md:ml-64');
                 }
             }
         }
+
+        // Close sidebar when clicking outside of it on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.querySelector('.toggle-sidebar-btn');
+            
+            // Only trigger on mobile/tablet viewports (< 768px)
+            if (window.innerWidth < 768) {
+                // If sidebar is currently open (doesn't contain -translate-x-full)
+                if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
+                    // Check if the click was outside the sidebar and not on the toggle button
+                    if (!sidebar.contains(event.target) && (!toggleBtn || !toggleBtn.contains(event.target))) {
+                        sidebar.classList.add('-translate-x-full');
+                    }
+                }
+            }
+        });
     </script>
