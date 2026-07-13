@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DefectController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\HolidayController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -120,6 +122,12 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{announcement}/restore', 'restore')->name('restore')->withTrashed();
         Route::delete('/{announcement}/force-delete', 'forceDelete')->name('force-delete')->withTrashed();
     });
+
+    // Defects Routes
+    Route::resource('defects', App\Http\Controllers\DefectController::class);
+    Route::post('defects/{defect}/restore', [App\Http\Controllers\DefectController::class, 'restore'])->name('defects.restore')->withTrashed();
+    Route::post('defects/{defect}/attachments', [App\Http\Controllers\DefectController::class, 'storeAttachment'])->name('defects.attachments.store');
+    Route::post('defects/{defect}/status', [App\Http\Controllers\DefectController::class, 'updateStatus'])->name('defects.status.update');
 });
 
 require __DIR__ . '/auth.php';
