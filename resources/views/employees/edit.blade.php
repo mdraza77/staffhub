@@ -91,6 +91,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                 <input type="text" name="phone" value="{{ old('phone', $employee->phone) }}"
+                    placeholder="e.g., +918544568958"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('phone') border-red-500 @enderror">
                 @error('phone')
                     <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
@@ -232,3 +233,51 @@
         </div>
     </form>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const phoneInput = document.querySelector('input[name="phone"]');
+            if (!phoneInput) return;
+
+            // Dynamic warning message setup
+            const warnSpan = document.createElement('span');
+            warnSpan.className = 'text-xs text-red-500 mt-1 hidden block';
+            warnSpan.textContent = 'Format invalid. Example: +919876543210 (Must include + and country code)';
+            phoneInput.parentNode.appendChild(warnSpan);
+
+            // Validation function ko alag kar diya
+            const validatePhone = () => {
+                const val = phoneInput.value.trim();
+
+                if (val === '') {
+                    phoneInput.classList.remove('border-red-500');
+                    warnSpan.classList.add('hidden');
+                    phoneInput.setCustomValidity('');
+                    return;
+                }
+
+                // Strict Regex: Starts with '+', then 1-3 digit country code, exactly 10 digits
+                const regex = /^\+\d{1,3}\d{10}$/;
+
+                if (!regex.test(val)) {
+                    phoneInput.classList.add('border-red-500');
+                    warnSpan.classList.remove('hidden');
+                    phoneInput.setCustomValidity('Invalid phone format.');
+                } else {
+                    phoneInput.classList.remove('border-red-500');
+                    warnSpan.classList.add('hidden');
+                    phoneInput.setCustomValidity('');
+                }
+            };
+
+            // 1. Jab user type karega tab validate hoga
+            phoneInput.addEventListener('input', validatePhone);
+
+            // 2. IMPORTANT FOR EDIT PAGE: Page load hote hi purana data validate check karega
+            if (phoneInput.value.trim() !== '') {
+                validatePhone();
+            }
+        });
+    </script>
+@endpush

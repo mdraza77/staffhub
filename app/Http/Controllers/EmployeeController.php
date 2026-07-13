@@ -86,8 +86,8 @@ class EmployeeController extends Controller implements HasMiddleware
     {
         // Auto-populate if not explicitly filled
         if (!$request->filled('employee_id')) {
-            $todayYear = \Carbon\Carbon::now()->format('y');
-            $todayMonth = \Carbon\Carbon::now()->format('m');
+            $todayYear = Carbon::now()->format('y');
+            $todayMonth = Carbon::now()->format('m');
             $prefix = "SH-{$todayYear}{$todayMonth}-";
 
             $lastEmployee = User::where('employee_id', 'LIKE', $prefix . '%')
@@ -110,7 +110,7 @@ class EmployeeController extends Controller implements HasMiddleware
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'employee_id' => 'required|string|unique:users,employee_id',
-            'phone' => 'nullable|string|max:20',
+            'phone' => 'nullable|string|regex:/^\+?[1-9]\d{9,14}$/',
             'department_id' => 'nullable|exists:departments,id',
             'designation' => 'nullable|string|max:255',
             'joining_date' => 'nullable|date',
@@ -118,6 +118,8 @@ class EmployeeController extends Controller implements HasMiddleware
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // Max 2MB image
             'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // Max 2MB signature
             'role' => 'nullable|exists:roles,name',
+        ], [
+            'phone.regex' => 'The phone number format must be valid (e.g. +918544568958 or 918544568958).',
         ]);
 
         try {
@@ -208,7 +210,7 @@ class EmployeeController extends Controller implements HasMiddleware
             'email' => 'required|string|email|max:255|unique:users,email,' . $employee->id,
             'password' => 'nullable|string|min:8|confirmed',
             'employee_id' => 'nullable|string|unique:users,employee_id,' . $employee->id,
-            'phone' => 'nullable|string|max:20',
+            'phone' => 'nullable|string|regex:/^\+?[1-9]\d{9,14}$/',
             'department_id' => 'nullable|exists:departments,id',
             'designation' => 'nullable|string|max:255',
             'joining_date' => 'nullable|date',
@@ -216,6 +218,8 @@ class EmployeeController extends Controller implements HasMiddleware
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'role' => 'nullable|exists:roles,name',
+        ], [
+            'phone.regex' => 'The phone number format must be valid (e.g. +918544568958 or 918544568958).',
         ]);
 
         try {
