@@ -12,8 +12,6 @@
 
     <link href="{{ asset('assets/img/logo.png') }}" rel="icon">
     <link href="{{ asset('assets/img/logo.png') }}" rel="apple-touch-icon">
-    <link rel="stylesheet" href="resources/css/datatables.css">
-    <link rel="stylesheet" href="{{ asset('css/datatables.css') }}">
 
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link
@@ -25,10 +23,11 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.tailwindcss.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.tailwindcss.min.css">
+    <link rel="stylesheet" href="{{ asset('css/datatables.css') }}?v={{ time() }}">
 
     @stack('styles')
 
@@ -39,9 +38,13 @@
         }
 
         /* Hide scrollbar for IE, Edge and Firefox */
-        html, body, #sidebar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+        html,
+        body,
+        #sidebar {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
             font-size: 14px;
         }
     </style>
@@ -305,9 +308,15 @@
 
             {{-- ===== BREAKS MANAGEMENT ===== --}}
             @php
-                $breaksActive = request()->routeIs('break-room.*') || request()->routeIs('break-types.*') || request()->routeIs('breaks.history');
+                $breaksActive =
+                    request()->routeIs('break-room.*') ||
+                    request()->routeIs('break-types.*') ||
+                    request()->routeIs('breaks.history');
             @endphp
-            @if (auth()->check() && (auth()->user()->can('Break-Room-Access') || auth()->user()->can('BreakType-Manage') || auth()->user()->can('Break-History-View')))
+            @if (auth()->check() &&
+                    (auth()->user()->can('Break-Room-Access') ||
+                        auth()->user()->can('BreakType-Manage') ||
+                        auth()->user()->can('Break-History-View')))
                 <li>
                     <details class="group" {{ $breaksActive ? 'open' : '' }}>
                         <summary
@@ -343,7 +352,7 @@
                                     <a href="{{ route('break-types.index') }}"
                                         class="{{ request()->routeIs('break-types.*') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
                                         <i class="bi bi-circle text-[8px]"></i>
-                                        <span>Break Types (Admin)</span>
+                                        <span>Break Types</span>
                                     </a>
                                 </li>
                             @endcan
@@ -491,22 +500,3 @@
             }
         }
     </script>
-    @include('sweetalert2::index')
-
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.tailwindcss.min.js"></script>
-
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.tailwindcss.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-
-    @stack('scripts')
-</body>
-
-</html>

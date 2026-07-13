@@ -96,7 +96,8 @@
 /* Style the select dropdown box */
 select.dt-input,
 .dt-length select {
-    padding: 4px 10px !important;
+    padding: 4px 28px 4px 10px !important;
+    min-width: 65px !important;
     border: 1px solid #d1d5db !important;
     /* border-gray-300 */
     border-radius: 6px !important;
@@ -117,4 +118,97 @@ select.dt-input:focus {
     border-color: #2563eb !important;
     /* blue-600 */
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
+}
+
+/* ========================================================= */
+/* FORCE LIGHT THEME FOR DATATABLE COMPONENT OVERRIDES       */
+/* ========================================================= */
+
+/* Search Inputs */
+.dataTables_filter input,
+.dt-search input,
+div.dt-search input,
+div.dataTables_filter input {
+    background-color: #ffffff !important;
+    color: #1f2937 !important; /* text-gray-800 */
+    border: 1px solid #d1d5db !important; /* border-gray-300 */
+}
+
+.dataTables_filter input::placeholder,
+.dt-search input::placeholder {
+    color: #9ca3af !important; /* text-gray-400 */
+}
+
+/* Select Dropdowns */
+.dataTables_length select,
+.dt-length select,
+select.dt-input {
+    background-color: #ffffff !important;
+    color: #1f2937 !important; /* text-gray-800 */
+    border: 1px solid #d1d5db !important; /* border-gray-300 */
+    padding: 4px 28px 4px 10px !important;
+    min-width: 65px !important;
+}
+
+/* Pagination Buttons (Force Light Mode Override) */
+.dataTables_wrapper .dataTables_paginate .paginate_button,
+.dt-container .dt-paging .dt-paging-button,
+.dataTables_paginate a,
+.dataTables_paginate span,
+.dataTables_paginate button,
+.dt-paging nav a,
+.dt-paging nav span,
+.dt-paging nav button {
+    background-color: #ffffff !important;
+    color: #374151 !important; /* text-gray-700 */
+    border: 1px solid #d1d5db !important; /* border-gray-300 */
+}
+
+/* Hover State */
+.dataTables_wrapper
+    .dataTables_paginate
+    .paginate_button:hover:not(.disabled):not(.current):not(.active),
+.dt-container
+    .dt-paging
+    .dt-paging-button:hover:not(.disabled):not(.current):not(.active),
+.dataTables_paginate a:hover:not(.disabled):not(.current):not(.active),
+.dataTables_paginate span:hover:not(.disabled):not(.current):not(.active),
+.dt-paging nav a:hover:not(.disabled):not(.current):not(.active),
+.dt-paging nav span:hover:not(.disabled):not(.current):not(.active) {
+    background-color: #f3f4f6 !important; /* bg-gray-100 */
+    color: #111827 !important; /* text-gray-900 */
+    border-color: #d1d5db !important;
+}
+
+/* Active State */
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.active,
+.dt-container .dt-paging .dt-paging-button.current,
+.dt-container .dt-paging .dt-paging-button.active,
+.dataTables_paginate a.current,
+.dataTables_paginate a.active,
+.dataTables_paginate span.current,
+.dataTables_paginate span.active,
+.dt-paging nav a.current,
+.dt-paging nav a.active,
+.dt-paging nav span.current,
+.dt-paging nav span.active {
+    background-color: #2563eb !important; /* bg-blue-600 */
+    color: #ffffff !important;
+    border-color: #2563eb !important;
+    font-weight: 600 !important;
+}
+
+/* Disabled State */
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.dt-container .dt-paging .dt-paging-button.disabled,
+.dataTables_paginate a.disabled,
+.dataTables_paginate span.disabled,
+.dt-paging nav a.disabled,
+.dt-paging nav span.disabled {
+    background-color: #f9fafb !important; /* bg-gray-50 */
+    color: #9ca3af !important; /* text-gray-400 */
+    border-color: #e5e7eb !important;
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
 }

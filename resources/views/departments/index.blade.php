@@ -138,7 +138,7 @@
             {{ $departments->links() }}
         </div>
     </div>
-
+@push('scripts')
     <script>
         function confirmDelete(departmentId) {
             Swal.fire({
@@ -221,6 +221,7 @@
             });
         });
     </script>
+@endpush
 
     <!-- Hidden delete forms for each department -->
     @foreach ($departments as $department)
