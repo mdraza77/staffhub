@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-55">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,13 +11,23 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:300,450,550,650&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
+    <!-- Scripts & Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="{{ asset('css/datatables.css') }}" rel="stylesheet">
+
+    <!-- Dark Mode Theme Initializer Script -->
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
-<body class="font-sans antialiased h-full text-slate-900 bg-slate-50 flex items-center justify-center p-4">
+<body class="font-sans antialiased h-full text-slate-900 bg-slate-50 dark:bg-zinc-950 flex items-center justify-center p-4 transition-colors duration-200">
 
     <!-- Primary Centered Card Container (Fully Responsive) -->
-    <div class="w-full max-w-md bg-white p-8 sm:p-10 rounded-2xl shadow-xl border border-slate-100 space-y-6">
+    <div class="w-full max-w-md bg-white dark:bg-zinc-900 p-8 sm:p-10 rounded-2xl shadow-xl border border-slate-100 dark:border-zinc-800 space-y-6">
         
         <!-- Branding and Title -->
         <div class="text-center space-y-3">
