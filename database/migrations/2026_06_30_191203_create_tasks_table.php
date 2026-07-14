@@ -35,7 +35,7 @@ return new class extends Migration {
             $table->string('project_name')->nullable();
 
             $table->string('title');
-            $table->longText('description');
+            $table->longText('description')->nullable();
 
             $table->date('deadline')->nullable();
 

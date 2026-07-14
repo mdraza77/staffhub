@@ -73,13 +73,13 @@ class TaskController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-            $request->validate([
+        $request->validate([
             'project_name' => 'nullable|string|max:255',
             'title' => 'required|string|max:255',
             'assigned_to' => 'required|exists:users,id',
             'tester_id' => 'nullable|exists:users,id',
             'deadline' => 'nullable|date|after_or_equal:today',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'priority' => 'nullable|in:low,medium,high,critical',
             'status' => 'nullable|in:open,in_progress,testing,completed,closed',
         ]);
@@ -93,7 +93,7 @@ class TaskController extends Controller implements HasMiddleware
                 'tester_id' => $request->tester_id,
                 'project_name' => $request->project_name,
                 'title' => $request->title,
-                'description' => $request->description,
+                'description' => $request->description ?? 'N/A',
                 'deadline' => $request->deadline,
                 'priority' => $request->priority ?? 'medium',
                 'status' => $request->status ?? 'open',
@@ -153,7 +153,7 @@ class TaskController extends Controller implements HasMiddleware
             'assigned_to' => 'required|exists:users,id',
             'tester_id' => 'nullable|exists:users,id',
             'deadline' => 'nullable|date',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'priority' => 'required|in:low,medium,high,critical',
             'status' => 'required|in:open,in_progress,testing,completed,closed',
         ]);
@@ -170,7 +170,7 @@ class TaskController extends Controller implements HasMiddleware
                 'assigned_to' => $request->assigned_to,
                 'tester_id' => $request->tester_id,
                 'deadline' => $request->deadline,
-                'description' => $request->description,
+                'description' => $request->description ?? 'N/A',
                 'priority' => $request->priority,
                 'status' => $newStatus,
             ]);

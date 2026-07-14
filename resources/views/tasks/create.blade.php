@@ -96,8 +96,7 @@
             </div>
 
             <div class="md:col-span-2 mt-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Detailed Instructions <span
-                        class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Detailed Instructions</label>
                 <textarea name="description" id="task-editor" placeholder="Write detailed instructions here...">{{ old('description') }}</textarea>
             </div>
 
