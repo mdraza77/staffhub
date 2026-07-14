@@ -31,12 +31,6 @@ class BreakTypeSeeder extends Seeder
                 'icon' => 'fa-solid fa-apple-whole',
                 'is_active' => true,
             ],
-            [
-                'name' => 'Smoke Break',
-                'duration_minutes' => 10,
-                'icon' => 'fa-solid fa-smoking',
-                'is_active' => true,
-            ],
         ];
 
         foreach ($types as $type) {

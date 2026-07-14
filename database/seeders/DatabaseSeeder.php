@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             HolidaySeeder::class,
             AttendanceSeeder::class,
             BreakTypeSeeder::class,
+            AnnouncementSeeder::class,
         ]);
     }
 }
