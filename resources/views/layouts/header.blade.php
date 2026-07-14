@@ -50,12 +50,78 @@
         /* Hide scrollbar for IE, Edge and Firefox */
         html,
         body,
-        #sidebar {
+        #sidebar,
+        #sidebar-scroll {
             -ms-overflow-style: none;
             /* IE and Edge */
             scrollbar-width: none;
             /* Firefox */
             font-size: 14px;
+        }
+
+        #sidebar-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Collapsed Sidebar CSS */
+        @media (min-width: 768px) {
+            #sidebar.collapsed {
+                width: 5rem !important;
+                /* Narrow width like Instagram */
+            }
+
+            #sidebar.collapsed #sidebar-scroll {
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+
+            #sidebar.collapsed #sidebar-nav span {
+                display: none !important;
+            }
+
+            #sidebar.collapsed .sidebar-group-header {
+                display: none !important;
+            }
+
+            #sidebar.collapsed #sidebar-nav li a,
+            #sidebar.collapsed #sidebar-nav li details summary {
+                justify-content: center !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            #sidebar.collapsed #sidebar-nav li a i,
+            #sidebar.collapsed #sidebar-nav li details summary i.fa-solid {
+                margin-right: 0 !important;
+                font-size: 1.25rem !important;
+                width: 100% !important;
+                text-align: center !important;
+            }
+
+            /* Hide details dropdown submenus/chevron arrows in collapsed mode */
+            #sidebar.collapsed details summary i.bi-chevron-down {
+                display: none !important;
+            }
+
+            #sidebar.collapsed details ul {
+                display: none !important;
+            }
+
+            /* Adjust Main and Header positions */
+            #main.collapsed {
+                margin-left: 5rem !important;
+            }
+
+            #header-logo-container.collapsed {
+                width: 5rem !important;
+                justify-content: center !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            #header-logo-container.collapsed .header-logo-text {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -66,14 +132,17 @@
     <header id="header"
         class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm h-16 flex items-center px-4 md:px-6 transition-all duration-300">
 
-        <div class="flex items-center justify-between w-auto md:w-64 gap-4 md:gap-0">
+        <div class="flex items-center justify-between w-auto md:w-64 gap-4 md:gap-0" id="header-logo-container"
+            class="transition-all duration-300">
             <a href="{{ route('dashboard') }}"
                 class="flex items-center gap-2 text-xl font-bold text-blue-700 decoration-none">
                 <img class="max-h-10 w-auto object-contain"
                     src="{{ !empty($globalSetting->logo) ? asset('storage/' . $globalSetting->logo) : asset('img/logo.png') }}"
-                    alt="{{ $globalSetting->name ?? 'StaffHub Logo' }}"> {{ $globalSetting->name ?? 'StaffHub' }}
+                    alt="{{ $globalSetting->name ?? 'StaffHub Logo' }}">
+                <span
+                    class="header-logo-text text-gray-800 dark:text-zinc-200 font-bold transition-all duration-300">{{ $globalSetting->name ?? 'StaffHub' }}</span>
             </a>
-            <i class="bi bi-list text-2xl cursor-pointer text-gray-800 hover:text-blue-600 transition-colors toggle-sidebar-btn"
+            <i class="bi bi-list text-2xl cursor-pointer text-gray-800 hover:text-blue-600 transition-colors toggle-sidebar-btn md:hidden"
                 onclick="toggleSidebar()"></i>
         </div>
 
@@ -137,341 +206,349 @@
 
     </header>
     <aside id="sidebar"
-        class="fixed top-16 left-0 bottom-0 w-64 bg-white border-r border-gray-200 overflow-y-auto z-40 transition-transform duration-300 transform md:translate-x-0 -translate-x-full">
+        class="fixed top-16 left-0 bottom-0 w-64 bg-white dark:bg-zinc-950 border-r border-gray-200 dark:border-zinc-800 z-40 transition-all duration-300 transform md:translate-x-0 -translate-x-full overflow-visible">
 
-        <ul class="p-4 space-y-1" id="sidebar-nav">
+        <!-- Desktop Floating Toggle Button -->
+        <button id="sidebar-toggle-btn" onclick="toggleSidebar()"
+            class="hidden md:flex absolute top-4 -right-5 w-10 h-10 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-850 rounded-full items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all duration-200 focus:outline-none z-50">
+            <i id="sidebar-toggle-icon" class="bi bi-chevron-left text-lg text-gray-600 dark:text-zinc-400"></i>
+        </button>
 
-            {{-- ===== DASHBOARD ===== --}}
-            @can('Dashboard')
-                <li>
-                    <a href="{{ route('dashboard') }}"
-                        class="{{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                        <i class="fa-solid fa-chart-pie text-base w-5 text-center"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-            @endcan
+        <div class="h-full overflow-y-auto py-4 px-3" id="sidebar-scroll">
+            <ul class="space-y-1" id="sidebar-nav">
 
-            {{-- ===== GROUP: ORGANIZATION ===== --}}
-            @if (auth()->check() &&
-                    (auth()->user()->can('Employee-Index') ||
-                        auth()->user()->can('Employee-Create') ||
-                        auth()->user()->can('Department-Index')))
-                <li
-                    class="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
-                    Organization
-                </li>
-            @endif
-
-            @if (auth()->check() && (auth()->user()->can('Employee-Index') || auth()->user()->can('Employee-Create')))
-                @can('Department-Index')
+                {{-- ===== DASHBOARD ===== --}}
+                @can('Dashboard')
                     <li>
-                        <a href="{{ route('employees.index') }}"
-                            class="{{ request()->routeIs('employees.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                            <i class="fa-solid fa-id-card text-base w-5 text-center"></i>
-                            <span>Employee Mgmt</span>
+                        <a href="{{ route('dashboard') }}"
+                            class="{{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-chart-pie text-base w-5 text-center"></i>
+                            <span>Dashboard</span>
                         </a>
                     </li>
                 @endcan
-            @endif
 
-            @can('Department-Index')
-                <li>
-                    <a href="{{ route('departments.index') }}"
-                        class="{{ request()->routeIs('departments.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                        <i class="fa-solid fa-sitemap text-base w-5 text-center"></i>
-                        <span>Departments</span>
-                    </a>
-                </li>
-            @endcan
+                {{-- ===== GROUP: ORGANIZATION ===== --}}
+                @if (auth()->check() &&
+                        (auth()->user()->can('Employee-Index') ||
+                            auth()->user()->can('Employee-Create') ||
+                            auth()->user()->can('Department-Index')))
+                    <li
+                        class="sidebar-group-header text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
+                        Organization
+                    </li>
+                @endif
 
-            {{-- ===== GROUP: TIME & OPERATIONS ===== --}}
-            @if (auth()->check() &&
-                    (auth()->user()->can('Attendance-Index') ||
-                        auth()->user()->can('LeaveType-Index') ||
-                        auth()->user()->can('Leave-Index') ||
-                        auth()->user()->can('Holiday-Index')))
-                <li
-                    class="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
-                    Time & Operations
-                </li>
-            @endif
+                @if (auth()->check() && (auth()->user()->can('Employee-Index') || auth()->user()->can('Employee-Create')))
+                    @can('Department-Index')
+                        <li>
+                            <a href="{{ route('employees.index') }}"
+                                class="{{ request()->routeIs('employees.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                                <i class="fa-solid fa-id-card text-base w-5 text-center"></i>
+                                <span>Employee Mgmt</span>
+                            </a>
+                        </li>
+                    @endcan
+                @endif
 
-            @can('Attendance-Index')
-                <li>
-                    <a href="{{ route('attendance.index') }}"
-                        class="{{ request()->routeIs('attendance.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                        <i class="fa-solid fa-clipboard-user text-base w-5 text-center"></i>
-                        <span>Attendance</span>
-                    </a>
-                </li>
-            @endcan
+                @can('Department-Index')
+                    <li>
+                        <a href="{{ route('departments.index') }}"
+                            class="{{ request()->routeIs('departments.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-sitemap text-base w-5 text-center"></i>
+                            <span>Departments</span>
+                        </a>
+                    </li>
+                @endcan
 
-            @can('LeaveType-Index')
-                <li>
-                    <a href="{{ route('leave-types.index') }}"
-                        class="{{ request()->routeIs('leave-types.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                        <i class="fa-solid fa-sliders text-base w-5 text-center"></i>
-                        <span>Leave Types</span>
-                    </a>
-                </li>
-            @endcan
+                {{-- ===== GROUP: TIME & OPERATIONS ===== --}}
+                @if (auth()->check() &&
+                        (auth()->user()->can('Attendance-Index') ||
+                            auth()->user()->can('LeaveType-Index') ||
+                            auth()->user()->can('Leave-Index') ||
+                            auth()->user()->can('Holiday-Index')))
+                    <li
+                        class="sidebar-group-header text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
+                        Time & Operations
+                    </li>
+                @endif
 
-            @can('Leave-Index')
-                <li>
-                    <a href="{{ route('leaves.index') }}"
-                        class="{{ request()->routeIs('leaves.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                        <i class="fa-solid fa-umbrella-beach text-base w-5 text-center"></i>
-                        <span>Leaves</span>
-                    </a>
-                </li>
-            @endcan
+                @can('Attendance-Index')
+                    <li>
+                        <a href="{{ route('attendance.index') }}"
+                            class="{{ request()->routeIs('attendance.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-clipboard-user text-base w-5 text-center"></i>
+                            <span>Attendance</span>
+                        </a>
+                    </li>
+                @endcan
 
-            @can('Holiday-Index')
-                <li>
-                    <a href="{{ route('holidays.index') }}"
-                        class="{{ request()->routeIs('holidays.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                        <i class="fa-solid fa-calendar-day text-base w-5 text-center"></i>
-                        <span>Holidays</span>
-                    </a>
-                </li>
-            @endcan
+                @can('LeaveType-Index')
+                    <li>
+                        <a href="{{ route('leave-types.index') }}"
+                            class="{{ request()->routeIs('leave-types.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-sliders text-base w-5 text-center"></i>
+                            <span>Leave Types</span>
+                        </a>
+                    </li>
+                @endcan
 
-            {{-- ===== GROUP: WORK ===== --}}
-            @if (auth()->check() &&
-                    (auth()->user()->can('Task-Index') ||
-                        auth()->user()->can('Defect-Index') ||
-                        auth()->user()->can('Break-Room-Access') ||
-                        auth()->user()->can('BreakType-Manage') ||
-                        auth()->user()->can('Break-History-View')))
-                <li
-                    class="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
-                    Work & Breaks
-                </li>
-            @endif
+                @can('Leave-Index')
+                    <li>
+                        <a href="{{ route('leaves.index') }}"
+                            class="{{ request()->routeIs('leaves.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-umbrella-beach text-base w-5 text-center"></i>
+                            <span>Leaves</span>
+                        </a>
+                    </li>
+                @endcan
 
-            @can('Task-Index')
-                <li>
-                    <a href="{{ route('tasks.index') }}"
-                        class="{{ request()->routeIs('tasks.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                        <i class="fa-solid fa-list-check text-base w-5 text-center"></i>
-                        <span>Tasks</span>
-                    </a>
-                </li>
-            @endcan
+                @can('Holiday-Index')
+                    <li>
+                        <a href="{{ route('holidays.index') }}"
+                            class="{{ request()->routeIs('holidays.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-calendar-day text-base w-5 text-center"></i>
+                            <span>Holidays</span>
+                        </a>
+                    </li>
+                @endcan
 
-            @can('Defect-Index')
-                <li>
-                    <a href="{{ route('defects.index') }}"
-                        class="{{ request()->routeIs('defects.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                        <i class="fa-solid fa-bug text-base w-5 text-center"></i>
-                        <span>Defects</span>
-                    </a>
-                </li>
-            @endcan
+                {{-- ===== GROUP: WORK ===== --}}
+                @if (auth()->check() &&
+                        (auth()->user()->can('Task-Index') ||
+                            auth()->user()->can('Defect-Index') ||
+                            auth()->user()->can('Break-Room-Access') ||
+                            auth()->user()->can('BreakType-Manage') ||
+                            auth()->user()->can('Break-History-View')))
+                    <li
+                        class="sidebar-group-header text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
+                        Work & Breaks
+                    </li>
+                @endif
 
-            @php
-                $breaksActive =
-                    request()->routeIs('break-room.*') ||
-                    request()->routeIs('break-types.*') ||
-                    request()->routeIs('breaks.history');
-            @endphp
-            @if (auth()->check() &&
-                    (auth()->user()->can('Break-Room-Access') ||
-                        auth()->user()->can('BreakType-Manage') ||
-                        auth()->user()->can('Break-History-View')))
-                <li>
-                    <details class="group" {{ $breaksActive ? 'open' : '' }}>
-                        <summary
-                            class="{{ $breaksActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
-                            <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-mug-hot text-base w-5 text-center"></i>
-                                <span>Break Room</span>
-                            </div>
-                            <i
-                                class="bi bi-chevron-down transition-transform duration-300 {{ $breaksActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
-                        </summary>
-                        <ul class="pl-9 pr-2 py-2 space-y-1">
-                            @can('Break-Room-Access')
-                                <li>
-                                    <a href="{{ route('break-room.index') }}"
-                                        class="{{ request()->routeIs('break-room.index') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
-                                        <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
-                                        <span>Enter Break Room</span>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('Break-History-View')
-                                <li>
-                                    <a href="{{ route('breaks.history') }}"
-                                        class="{{ request()->routeIs('breaks.history') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
-                                        <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
-                                        <span>Break History</span>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('BreakType-Manage')
-                                <li>
-                                    <a href="{{ route('break-types.index') }}"
-                                        class="{{ request()->routeIs('break-types.*') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
-                                        <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
-                                        <span>Break Types</span>
-                                    </a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </details>
-                </li>
-            @endif
+                @can('Task-Index')
+                    <li>
+                        <a href="{{ route('tasks.index') }}"
+                            class="{{ request()->routeIs('tasks.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-list-check text-base w-5 text-center"></i>
+                            <span>Tasks</span>
+                        </a>
+                    </li>
+                @endcan
 
-            {{-- ===== GROUP: MANAGEMENT ===== --}}
-            @if (auth()->check() &&
-                    (auth()->user()->can('Announcement-Index') ||
-                        auth()->user()->can('Salary-View') ||
-                        auth()->user()->can('Payslip-Index') ||
-                        auth()->user()->can('AccessManagement-Index')))
-                <li
-                    class="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
-                    Management
-                </li>
-            @endif
+                @can('Defect-Index')
+                    <li>
+                        <a href="{{ route('defects.index') }}"
+                            class="{{ request()->routeIs('defects.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-bug text-base w-5 text-center"></i>
+                            <span>Defects</span>
+                        </a>
+                    </li>
+                @endcan
 
-            @can('Announcement-Index')
-                <li>
-                    <a href="{{ route('announcements.index') }}"
-                        class="{{ request()->routeIs('announcements.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                        <i class="fa-solid fa-bullhorn text-base w-5 text-center"></i>
-                        <span>Announcements</span>
-                    </a>
-                </li>
-            @endcan
-
-            @php
-                $payrollActive = request()->routeIs('payroll.*');
-            @endphp
-            @if (auth()->check() && (auth()->user()->can('Salary-View') || auth()->user()->can('Payslip-Index')))
-                <li title="Payroll Management">
-                    <details class="group" {{ $payrollActive ? 'open' : '' }}>
-                        <summary
-                            class="{{ $payrollActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
-                            <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-file-invoice-dollar text-base w-5 text-center"></i>
-                                <span>Payroll Mgmt</span>
-                            </div>
-                            <i
-                                class="bi bi-chevron-down transition-transform duration-300 {{ $payrollActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
-                        </summary>
-                        <ul class="pl-9 pr-2 py-2 space-y-1">
-                            @can('Salary-View')
-                                <li>
-                                    <a href="{{ route('payroll.salaries.index') }}"
-                                        class="{{ request()->routeIs('payroll.salaries.*') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
-                                        <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
-                                        <span>Salary Structures</span>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('Payslip-Index')
-                                <li>
-                                    <a href="{{ route('payroll.payslips.index') }}"
-                                        class="{{ request()->routeIs('payroll.payslips.*') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
-                                        <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
-                                        <span>Monthly Payslips</span>
-                                    </a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </details>
-                </li>
-            @endif
-
-            @can('AccessManagement-Index')
-                <li>
-                    <a href="{{ route('roles.index') }}"
-                        class="{{ request()->routeIs('roles.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
-                        <i class="fa-solid fa-shield-halved text-base w-5 text-center"></i>
-                        <span>Roles & Permissions</span>
-                    </a>
-                </li>
-            @endcan
-
-            {{-- ===== GROUP: SYSTEM ===== --}}
-            @if (auth()->check() &&
-                    (auth()->user()->can('Employee-Index') ||
-                        auth()->user()->can('Company-Index') ||
-                        auth()->user()->can('Settings-Index')))
-                <li
-                    class="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
-                    System
-                </li>
-            @endif
-
-            @if (auth()->check() && (auth()->user()->can('Employee-Index') || auth()->user()->can('Employee-Create')))
                 @php
-                    $reportsActive =
-                        request()->routeIs('reports.employees') ||
-                        request()->routeIs('reports.attendance') ||
-                        request()->routeIs('reports.leaves') ||
-                        request()->routeIs('reports.departments') ||
-                        request()->routeIs('reports.leave-types');
+                    $breaksActive =
+                        request()->routeIs('break-room.*') ||
+                        request()->routeIs('break-types.*') ||
+                        request()->routeIs('breaks.history');
                 @endphp
-                <li>
-                    <details class="group" {{ $reportsActive ? 'open' : '' }}>
-                        <summary
-                            class="{{ $reportsActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
-                            <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-chart-simple text-base w-5 text-center"></i>
-                                <span>Reports</span>
-                            </div>
-                            <i
-                                class="bi bi-chevron-down transition-transform duration-300 {{ $reportsActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
-                        </summary>
-                        <ul class="pl-9 pr-2 py-2 space-y-1">
-                            @can('Employee-Index')
-                                <li>
-                                    <a href="{{ route('reports.employees') }}"
-                                        class="{{ request()->routeIs('reports.employees') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
-                                        <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
-                                        <span>Employees Report</span>
-                                    </a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </details>
-                </li>
-            @endif
+                @if (auth()->check() &&
+                        (auth()->user()->can('Break-Room-Access') ||
+                            auth()->user()->can('BreakType-Manage') ||
+                            auth()->user()->can('Break-History-View')))
+                    <li>
+                        <details class="group" {{ $breaksActive ? 'open' : '' }}>
+                            <summary
+                                class="{{ $breaksActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-mug-hot text-base w-5 text-center"></i>
+                                    <span>Break Room</span>
+                                </div>
+                                <i
+                                    class="bi bi-chevron-down transition-transform duration-300 {{ $breaksActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
+                            </summary>
+                            <ul class="pl-9 pr-2 py-2 space-y-1">
+                                @can('Break-Room-Access')
+                                    <li>
+                                        <a href="{{ route('break-room.index') }}"
+                                            class="{{ request()->routeIs('break-room.index') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                            <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
+                                            <span>Enter Break Room</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('Break-History-View')
+                                    <li>
+                                        <a href="{{ route('breaks.history') }}"
+                                            class="{{ request()->routeIs('breaks.history') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                            <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
+                                            <span>Break History</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('BreakType-Manage')
+                                    <li>
+                                        <a href="{{ route('break-types.index') }}"
+                                            class="{{ request()->routeIs('break-types.*') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                            <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
+                                            <span>Break Types</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </details>
+                    </li>
+                @endif
 
-            @php
-                $settingsActive = request()->routeIs('settings.*') || request()->routeIs('company.*');
-            @endphp
-            @if (auth()->check() && (auth()->user()->can('Company-Index') || auth()->user()->can('Settings-Index')))
-                <li>
-                    <details class="group" {{ $settingsActive ? 'open' : '' }}>
-                        <summary
-                            class="{{ $settingsActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
-                            <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-gear text-base w-5 text-center"></i>
-                                <span>Settings</span>
-                            </div>
-                            <i
-                                class="bi bi-chevron-down transition-transform duration-300 {{ $settingsActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
-                        </summary>
-                        <ul class="pl-9 pr-2 py-2 space-y-1">
-                            @can('Company-Index')
-                                <li>
-                                    <a href="{{ route('company') }}"
-                                        class="{{ request()->routeIs('company') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
-                                        <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
-                                        <span>Company Setting</span>
-                                    </a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </details>
-                </li>
-            @endif
+                {{-- ===== GROUP: MANAGEMENT ===== --}}
+                @if (auth()->check() &&
+                        (auth()->user()->can('Announcement-Index') ||
+                            auth()->user()->can('Salary-View') ||
+                            auth()->user()->can('Payslip-Index') ||
+                            auth()->user()->can('AccessManagement-Index')))
+                    <li
+                        class="sidebar-group-header text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
+                        Management
+                    </li>
+                @endif
 
-        </ul>
+                @can('Announcement-Index')
+                    <li>
+                        <a href="{{ route('announcements.index') }}"
+                            class="{{ request()->routeIs('announcements.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-bullhorn text-base w-5 text-center"></i>
+                            <span>Announcements</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @php
+                    $payrollActive = request()->routeIs('payroll.*');
+                @endphp
+                @if (auth()->check() && (auth()->user()->can('Salary-View') || auth()->user()->can('Payslip-Index')))
+                    <li title="Payroll Management">
+                        <details class="group" {{ $payrollActive ? 'open' : '' }}>
+                            <summary
+                                class="{{ $payrollActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-file-invoice-dollar text-base w-5 text-center"></i>
+                                    <span>Payroll Mgmt</span>
+                                </div>
+                                <i
+                                    class="bi bi-chevron-down transition-transform duration-300 {{ $payrollActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
+                            </summary>
+                            <ul class="pl-9 pr-2 py-2 space-y-1">
+                                @can('Salary-View')
+                                    <li>
+                                        <a href="{{ route('payroll.salaries.index') }}"
+                                            class="{{ request()->routeIs('payroll.salaries.*') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                            <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
+                                            <span>Salary Structures</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('Payslip-Index')
+                                    <li>
+                                        <a href="{{ route('payroll.payslips.index') }}"
+                                            class="{{ request()->routeIs('payroll.payslips.*') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                            <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
+                                            <span>Monthly Payslips</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </details>
+                    </li>
+                @endif
+
+                @can('AccessManagement-Index')
+                    <li>
+                        <a href="{{ route('roles.index') }}"
+                            class="{{ request()->routeIs('roles.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-shield-halved text-base w-5 text-center"></i>
+                            <span>Roles & Permissions</span>
+                        </a>
+                    </li>
+                @endcan
+
+                {{-- ===== GROUP: SYSTEM ===== --}}
+                @if (auth()->check() &&
+                        (auth()->user()->can('Employee-Index') ||
+                            auth()->user()->can('Company-Index') ||
+                            auth()->user()->can('Settings-Index')))
+                    <li
+                        class="sidebar-group-header text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
+                        System
+                    </li>
+                @endif
+
+                @if (auth()->check() && (auth()->user()->can('Employee-Index') || auth()->user()->can('Employee-Create')))
+                    @php
+                        $reportsActive =
+                            request()->routeIs('reports.employees') ||
+                            request()->routeIs('reports.attendance') ||
+                            request()->routeIs('reports.leaves') ||
+                            request()->routeIs('reports.departments') ||
+                            request()->routeIs('reports.leave-types');
+                    @endphp
+                    <li>
+                        <details class="group" {{ $reportsActive ? 'open' : '' }}>
+                            <summary
+                                class="{{ $reportsActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-chart-simple text-base w-5 text-center"></i>
+                                    <span>Reports</span>
+                                </div>
+                                <i
+                                    class="bi bi-chevron-down transition-transform duration-300 {{ $reportsActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
+                            </summary>
+                            <ul class="pl-9 pr-2 py-2 space-y-1">
+                                @can('Employee-Index')
+                                    <li>
+                                        <a href="{{ route('reports.employees') }}"
+                                            class="{{ request()->routeIs('reports.employees') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                            <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
+                                            <span>Employees Report</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </details>
+                    </li>
+                @endif
+
+                @php
+                    $settingsActive = request()->routeIs('settings.*') || request()->routeIs('company.*');
+                @endphp
+                @if (auth()->check() && (auth()->user()->can('Company-Index') || auth()->user()->can('Settings-Index')))
+                    <li>
+                        <details class="group" {{ $settingsActive ? 'open' : '' }}>
+                            <summary
+                                class="{{ $settingsActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-gear text-base w-5 text-center"></i>
+                                    <span>Settings</span>
+                                </div>
+                                <i
+                                    class="bi bi-chevron-down transition-transform duration-300 {{ $settingsActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
+                            </summary>
+                            <ul class="pl-9 pr-2 py-2 space-y-1">
+                                @can('Company-Index')
+                                    <li>
+                                        <a href="{{ route('company') }}"
+                                            class="{{ request()->routeIs('company') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
+                                            <i class="fa-solid fa-circle text-[6px] w-5 text-center"></i>
+                                            <span>Company Setting</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </details>
+                    </li>
+                @endif
+
+            </ul>
+        </div>
     </aside>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -506,33 +583,62 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const main = document.getElementById('main');
+            const logoContainer = document.getElementById('header-logo-container');
+            const toggleIcon = document.getElementById('sidebar-toggle-icon');
 
             if (window.innerWidth >= 768) {
-                // Desktop toggle logic
-                if (sidebar.classList.contains('md:translate-x-0')) {
-                    // Currently open, let's close it
-                    sidebar.classList.remove('md:translate-x-0');
-                    sidebar.classList.add('-translate-x-full');
+                // Desktop toggle logic: toggle 'collapsed' state
+                sidebar.classList.toggle('collapsed');
+                if (main) main.classList.toggle('collapsed');
+                if (logoContainer) logoContainer.classList.toggle('collapsed');
 
-                    if (main) {
-                        main.classList.remove('md:ml-64');
-                        main.classList.add('ml-0');
-                    }
-                } else {
-                    // Currently closed, let's open it
-                    sidebar.classList.remove('-translate-x-full');
-                    sidebar.classList.add('md:translate-x-0');
-
-                    if (main) {
-                        main.classList.remove('ml-0');
-                        main.classList.add('md:ml-64');
+                // Toggle icon
+                if (toggleIcon) {
+                    if (sidebar.classList.contains('collapsed')) {
+                        toggleIcon.classList.remove('bi-chevron-left');
+                        toggleIcon.classList.add('bi-list');
+                        localStorage.setItem('sidebar-collapsed', 'true');
+                    } else {
+                        toggleIcon.classList.remove('bi-list');
+                        toggleIcon.classList.add('bi-chevron-left');
+                        localStorage.setItem('sidebar-collapsed', 'false');
                     }
                 }
             } else {
-                // Mobile toggle logic
+                // Mobile toggle logic: slide in / out
                 sidebar.classList.toggle('-translate-x-full');
             }
         }
+
+        // Restore sidebar collapsed state on desktop
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('main');
+            const logoContainer = document.getElementById('header-logo-container');
+            const toggleIcon = document.getElementById('sidebar-toggle-icon');
+
+            if (window.innerWidth >= 768) {
+                if (localStorage.getItem('sidebar-collapsed') === 'true') {
+                    sidebar.classList.add('collapsed');
+                    if (main) main.classList.add('collapsed');
+                    if (logoContainer) logoContainer.classList.add('collapsed');
+                    if (toggleIcon) {
+                        toggleIcon.classList.remove('bi-chevron-left');
+                        toggleIcon.classList.add('bi-list');
+                    }
+                }
+            }
+
+            // Expand sidebar if a parent module with submodules is clicked while collapsed
+            if (sidebar) {
+                sidebar.addEventListener('click', function(e) {
+                    const summary = e.target.closest('summary');
+                    if (summary && sidebar.classList.contains('collapsed')) {
+                        toggleSidebar();
+                    }
+                });
+            }
+        });
 
         // Close sidebar when clicking outside of it on mobile
         document.addEventListener('click', function(event) {
