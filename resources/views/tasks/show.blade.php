@@ -94,7 +94,7 @@
                             {{ $deadline ? $deadline->format('d M, Y') : 'No Deadline' }}
                             @if ($isOverdue)
                                 <span
-                                    class="bg-red-50 text-red-755 text-[10px] font-bold px-1.5 py-0.5 rounded ml-1 uppercase">Overdue</span>
+                                    class="bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900/50 text-[10px] font-bold px-1.5 py-0.5 rounded ml-1 uppercase">Overdue</span>
                             @endif
                         </p>
                     </div>
@@ -147,12 +147,15 @@
                 @can('Task-Comment')
                     @php
                         $userId = Auth::id();
-                        $isAdminOrManager = Auth::user()->can('Task-ManageAll') || Auth::user()->hasAnyRole(['Super Admin', 'Admin', 'HR Manager']);
-                        $isAssigner = ($userId === $task->assigned_by);
+                        $isAdminOrManager =
+                            Auth::user()->can('Task-ManageAll') ||
+                            Auth::user()->hasAnyRole(['Super Admin', 'Admin', 'HR Manager']);
+                        $isAssigner = $userId === $task->assigned_by;
                     @endphp
 
                     @if ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
-                        <div class="mt-4 bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
+                        <div
+                            class="mt-4 bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
                             <i class="fa-solid fa-lock text-gray-400"></i> Discussion is closed because this task is closed.
                         </div>
                     @else
@@ -197,32 +200,41 @@
                                     <i class="fa-solid fa-arrow-right-arrow-left text-[8px] text-indigo-500"></i>
                                 </div>
 
-                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-1 text-[11px] text-gray-400">
+                                <div
+                                    class="flex flex-col md:flex-row md:items-center justify-between gap-1 text-[11px] text-gray-400">
                                     <div class="flex items-center gap-1.5">
-                                        <span class="font-bold text-gray-700 text-sm">{{ $history->user->name ?? 'System' }}</span>
+                                        <span
+                                            class="font-bold text-gray-700 text-sm">{{ $history->user->name ?? 'System' }}</span>
                                         @if ($history->user && $history->user->roles->isNotEmpty())
-                                            <span class="px-1.5 py-0.2 bg-gray-100 text-gray-500 rounded text-[9px] font-medium border border-gray-200">
+                                            <span
+                                                class="px-1.5 py-0.2 bg-gray-100 text-gray-500 rounded text-[9px] font-medium border border-gray-200">
                                                 {{ $history->user->roles->first()->name }}
                                             </span>
                                         @endif
                                     </div>
-                                    <span>{{ $history->created_at->format('d M Y, g:i A') }} ({{ $history->created_at->diffForHumans() }})</span>
+                                    <span>{{ $history->created_at->format('d M Y, g:i A') }}
+                                        ({{ $history->created_at->diffForHumans() }})
+                                    </span>
                                 </div>
 
                                 <p class="text-gray-700 mt-2 text-xs flex items-center gap-1.5 flex-wrap">
                                     Transitioned status from
-                                    <span class="bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded-full font-semibold uppercase text-[10px]">
+                                    <span
+                                        class="bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded-full font-semibold uppercase text-[10px]">
                                         {{ str_replace('_', ' ', $history->old_status) }}
                                     </span>
                                     to
-                                    <span class="bg-indigo-50 text-indigo-750 border border-indigo-100 px-2 py-0.5 rounded-full font-bold uppercase text-[10px]">
+                                    <span
+                                        class="bg-indigo-50 text-indigo-750 border border-indigo-100 px-2 py-0.5 rounded-full font-bold uppercase text-[10px]">
                                         {{ str_replace('_', ' ', $history->new_status) }}
                                     </span>
                                 </p>
 
                                 @if ($history->remark)
-                                    <div class="mt-3 p-3.5 bg-gray-50 border border-gray-150 rounded-xl text-gray-700 leading-relaxed relative max-w-3xl shadow-3xs">
-                                        <div class="flex items-center gap-1 mb-1.5 text-[9px] font-bold uppercase text-gray-400 tracking-wider">
+                                    <div
+                                        class="mt-3 p-3.5 bg-gray-50 border border-gray-150 rounded-xl text-gray-700 leading-relaxed relative max-w-3xl shadow-3xs">
+                                        <div
+                                            class="flex items-center gap-1 mb-1.5 text-[9px] font-bold uppercase text-gray-400 tracking-wider">
                                             <i class="fa-solid fa-comment-dots text-indigo-400 text-xs"></i>
                                             Change Remark / Explanation
                                         </div>
@@ -243,45 +255,50 @@
         <div class="space-y-6">
 
             <!-- Quick Actions Card (Status changes & badges) -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
-                <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider mb-2">Properties & Actions</h3>
+            <div
+                class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800 p-6 space-y-4">
+                <h3 class="text-sm font-bold text-gray-800 dark:text-zinc-100 uppercase tracking-wider mb-2">Properties &
+                    Actions</h3>
 
                 <div class="space-y-3.5">
-                    <div class="flex justify-between items-center text-sm border-b border-gray-50 pb-2.5">
-                        <span class="text-gray-500">Current Status:</span>
+                    <div
+                        class="flex justify-between items-center text-sm border-b border-gray-100 dark:border-zinc-800 pb-2.5">
+                        <span class="text-gray-500 dark:text-zinc-400">Current Status:</span>
                         @if ($task->status === 'completed')
                             <span
-                                class="bg-green-50 text-green-700 text-xs font-bold px-3 py-1 rounded-full border border-green-200 uppercase">Completed</span>
+                                class="bg-green-50 text-green-700 border border-green-200 dark:bg-green-950/40 dark:text-green-400 dark:border-green-900/50 text-xs font-bold px-3 py-1 rounded-full uppercase">Completed</span>
                         @elseif($task->status === 'in_progress')
                             <span
-                                class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full border border-blue-200 uppercase">In Progress</span>
+                                class="bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/50 text-xs font-bold px-3 py-1 rounded-full uppercase">In
+                                Progress</span>
                         @elseif($task->status === 'testing')
                             <span
-                                class="bg-amber-50 text-amber-700 text-xs font-bold px-3 py-1 rounded-full border border-amber-200 uppercase">Testing</span>
+                                class="bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/50 text-xs font-bold px-3 py-1 rounded-full uppercase">Testing</span>
                         @elseif($task->status === 'closed')
                             <span
-                                class="bg-gray-50 text-gray-700 text-xs font-bold px-3 py-1 rounded-full border border-gray-200 uppercase">Closed</span>
+                                class="bg-gray-50 text-gray-700 border border-gray-200 dark:bg-zinc-800/40 dark:text-zinc-400 dark:border-zinc-700/50 text-xs font-bold px-3 py-1 rounded-full uppercase">Closed</span>
                         @else
                             <span
-                                class="bg-yellow-50 text-yellow-750 text-xs font-bold px-3 py-1 rounded-full border border-yellow-150 uppercase">Open</span>
+                                class="bg-yellow-50 text-yellow-700 border border-yellow-200 dark:bg-yellow-950/40 dark:text-yellow-400 dark:border-yellow-900/50 text-xs font-bold px-3 py-1 rounded-full uppercase">Open</span>
                         @endif
                     </div>
 
-                    <div class="flex justify-between items-center text-sm border-b border-gray-50 pb-2.5">
-                        <span class="text-gray-500">Priority Level:</span>
+                    <div
+                        class="flex justify-between items-center text-sm border-b border-gray-100 dark:border-zinc-800 pb-2.5">
+                        <span class="text-gray-500 dark:text-zinc-400">Priority Level:</span>
                         @if ($task->priority === 'critical')
                             <span
-                                class="bg-red-50 border border-red-150 text-red-755 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i
+                                class="bg-red-50 border border-red-200 text-red-700 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i
                                     class="fa-solid fa-triangle-exclamation mr-0.5"></i> Critical</span>
                         @elseif($task->priority === 'high')
                             <span
-                                class="bg-orange-50 border border-orange-150 text-orange-755 text-xs font-semibold px-2.5 py-0.5 rounded-full">High</span>
+                                class="bg-orange-50 border border-orange-200 text-orange-700 dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full">High</span>
                         @elseif($task->priority === 'low')
                             <span
-                                class="bg-gray-50 border border-gray-200 text-gray-600 text-xs font-semibold px-2.5 py-0.5 rounded-full">Low</span>
+                                class="bg-gray-50 border border-gray-200 text-gray-600 dark:bg-zinc-800/40 dark:text-zinc-400 dark:border-zinc-700/50 text-xs font-semibold px-2.5 py-0.5 rounded-full">Low</span>
                         @else
                             <span
-                                class="bg-indigo-50 border border-indigo-150 text-indigo-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">Medium</span>
+                                class="bg-indigo-50 border border-indigo-200 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full">Medium</span>
                         @endif
                     </div>
                 </div>
@@ -304,22 +321,20 @@
                             $isDropdownDisabled = true;
                         } else {
                             if ($isAdminOrManager || $isAssigner) {
-                                $allowedStatuses = [
-                                    'open',
-                                    'in_progress',
-                                    'testing',
-                                    'completed',
-                                    'closed',
-                                ];
+                                $allowedStatuses = ['open', 'in_progress', 'testing', 'completed', 'closed'];
                             } elseif ($isDeveloper) {
                                 $allowedStatuses = ['in_progress', 'testing'];
                                 if (!in_array($task->status, $allowedStatuses)) {
                                     $allowedStatuses[] = $task->status;
                                 }
                             } elseif ($isTester) {
-                                $allowedStatuses = ['completed', 'in_progress'];
-                                if (!in_array($task->status, $allowedStatuses)) {
-                                    $allowedStatuses[] = $task->status;
+                                if ($task->status !== 'testing') {
+                                    $isDropdownDisabled = true;
+                                } else {
+                                    $allowedStatuses = ['completed', 'in_progress'];
+                                    if (!in_array($task->status, $allowedStatuses)) {
+                                        $allowedStatuses[] = $task->status;
+                                    }
                                 }
                             } else {
                                 $isDropdownDisabled = true;
@@ -339,13 +354,16 @@
                                     <option value="open" {{ $task->status === 'open' ? 'selected' : '' }}>Open</option>
                                 @endif
                                 @if (in_array('in_progress', $allowedStatuses))
-                                    <option value="in_progress" {{ $task->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                                    <option value="in_progress" {{ $task->status === 'in_progress' ? 'selected' : '' }}>In
+                                        Progress</option>
                                 @endif
                                 @if (in_array('testing', $allowedStatuses))
-                                    <option value="testing" {{ $task->status === 'testing' ? 'selected' : '' }}>Testing</option>
+                                    <option value="testing" {{ $task->status === 'testing' ? 'selected' : '' }}>Testing
+                                    </option>
                                 @endif
                                 @if (in_array('completed', $allowedStatuses))
-                                    <option value="completed" {{ $task->status === 'completed' ? 'selected' : '' }}>Completed</option>
+                                    <option value="completed" {{ $task->status === 'completed' ? 'selected' : '' }}>Completed
+                                    </option>
                                 @endif
                                 @if (in_array('closed', $allowedStatuses))
                                     <option value="closed" {{ $task->status === 'closed' ? 'selected' : '' }}>Closed</option>
@@ -354,14 +372,23 @@
                         </div>
 
                         @if ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
-                            <div class="bg-gray-50 border border-gray-250 text-gray-550 text-[10px] px-3 py-2 rounded-lg flex items-center gap-1.5 justify-center font-medium italic">
+                            <div
+                                class="bg-gray-50 border border-gray-250 text-gray-550 text-[10px] px-3 py-2 rounded-lg flex items-center gap-1.5 justify-center font-medium italic">
                                 <i class="fa-solid fa-lock text-gray-450"></i> Reopening this task is restricted.
+                            </div>
+                        @endif
+
+                        @if ($isTester && !$isDeveloper && !$isAdminOrManager && !$isAssigner && $task->status !== 'testing')
+                            <div
+                                class="bg-amber-50 border border-amber-250 text-amber-700 text-[10px] px-3 py-2 rounded-lg flex items-center gap-1.5 justify-center font-medium italic">
+                                <i class="fa-solid fa-clock text-amber-500"></i> Waiting for worker
                             </div>
                         @endif
 
                         @if (!$isDropdownDisabled)
                             <div>
-                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Status Change Remark / Note</label>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Status Change Remark /
+                                    Note</label>
                                 <textarea name="remark" rows="2" placeholder="Describe progress or reasons for status change..."
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder-gray-400 bg-gray-50"></textarea>
                             </div>
@@ -385,12 +412,15 @@
 
                     @php
                         $userId = Auth::id();
-                        $isAdminOrManager = Auth::user()->can('Task-ManageAll') || Auth::user()->hasAnyRole(['Super Admin', 'Admin', 'HR Manager']);
-                        $isAssigner = ($userId === $task->assigned_by);
+                        $isAdminOrManager =
+                            Auth::user()->can('Task-ManageAll') ||
+                            Auth::user()->hasAnyRole(['Super Admin', 'Admin', 'HR Manager']);
+                        $isAssigner = $userId === $task->assigned_by;
                     @endphp
 
                     @if ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
-                        <div class="bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
+                        <div
+                            class="bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
                             <i class="fa-solid fa-lock text-gray-450"></i> File uploads are locked because this task is closed.
                         </div>
                     @else

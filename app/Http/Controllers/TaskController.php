@@ -93,7 +93,7 @@ class TaskController extends Controller implements HasMiddleware
                 'tester_id' => $request->tester_id,
                 'project_name' => $request->project_name,
                 'title' => $request->title,
-                'description' => $request->description ?? 'N/A',
+                'description' => $request->description,
                 'deadline' => $request->deadline,
                 'priority' => $request->priority ?? 'medium',
                 'status' => $request->status ?? 'open',
@@ -170,7 +170,7 @@ class TaskController extends Controller implements HasMiddleware
                 'assigned_to' => $request->assigned_to,
                 'tester_id' => $request->tester_id,
                 'deadline' => $request->deadline,
-                'description' => $request->description ?? 'N/A',
+                'description' => $request->description,
                 'priority' => $request->priority,
                 'status' => $newStatus,
             ]);
@@ -325,6 +325,10 @@ class TaskController extends Controller implements HasMiddleware
                     return back()->with('error', 'Developers can only set task status to In Progress or Testing.');
                 }
             } elseif ($isTester) {
+                // Tester cannot update status unless task status is testing
+                if ($oldStatus !== 'testing') {
+                    return back()->with('error', 'You cannot change the status until the developer puts it in testing.');
+                }
                 // Tester can only set task status to Completed or In Progress (if failed testing)
                 if (!in_array($newStatus, ['completed', 'in_progress'])) {
                     return back()->with('error', 'Testers can only set task status to Completed or In Progress.');

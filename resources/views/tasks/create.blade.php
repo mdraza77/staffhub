@@ -92,7 +92,7 @@
                 <input type="date" name="deadline" value="{{ old('deadline', now()->addDays(1)->format('Y-m-d')) }}"
                     min="{{ now()->format('Y-m-d') }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                    required>
+                    onclick="this.showPicker()" required>
             </div>
 
             <div class="md:col-span-2 mt-2">

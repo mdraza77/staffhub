@@ -586,4 +586,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', initThemeIcon);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.addEventListener('click', (e) => {
+                if (e.target && e.target.tagName === 'INPUT' && e.target.type === 'date') {
+                    if (typeof e.target.showPicker === 'function') {
+                        e.target.showPicker();
+                    }
+                }
+            }, true);
+        });
     </script>
