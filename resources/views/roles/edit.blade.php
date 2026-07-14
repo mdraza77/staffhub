@@ -77,10 +77,16 @@
 
                     {{-- Submit --}}
                     @can('AccessManagement-Edit')
-                        <button type="submit"
-                            class="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition-colors shadow-sm">
-                            <i class="fa-solid fa-floppy-disk mr-1"></i> Update Role
-                        </button>
+                        @if ($role->name === 'Super Admin')
+                            <button disabled class="w-full px-4 py-2.5 bg-gray-400 text-white rounded-lg cursor-not-allowed">
+                                <i class="fa-solid fa-lock mr-1"></i> Protected Role
+                            </button>
+                        @else
+                            <button type="submit"
+                                class="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition-colors shadow-sm">
+                                <i class="fa-solid fa-floppy-disk mr-1"></i> Update Role
+                            </button>
+                        @endif
                     @endcan
 
                     <a href="{{ route('roles.index') }}"

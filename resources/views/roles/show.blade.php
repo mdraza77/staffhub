@@ -12,10 +12,17 @@
         </div>
         <div class="flex items-center gap-3">
             @can('AccessManagement-Edit')
-                <a href="{{ route('roles.edit', $role->id) }}"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm flex items-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-pen-to-square"></i> Edit Role
-                </a>
+                @if ($role->name !== 'Super Admin')
+                    <a href="{{ route('roles.edit', $role->id) }}"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit Role
+                    </a>
+                @else
+                    <a href="#" title="Cannot edit System Role"
+                        class="px-4 py-2 bg-gray-200 text-gray-500 rounded-lg hover:bg-gray-300 transition-colors font-medium text-sm flex items-center gap-2 cursor-not-allowed">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit Role
+                    </a>
+                @endif
             @endcan
             <a href="{{ route('roles.index') }}"
                 class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium text-sm">

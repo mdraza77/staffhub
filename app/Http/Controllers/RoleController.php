@@ -3,26 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:AccessManagement-Index',  only: ['index']),
+            new Middleware('permission:AccessManagement-Index', only: ['index']),
             new Middleware('permission:AccessManagement-Create', only: ['create', 'store']),
-            new Middleware('permission:AccessManagement-Edit',   only: ['edit', 'update']),
+            new Middleware('permission:AccessManagement-Edit', only: ['edit', 'update']),
             new Middleware('permission:AccessManagement-Delete', only: ['destroy']),
-            new Middleware('permission:AccessManagement-View',   only: ['show']),
+            new Middleware('permission:AccessManagement-View', only: ['show']),
         ];
     }
 
@@ -47,14 +47,14 @@ class RoleController extends Controller implements HasMiddleware
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name'           => 'required|string|max:100|unique:roles,name',
-            'permission'     => 'required|array|min:1',
-            'permission.*'   => 'exists:permissions,name',
+            'name' => 'required|string|max:100|unique:roles,name',
+            'permission' => 'required|array|min:1',
+            'permission.*' => 'exists:permissions,name',
         ], [
-            'name.required'       => 'Role name is required.',
-            'name.unique'         => 'This role name already exists.',
+            'name.required' => 'Role name is required.',
+            'name.unique' => 'This role name already exists.',
             'permission.required' => 'Please select at least one permission.',
-            'permission.min'      => 'Please select at least one permission.',
+            'permission.min' => 'Please select at least one permission.',
         ]);
 
         try {
@@ -66,13 +66,15 @@ class RoleController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->route('roles.index')
+            return redirect()
+                ->route('roles.index')
                 ->with('success', "Role \"{$role->name}\" created successfully.");
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Role Creation Failed: ' . $e->getMessage());
 
-            return back()->withInput()
+            return back()
+                ->withInput()
                 ->with('error', 'Something went wrong while creating the role. Please try again.');
         }
     }
@@ -113,15 +115,21 @@ class RoleController extends Controller implements HasMiddleware
     {
         $role = Role::findOrFail($id);
 
+        if ($role->name === 'Super Admin') {
+            return redirect()
+                ->route('roles.index')
+                ->with('error', 'Super Admin role cannot be modified.');
+        }
+
         $request->validate([
-            'name'         => 'required|string|max:100|unique:roles,name,' . $id,
-            'permission'   => 'required|array|min:1',
+            'name' => 'required|string|max:100|unique:roles,name,' . $id,
+            'permission' => 'required|array|min:1',
             'permission.*' => 'exists:permissions,name',
         ], [
-            'name.required'       => 'Role name is required.',
-            'name.unique'         => 'This role name already exists.',
+            'name.required' => 'Role name is required.',
+            'name.unique' => 'This role name already exists.',
             'permission.required' => 'Please select at least one permission.',
-            'permission.min'      => 'Please select at least one permission.',
+            'permission.min' => 'Please select at least one permission.',
         ]);
 
         try {
@@ -134,13 +142,15 @@ class RoleController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->route('roles.index')
+            return redirect()
+                ->route('roles.index')
                 ->with('success', "Role \"{$role->name}\" updated successfully.");
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Role Update Failed: ' . $e->getMessage());
 
-            return back()->withInput()
+            return back()
+                ->withInput()
                 ->with('error', 'Something went wrong while updating the role. Please try again.');
         }
     }
@@ -151,7 +161,8 @@ class RoleController extends Controller implements HasMiddleware
         $role = Role::findOrFail($id);
 
         if ($role->name === 'Super Admin') {
-            return redirect()->route('roles.index')
+            return redirect()
+                ->route('roles.index')
                 ->with('error', 'Super Admin role cannot be deleted.');
         }
 
@@ -163,13 +174,15 @@ class RoleController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->route('roles.index')
+            return redirect()
+                ->route('roles.index')
                 ->with('success', "Role \"{$roleName}\" deleted successfully.");
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Role Deletion Failed: ' . $e->getMessage());
 
-            return redirect()->route('roles.index')
+            return redirect()
+                ->route('roles.index')
                 ->with('error', 'Something went wrong while deleting the role. Please try again.');
         }
     }

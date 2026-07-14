@@ -240,7 +240,7 @@
                 @endif
 
                 @if (auth()->check() && (auth()->user()->can('Employee-Index') || auth()->user()->can('Employee-Create')))
-                    @can('Department-Index')
+                    @can('Employee-Index')
                         <li>
                             <a href="{{ route('employees.index') }}"
                                 class="{{ request()->routeIs('employees.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
@@ -474,6 +474,7 @@
                 {{-- ===== GROUP: SYSTEM ===== --}}
                 @if (auth()->check() &&
                         (auth()->user()->can('Employee-Index') ||
+                            auth()->user()->can('Employee-Create') ||
                             auth()->user()->can('Company-Index') ||
                             auth()->user()->can('Settings-Index')))
                     <li
@@ -634,6 +635,11 @@
                 sidebar.addEventListener('click', function(e) {
                     const summary = e.target.closest('summary');
                     if (summary && sidebar.classList.contains('collapsed')) {
+                        e.preventDefault();
+                        const details = summary.closest('details');
+                        if (details) {
+                            details.open = true;
+                        }
                         toggleSidebar();
                     }
                 });

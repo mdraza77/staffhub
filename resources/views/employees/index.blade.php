@@ -35,7 +35,7 @@
                     <tr class="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
                         <th class="px-6 py-3 font-semibold">#</th>
                         <th class="px-6 py-3 font-semibold">Employee</th>
-                        <th class="px-6 py-3 font-semibold">ID & Designation</th>
+                        <th class="px-6 py-3 font-semibold">Emp ID & Designation</th>
                         <th class="px-6 py-3 font-semibold">Department</th>
                         <th class="px-6 py-3 font-semibold">Role</th>
                         <th class="px-6 py-3 font-semibold">Status</th>
@@ -64,7 +64,18 @@
                                     @endif
                                     <div>
                                         <div class="flex items-center gap-2">
-                                            <p class="text-sm font-semibold text-gray-800">{{ $employee->name }}</p>
+                                            @if (auth()->user()->can('Employee-View'))
+                                                <a href="{{ route('employees.show', $employee->id) }}">
+                                                    <p
+                                                        class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                                                        {{ $employee->name }}
+                                                    </p>
+                                                </a>
+                                            @else
+                                                <span class="text-sm font-medium text-gray-800">
+                                                    {{ $employee->name }}
+                                                </span>
+                                            @endif
                                             @if ($employee->trashed())
                                                 <span
                                                     class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-600 uppercase tracking-wide">
@@ -77,11 +88,18 @@
                                 </div>
                             </td>
 
-                            {{-- ID & Designation --}}
+                            {{-- Employee ID & Designation --}}
                             <td class="px-6 py-4">
-                                <a href="{{ route('employees.show', $employee->id) }}">
-                                    <p class="text-sm font-medium text-gray-800">{{ $employee->employee_id ?? 'N/A' }}</p>
-                                </a>
+                                @if (auth()->user()->can('Employee-View'))
+                                    <a href="{{ route('employees.show', $employee->id) }}"
+                                        class="text-sm font-medium text-blue-600 hover:text-blue-700">
+                                        {{ $employee->employee_id ?? '--' }}
+                                    </a>
+                                @else
+                                    <span class="text-sm font-medium text-gray-800">
+                                        {{ $employee->employee_id ?? '--' }}
+                                    </span>
+                                @endif
                                 <p class="text-xs text-gray-500">{{ $employee->designation ?? 'N/A' }}</p>
                             </td>
 
@@ -90,7 +108,7 @@
                                 {{ $employee->department->name ?? 'Unassigned' }}
                             </td>
 
-                            {{-- ROLE --}}
+                            {{-- Role --}}
                             <td class="px-6 py-4 text-sm text-gray-600">
                                 @if ($employee->roles->isNotEmpty())
                                     <span class="px-2 py-1 rounded-md text-xs font-semibold bg-indigo-50 text-indigo-600">
@@ -160,12 +178,12 @@
                                         {{-- NORMAL STATE: View + Edit + Soft Delete --}}
 
                                         {{-- View --}}
-                                        @can('Employee-View')
+                                        {{-- @can('Employee-View')
                                             <a href="{{ route('employees.show', $employee->id) }}" title="View Details"
                                                 class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                                                 <i class="fa-solid fa-eye text-base"></i>
                                             </a>
-                                        @endcan
+                                        @endcan --}}
 
                                         {{-- Edit --}}
                                         @can('Employee-Edit')

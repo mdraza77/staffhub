@@ -230,10 +230,12 @@
                         class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">
                         Cancel
                     </a>
-                    <button type="submit"
-                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm text-sm">
-                        Save Settings
-                    </button>
+                    @can('Company-Edit')
+                        <button type="submit"
+                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm text-sm">
+                            Save Settings
+                        </button>
+                    @endcan
                 </div>
 
             </div>

@@ -52,7 +52,14 @@
 
                             {{-- Name --}}
                             <td class="px-6 py-4">
-                                <p class="text-sm font-semibold text-gray-800">{{ $holiday->name }}</p>
+                                @if (auth()->user()->can('Holiday-View'))
+                                    <a href="{{ route('holidays.show', $holiday->id) }}">
+                                        <p class="text-sm font-medium text-blue-600 hover:text-blue-700">
+                                            {{ $holiday->name }}</p>
+                                    </a>
+                                @else
+                                    <p class="text-sm font-semibold text-gray-800">{{ $holiday->name }}</p>
+                                @endif
                             </td>
 
                             {{-- start date and end date --}}
@@ -141,12 +148,12 @@
                                         {{-- NORMAL STATE: View + Edit + Soft Delete --}}
 
                                         {{-- View --}}
-                                        @can('Holiday-View')
+                                        {{-- @can('Holiday-View')
                                             <a href="{{ route('holidays.show', $holiday->id) }}" title="View Details"
                                                 class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                                                 <i class="fa-solid fa-eye text-base"></i>
                                             </a>
-                                        @endcan
+                                        @endcan --}}
 
                                         {{-- Edit --}}
                                         @can('Holiday-Edit')

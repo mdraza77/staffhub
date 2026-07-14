@@ -204,7 +204,20 @@
                                 </div>
                             </td>
 
-                            <td class="px-4 py-3 text-sm text-gray-600">{{ $employee->employee_id ?? '—' }}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600">
+                                @if (auth()->user()->can('Employee-View'))
+                                    <a href="{{ route('employees.show', $employee->id) }}">
+                                        <p
+                                            class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                                            {{ $employee->employee_id ?? '—' }}
+                                        </p>
+                                    </a>
+                                @else
+                                    <span class="text-sm font-medium text-gray-800">
+                                        {{ $employee->employee_id ?? '—' }}
+                                    </span>
+                                @endif
+                            </td>
                             <td class="px-4 py-3 text-sm text-gray-600">{{ $employee->designation ?? '—' }}</td>
                             <td class="px-4 py-3 text-sm text-gray-600">{{ $employee->department->name ?? '—' }}</td>
 

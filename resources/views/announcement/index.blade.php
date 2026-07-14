@@ -51,7 +51,15 @@
 
                             {{-- Title --}}
                             <td class="px-6 py-4">
-                                <p class="text-sm font-semibold text-gray-800">{{ $announcement->title }}</p>
+                                @if (auth()->user()->can('Announcement-View'))
+                                    <a href="{{ route('announcements.show', $announcement->id) }}">
+                                        <p
+                                            class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                                            {{ $announcement->title }}</p>
+                                    </a>
+                                @else
+                                    <p class="text-sm font-semibold text-gray-800">{{ $announcement->title }}</p>
+                                @endif
                             </td>
 
                             {{-- Creator --}}
@@ -128,12 +136,12 @@
                                         @endcan
                                     @else
                                         {{-- NORMAL STATE: View + Edit + Soft Delete --}}
-                                        @can('Announcement-View')
+                                        {{-- @can('Announcement-View')
                                             <a href="{{ route('announcements.show', $announcement->id) }}" title="View Details"
                                                 class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                                                 <i class="fa-solid fa-eye text-base"></i>
                                             </a>
-                                        @endcan
+                                        @endcan --}}
 
                                         @can('Announcement-Edit')
                                             <a href="{{ route('announcements.edit', $announcement->id) }}"

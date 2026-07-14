@@ -333,16 +333,30 @@
                             @foreach ($assignedByMe as $task)
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4 text-sm font-bold text-gray-800 dark:text-zinc-100">
-                                        {{ $task->project_name ?? 'N/A' }}
+                                        @if (auth()->user()->can('Task-View'))
+                                            <a href="{{ route('tasks.show', $task->id) }}"
+                                                class="text-sm font-medium text-blue-600 hover:text-blue-700">
+                                                {{ $task->project_name ?? 'N/A' }}
+                                            </a>
+                                        @else
+                                            {{ $task->project_name ?? 'N/A' }}
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <p class="text-sm font-bold text-gray-800 dark:text-zinc-100 cursor-help truncate max-w-[200px]"
-                                            title="{{ $task->title }}">
-                                            <a href="{{ route('tasks.show', $task->id) }}"
-                                                class="hover:underline hover:text-indigo-650 dark:hover:text-purple-400">
+                                        @if (auth()->user()->can('Task-View'))
+                                            <p class="text-sm font-bold text-gray-800 dark:text-zinc-100 cursor-help truncate max-w-[200px]"
+                                                title="{{ $task->title }}">
+                                                <a href="{{ route('tasks.show', $task->id) }}"
+                                                    class="text-sm font-medium text-blue-600 hover:text-blue-700">
+                                                    {{ Str::limit($task->title, 45) }}
+                                                </a>
+                                            </p>
+                                        @else
+                                            <p class="text-sm font-bold text-gray-800 dark:text-zinc-100 cursor-help truncate max-w-[200px]"
+                                                title="{{ $task->title }}">
                                                 {{ Str::limit($task->title, 45) }}
-                                            </a>
-                                        </p>
+                                            </p>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 text-sm font-medium text-gray-700 dark:text-zinc-300">
                                         {{ $task->engineer->name ?? 'N/A' }}
@@ -391,12 +405,12 @@
                                     </td>
                                     <td class="px-6 py-4 text-center flex justify-center gap-2">
                                         {{-- View --}}
-                                        @can('Task-View')
+                                        {{-- @can('Task-View')
                                             <a href="{{ route('tasks.show', $task->id) }}" title="View Details"
                                                 class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                                                 <i class="fa-solid fa-eye text-base"></i>
                                             </a>
-                                        @endcan
+                                        @endcan --}}
                                         @can('Task-Edit')
                                             <a href="{{ route('tasks.edit', $task->id) }}"
                                                 class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"

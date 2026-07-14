@@ -51,8 +51,15 @@
                 <tbody class="divide-y divide-gray-100">
                     @foreach ($defects as $defect)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 font-mono font-bold text-xs text-indigo-650">
-                                {{ $defect->defect_id }}
+                            <td class="px-6 py-4 font-mono font-bold text-s">
+                                @if (auth()->user()->can('Defect-View'))
+                                    <a href="{{ route('defects.show', $defect->id) }}">
+                                        <p class="text-sm font-medium text-blue-600 hover:text-blue-700">
+                                            {{ $defect->defect_id }}</p>
+                                    </a>
+                                @else
+                                    <p class="text-sm font-medium text-gray-800">{{ $defect->defect_id }}</p>
+                                @endif
                             </td>
                             <td class="px-6 py-4">
                                 @if ($defect->project_name)
@@ -75,32 +82,32 @@
                             <td class="px-6 py-4 text-center">
                                 @if ($defect->severity === 'critical')
                                     <span
-                                        class="bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-red-200">Critical</span>
+                                        class="bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-red-200">Critical</span>
                                 @elseif($defect->severity === 'high')
                                     <span
-                                        class="bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-orange-200">High</span>
+                                        class="bg-orange-100 text-orange-700 dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-orange-200">High</span>
                                 @elseif($defect->severity === 'medium')
                                     <span
-                                        class="bg-blue-100 text-blue-700 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-blue-200">Medium</span>
+                                        class="bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-blue-200">Medium</span>
                                 @else
                                     <span
-                                        class="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-gray-200">Low</span>
+                                        class="bg-gray-100 text-gray-600 dark:bg-zinc-800/40 dark:text-zinc-400 dark:border-zinc-700/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-gray-200">Low</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($defect->priority === 'urgent')
                                     <span
-                                        class="bg-red-50 text-red-650 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-red-100"><i
+                                        class="bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-red-200"><i
                                             class="fa-solid fa-triangle-exclamation mr-0.5"></i> Urgent</span>
                                 @elseif($defect->priority === 'high')
                                     <span
-                                        class="bg-orange-50 text-orange-755 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-orange-100">High</span>
+                                        class="bg-orange-50 text-orange-700 dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-orange-200">High</span>
                                 @elseif($defect->priority === 'medium')
                                     <span
-                                        class="bg-yellow-50 text-yellow-750 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-yellow-100">Medium</span>
+                                        class="bg-yellow-50 text-yellow-700 dark:bg-yellow-950/40 dark:text-yellow-400 dark:border-yellow-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-yellow-200">Medium</span>
                                 @else
                                     <span
-                                        class="bg-gray-50 text-gray-600 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-gray-100">Low</span>
+                                        class="bg-gray-50 text-gray-600 dark:bg-zinc-800/40 dark:text-zinc-400 dark:border-zinc-700/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-gray-200">Low</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center text-xs text-gray-700">
@@ -155,12 +162,12 @@
                                         </form>
                                     @endcan
                                 @else
-                                    @can('Defect-View')
+                                    {{-- @can('Defect-View')
                                         <a href="{{ route('defects.show', $defect->id) }}" title="View Details"
                                             class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
                                             <i class="fa-solid fa-eye text-base"></i>
                                         </a>
-                                    @endcan
+                                    @endcan --}}
                                     @can('Defect-Edit')
                                         <a href="{{ route('defects.edit', $defect->id) }}" title="Edit Defect"
                                             class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">

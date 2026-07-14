@@ -53,20 +53,41 @@
 
                             {{-- Role Name --}}
                             <td class="px-6 py-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
-                                        <i class="fa-solid fa-shield-halved text-indigo-500 text-xs"></i>
+                                @if (auth()->user()->can('AccessManagement-View'))
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+                                            <i class="fa-solid fa-shield-halved text-indigo-500 text-xs"></i>
+                                        </div>
+                                        <div>
+                                            <a href="{{ route('roles.show', $role->id) }}">
+                                                <p
+                                                    class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                                                    {{ $role->name }}</p>
+                                            </a>
+                                            @if ($role->name === 'Super Admin')
+                                                <span
+                                                    class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-600 uppercase tracking-wide">
+                                                    System Role
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p class="text-sm font-semibold text-gray-800">{{ $role->name }}</p>
-                                        @if ($role->name === 'Super Admin')
-                                            <span
-                                                class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-600 uppercase tracking-wide">
-                                                System Role
-                                            </span>
-                                        @endif
+                                @else
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+                                            <i class="fa-solid fa-shield-halved text-indigo-500 text-xs"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-gray-800">{{ $role->name }}</p>
+                                            @if ($role->name === 'Super Admin')
+                                                <span
+                                                    class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-600 uppercase tracking-wide">
+                                                    System Role
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                             </td>
 
                             {{-- Permissions Count --}}
@@ -88,20 +109,18 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center justify-center gap-1">
 
-                                    {{-- View --}}
-                                    @can('AccessManagement-View')
-                                        <a href="{{ route('roles.show', $role->id) }}" title="View Role"
-                                            class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                            <i class="fa-solid fa-eye text-base"></i>
-                                        </a>
-                                    @endcan
-
                                     {{-- Edit --}}
                                     @can('AccessManagement-Edit')
-                                        <a href="{{ route('roles.edit', $role->id) }}" title="Edit Role"
-                                            class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
-                                            <i class="fa-solid fa-pen-to-square text-base"></i>
-                                        </a>
+                                        @if ($role->name !== 'Super Admin')
+                                            <a href="{{ route('roles.edit', $role->id) }}" title="Edit Role"
+                                                class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
+                                                <i class="fa-solid fa-pen-to-square text-base"></i>
+                                            </a>
+                                        @else
+                                            <span class="p-2 text-gray-200 cursor-not-allowed" title="Cannot edit System Role">
+                                                <i class="fa-solid fa-pen-to-square text-base"></i>
+                                            </span>
+                                        @endif
                                     @endcan
 
                                     {{-- Delete --}}
@@ -118,7 +137,7 @@
                                                 </button>
                                             </form>
                                         @else
-                                            {{-- Super Admin delete nahi hoga --}}
+                                            {{-- Super Admin cannot delete --}}
                                             <span class="p-2 text-gray-200 cursor-not-allowed"
                                                 title="Cannot delete System Role">
                                                 <i class="fa-solid fa-trash text-base"></i>
