@@ -22,9 +22,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (Schema::hasTable('company_settings')) {
-            $globalSetting = CompanySetting::first();
-            View::share('globalSetting', $globalSetting);
+        try {
+            if (Schema::hasTable('company_settings')) {
+                $globalSetting = CompanySetting::first();
+                View::share('globalSetting', $globalSetting);
+            }
+        } catch (\Exception $e) {
+            // Ignore during build/deployment
         }
     }
 }
