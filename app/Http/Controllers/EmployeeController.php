@@ -183,8 +183,9 @@ class EmployeeController extends Controller implements HasMiddleware
     /**
      * Display the specified resource.
      */
-    public function show(User $employee)
+    public function show($id)
     {
+        $employee = User::withTrashed()->findOrFail($id);
         $employee->load('department');
         return view('employees.show', compact('employee'));
     }
@@ -290,7 +291,7 @@ class EmployeeController extends Controller implements HasMiddleware
     public function destroy(User $employee)
     {
         $employee->delete();  // Soft Delete
-        return redirect()->route('employees.index')->with('success', 'Employee soft deleted successfully.');
+        return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
     }
 
     public function restore($id)

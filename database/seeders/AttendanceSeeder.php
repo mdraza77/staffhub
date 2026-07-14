@@ -23,7 +23,7 @@ class AttendanceSeeder extends Seeder
         }
 
         $startDate = now()->startOfMonth();
-        $endDate = now(); // Seed up to today
+        $endDate = now();  // Seed up to today
 
         // 1. Generate list of working days (excluding Sundays) from start of month to today
         $workingDates = [];
@@ -97,6 +97,6 @@ class AttendanceSeeder extends Seeder
             }
         }
 
-        $this->command->info('Attendance seeded successfully for the current month.');
+        // $this->command->info('Attendance seeded successfully for the current month.');
     }
 }

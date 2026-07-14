@@ -44,8 +44,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @foreach ($employees as $key => $employee)
-                        <tr
-                            class="transition-colors {{ $employee->trashed() ? 'bg-red-50 opacity-70' : 'hover:bg-gray-50' }}">
+                        <tr class="transition-colors {{ $employee->trashed() ? 'opacity-70' : 'hover:bg-gray-50' }}">
 
                             {{-- # --}}
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $key + 1 }}</td>
@@ -78,9 +77,11 @@
                                 </div>
                             </td>
 
-                            {{-- ID & Role --}}
+                            {{-- ID & Designation --}}
                             <td class="px-6 py-4">
-                                <p class="text-sm font-medium text-gray-800">{{ $employee->employee_id ?? 'N/A' }}</p>
+                                <a href="{{ route('employees.show', $employee->id) }}">
+                                    <p class="text-sm font-medium text-gray-800">{{ $employee->employee_id ?? 'N/A' }}</p>
+                                </a>
                                 <p class="text-xs text-gray-500">{{ $employee->designation ?? 'N/A' }}</p>
                             </td>
 

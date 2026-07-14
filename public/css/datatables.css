@@ -797,3 +797,46 @@ select.dt-input {
 .dark input::-webkit-calendar-picker-indicator:hover {
     opacity: 1 !important;
 }
+
+/* ========================================================= */
+/* SWEETALERT2 DARK MODE COMPATIBILITY OVERRIDES             */
+/* ========================================================= */
+
+.dark .swal2-popup {
+    background-color: #1e293b !important; /* bg-slate-800 */
+    color: #f8fafc !important; /* text-slate-50 */
+    border: 1px solid #334155 !important; /* border-slate-700 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .swal2-title {
+    color: #f1f5f9 !important; /* text-slate-100 */
+}
+
+.dark .swal2-html-container {
+    color: #cbd5e1 !important; /* text-slate-300 */
+}
+
+.dark .swal2-validation-message {
+    background-color: #0f172a !important; /* bg-slate-900 */
+    color: #f87171 !important;
+}
+
+.dark .swal2-close {
+    color: #94a3b8 !important;
+}
+
+.dark .swal2-close:hover {
+    color: #ffffff !important;
+}
+
+.dark .swal2-deny,
+.dark .swal2-cancel {
+    background-color: #475569 !important; /* bg-slate-600 */
+    color: #ffffff !important;
+}
+
+.dark .swal2-deny:hover,
+.dark .swal2-cancel:hover {
+    background-color: #334155 !important;
+}

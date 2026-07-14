@@ -12,10 +12,13 @@
         </div>
         <div class="flex items-center gap-3">
             @can('Employee-Edit')
-                <a href="{{ route('employees.edit', $employee->id) }}"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm flex items-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-pen-to-square"></i> Edit
-                </a>
+                @if ($employee->trashed())
+                @else
+                    <a href="{{ route('employees.edit', $employee->id) }}"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </a>
+                @endif
             @endcan
             <a href="{{ route('employees.index') }}"
                 class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
@@ -112,34 +115,49 @@
             </div>
 
             {{-- Signature Card --}}
-            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-                <h3 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Signature</h3>
-                @if ($employee->signature)
+            @if ($employee->signature)
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+                    <h3 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Signature</h3>
                     <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg border border-gray-100">
                         <img src="{{ asset('storage/' . $employee->signature) }}" alt="Signature"
                             class="max-h-16 object-contain mix-blend-multiply" draggable="false">
                     </div>
-                @else
-                    <p class="text-sm text-gray-400 text-center py-4">No signature uploaded</p>
-                @endif
-            </div>
+                </div>
+            @endif
 
             {{-- Danger Zone --}}
-            @can('Employee-Delete')
-                <div class="bg-white rounded-xl border border-red-100 shadow-sm p-5">
-                    <h3 class="text-sm font-semibold text-red-600 mb-3 uppercase tracking-wide">Danger Zone</h3>
-                    <p class="text-xs text-gray-500 mb-4">Permanently delete this employee.</p>
-                    <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
-                        onsubmit="return confirm('Are you sure you want to delete {{ addslashes($employee->name) }}?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="w-full px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-medium">
-                            <i class="fa-solid fa-trash mr-1"></i> Delete Employee
-                        </button>
-                    </form>
-                </div>
-            @endcan
+            @if ($employee->trashed())
+                @can('Employee-Restore')
+                    <div class="bg-white rounded-xl border border-green-150 shadow-sm p-5">
+                        <h3 class="text-sm font-semibold text-green-600 mb-3 uppercase tracking-wide">Restore Employee</h3>
+                        <p class="text-xs text-gray-500 mb-4">Restore this employee's profile to active status.</p>
+                        <form id="restore-employee-form" action="{{ route('employees.restore', $employee->id) }}"
+                            method="POST">
+                            @csrf
+                            <button type="button" onclick="confirmRestore(event)"
+                                class="w-full px-4 py-2 bg-green-50 text-green-600 border border-green-200 rounded-lg hover:bg-green-600 hover:text-white transition-all text-sm font-medium">
+                                <i class="fa-solid fa-rotate-left mr-1"></i> Restore Employee
+                            </button>
+                        </form>
+                    </div>
+                @endcan
+            @else
+                @can('Employee-Delete')
+                    <div class="bg-white rounded-xl border border-red-100 shadow-sm p-5">
+                        <h3 class="text-sm font-semibold text-red-600 mb-3 uppercase tracking-wide">Danger Zone</h3>
+                        <p class="text-xs text-gray-500 mb-4">Permanently delete this employee.</p>
+                        <form id="delete-employee-form" action="{{ route('employees.destroy', $employee->id) }}"
+                            method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" onclick="confirmDelete(event)"
+                                class="w-full px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-medium">
+                                <i class="fa-solid fa-trash mr-1"></i> Delete Employee
+                            </button>
+                        </form>
+                    </div>
+                @endcan
+            @endif
 
         </div>
 
@@ -307,3 +325,45 @@
     </div>
 
 @endsection
+
+@push('scripts')
+    <script>
+        function confirmDelete(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this! All employee records will be archived/deleted.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444', // bg-red-500
+                cancelButtonColor: '#4b5563', // bg-gray-600
+                confirmButtonText: 'Yes, delete employee!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-employee-form').submit();
+                }
+            });
+        }
+
+        function confirmRestore(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Restore Employee?',
+                text: "Are you sure you want to restore {{ addslashes($employee->name) }} to active status?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981', // bg-green-500
+                cancelButtonColor: '#4b5563', // bg-gray-600
+                confirmButtonText: 'Yes, restore employee!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('restore-employee-form').submit();
+                }
+            });
+        }
+    </script>
+@endpush

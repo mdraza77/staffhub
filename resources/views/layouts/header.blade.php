@@ -162,39 +162,16 @@
             @endphp
 
             @if (auth()->check() && (auth()->user()->can('Employee-Index') || auth()->user()->can('Employee-Create')))
-                <li title="Employee Management">
-                    <details class="group" {{ $employeeActive ? 'open' : '' }}>
-                        <summary
-                            class="{{ $employeeActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors cursor-pointer list-none font-medium [&::-webkit-details-marker]:hidden">
-                            <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-users text-lg"></i>
-                                <span>Employee Mgmt</span>
-                            </div>
-                            <i
-                                class="bi bi-chevron-down transition-transform duration-300 {{ $employeeActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
-                        </summary>
-                        <ul class="pl-9 pr-2 py-2 space-y-1">
-                            @can('Employee-Index')
-                                <li>
-                                    <a href="{{ route('employees.index') }}"
-                                        class="{{ request()->routeIs('employees.index') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
-                                        <i class="bi bi-circle text-[8px]"></i>
-                                        <span>All Employees</span>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('Employee-Create')
-                                <li>
-                                    <a href="{{ route('employees.create') }}"
-                                        class="{{ request()->routeIs('employees.create') ? 'text-blue-700 font-semibold' : 'text-gray-600 hover:text-blue-700' }} flex items-center gap-2 text-sm py-1.5 transition-colors">
-                                        <i class="bi bi-circle text-[8px]"></i>
-                                        <span>Add Employee</span>
-                                    </a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </details>
-                </li>
+                {{-- ===== DEPARTMENTS ===== --}}
+                @can('Department-Index')
+                    <li>
+                        <a href="{{ route('employees.index') }}"
+                            class="{{ request()->routeIs('employees.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-users text-lg"></i>
+                            <span>Employee Mgmt</span>
+                        </a>
+                    </li>
+                @endcan
             @endif
 
             {{-- ===== DEPARTMENTS ===== --}}
@@ -505,18 +482,30 @@
             const sidebar = document.getElementById('sidebar');
             const main = document.getElementById('main');
 
-            sidebar.classList.toggle('-translate-x-full'); // Hides/Shows sidebar on mobile
-            sidebar.classList.toggle('md:translate-x-0'); // Toggle state on desktop
+            if (window.innerWidth >= 768) {
+                // Desktop toggle logic
+                if (sidebar.classList.contains('md:translate-x-0')) {
+                    // Currently open, let's close it
+                    sidebar.classList.remove('md:translate-x-0');
+                    sidebar.classList.add('-translate-x-full');
 
-            // Adjust main content margin based on screen size
-            if (window.innerWidth >= 768) { // md breakpoint in tailwind
-                if (main.classList.contains('md:ml-64')) {
-                    main.classList.remove('md:ml-64');
-                    main.classList.add('ml-0');
+                    if (main) {
+                        main.classList.remove('md:ml-64');
+                        main.classList.add('ml-0');
+                    }
                 } else {
-                    main.classList.remove('ml-0');
-                    main.classList.add('md:ml-64');
+                    // Currently closed, let's open it
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.add('md:translate-x-0');
+
+                    if (main) {
+                        main.classList.remove('ml-0');
+                        main.classList.add('md:ml-64');
+                    }
                 }
+            } else {
+                // Mobile toggle logic
+                sidebar.classList.toggle('-translate-x-full');
             }
         }
 
