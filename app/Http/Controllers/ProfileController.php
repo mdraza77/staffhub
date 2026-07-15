@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-use ImageKit\ImageKit;
+use App\Services\ImageKitService;
 
 class ProfileController extends Controller implements HasMiddleware
 {
@@ -59,11 +59,7 @@ class ProfileController extends Controller implements HasMiddleware
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $imageKit = new ImageKit(
-            env('IMAGEKIT_PUBLIC_KEY'),
-            env('IMAGEKIT_PRIVATE_KEY'),
-            env('IMAGEKIT_URL_ENDPOINT')
-        );
+        $imageKit = ImageKitService::getInstance();
 
         try {
             DB::beginTransaction();
@@ -136,11 +132,7 @@ class ProfileController extends Controller implements HasMiddleware
 
         if ($user->profile) {
             if (str_starts_with($user->profile, 'http')) {
-                $imageKit = new ImageKit(
-                    env('IMAGEKIT_PUBLIC_KEY'),
-                    env('IMAGEKIT_PRIVATE_KEY'),
-                    env('IMAGEKIT_URL_ENDPOINT')
-                );
+                $imageKit = ImageKitService::getInstance();
                 $this->deleteImageKitFileByUrl($user->profile, $imageKit);
             } else {
                 Storage::disk('public')->delete($user->profile);

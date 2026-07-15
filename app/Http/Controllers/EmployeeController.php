@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use ImageKit\ImageKit;
+use App\Services\ImageKitService;
 use Spatie\Permission\Models\Role;
 
 class EmployeeController extends Controller implements HasMiddleware
@@ -85,11 +85,7 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-        $imageKit = new ImageKit(
-            env('IMAGEKIT_PUBLIC_KEY'),
-            env('IMAGEKIT_PRIVATE_KEY'),
-            env('IMAGEKIT_URL_ENDPOINT')
-        );
+        $imageKit = ImageKitService::getInstance();
 
         // Auto-populate if not explicitly filled
         if (!$request->filled('employee_id')) {
@@ -260,11 +256,7 @@ class EmployeeController extends Controller implements HasMiddleware
             'phone.regex' => 'The phone number format must be valid (e.g. +918544568958 or 918544568958).',
         ]);
 
-        $imageKit = new ImageKit(
-            env('IMAGEKIT_PUBLIC_KEY'),
-            env('IMAGEKIT_PRIVATE_KEY'),
-            env('IMAGEKIT_URL_ENDPOINT')
-        );
+        $imageKit = ImageKitService::getInstance();
 
         try {
             DB::beginTransaction();
@@ -372,11 +364,7 @@ class EmployeeController extends Controller implements HasMiddleware
     {
         $employee = User::withTrashed()->findOrFail($id);
 
-        $imageKit = new ImageKit(
-            env('IMAGEKIT_PUBLIC_KEY'),
-            env('IMAGEKIT_PRIVATE_KEY'),
-            env('IMAGEKIT_URL_ENDPOINT')
-        );
+        $imageKit = ImageKitService::getInstance();
 
         // Profile image bhi delete karo permanently
         if ($employee->profile) {
