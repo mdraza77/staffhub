@@ -18,22 +18,6 @@
             </a>
         </div>
 
-        @if (session('success'))
-            <div
-                class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm flex items-center gap-2">
-                <i class="fa-solid fa-circle-check"></i>
-                <span>{{ session('success') }}</span>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div
-                class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm flex items-center gap-2">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                <span>{{ session('error') }}</span>
-            </div>
-        @endif
-
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left Side: User Control & Quick Stats -->
             <div class="space-y-6">

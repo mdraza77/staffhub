@@ -18,6 +18,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -166,11 +167,29 @@ Route::middleware(['auth'])->group(function () {
 
 // For testing only
 Route::middleware(['auth'])->get('/refresh-db-secret-123', function () {
-    abort_unless(auth()->user()->hasRole('Super Admin'), 403);
+    if (!auth()->user()->hasRole('Super Admin')) {
+        return response()->json([
+            'title' => 'Access Denied',
+            'message' => 'Users with the role "' . auth()->user()->roles->first()->name . '" are not authorized to perform this action. Only Super Admins can refresh the database.'
+        ]);
+    }
 
-    Artisan::call('migrate:fresh --seed --force');
+    try {
+        Artisan::call('migrate:fresh --seed --force');
 
-    return 'Database Refreshed Successfully';
+        return response()->json([
+            'success' => true,
+            'message' => 'Database refreshed successfully.'
+        ]);
+    } catch (\Throwable $e) {
+        Log::error($e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Database refresh failed.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
 });
 
 require __DIR__ . '/auth.php';

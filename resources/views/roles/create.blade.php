@@ -16,13 +16,6 @@
         </a>
     </div>
 
-    {{-- Error Flash --}}
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 text-sm">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
-
     <form action="{{ route('roles.store') }}" method="POST">
         @csrf
 
@@ -121,12 +114,10 @@
                                     class="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:border-blue-200 hover:bg-blue-50 cursor-pointer transition-all group has-[:checked]:border-blue-300 has-[:checked]:bg-blue-50">
                                     <input type="checkbox" name="permission[]" value="{{ $perm->name }}"
                                         class="perm-checkbox w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer"
-                                        data-module="{{ Str::slug($module) }}"
-                                        {{ in_array($perm->name, old('permission', [])) ? 'checked' : '' }}>
+                                        data-module="{{ Str::slug($module) }}" {{ in_array($perm->name, old('permission', [])) ? 'checked' : '' }}>
                                     <div>
                                         {{-- Show only the action part e.g. "Index" from "Employee-Index" --}}
-                                        <p
-                                            class="text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-colors">
+                                        <p class="text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-colors">
                                             {{ explode('-', $perm->name)[1] ?? $perm->name }}
                                         </p>
                                         <p class="text-xs text-gray-400">{{ $perm->name }}</p>
@@ -199,7 +190,7 @@
 
         // ===== LISTEN ON ALL CHECKBOXES =====
         document.querySelectorAll('.perm-checkbox').forEach(cb => {
-            cb.addEventListener('change', function() {
+            cb.addEventListener('change', function () {
                 const slug = this.dataset.module;
                 const moduleCheckboxes = document.querySelectorAll(`[data-module="${slug}"]`);
                 const allChecked = [...moduleCheckboxes].every(c => c.checked);

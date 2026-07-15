@@ -16,19 +16,6 @@
         </a>
     </div>
 
-    {{-- Flash Messages --}}
-    @if (session('success'))
-        <div
-            class="mb-5 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 text-sm">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="mb-5 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 text-sm">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
-
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -53,8 +40,8 @@
                                 {{ strtoupper(substr($user->name, 0, 2)) }}
                             </div>
                             <img id="profile-preview"
-                                class="w-28 h-28 rounded-full object-cover border-4 border-blue-100 shadow hidden"
-                                src="" alt="Preview">
+                                class="w-28 h-28 rounded-full object-cover border-4 border-blue-100 shadow hidden" src=""
+                                alt="Preview">
                         @endif
 
                         {{-- Overlay on hover --}}
@@ -212,8 +199,7 @@
                         {{-- Designation --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Designation</label>
-                            <input type="text" name="designation"
-                                value="{{ old('designation', $user->designation) }}"
+                            <input type="text" name="designation" value="{{ old('designation', $user->designation) }}"
                                 class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('designation') border-red-500 @enderror"
                                 placeholder="e.g. Software Engineer">
                             @error('designation')
@@ -315,13 +301,11 @@
                             <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Status</p>
                             <div class="flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg">
                                 @if ($user->status === 'active')
-                                    <span
-                                        class="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">
                                         <i class="fa-solid fa-circle text-[8px] mr-1"></i>Active
                                     </span>
                                 @elseif ($user->status === 'inactive')
-                                    <span
-                                        class="px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">
                                         <i class="fa-solid fa-circle text-[8px] mr-1"></i>Inactive
                                     </span>
                                 @else
@@ -383,7 +367,7 @@
         function previewImage(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     // Initials div hide karo
                     const initials = document.getElementById('profile-initials');
                     if (initials) initials.classList.add('hidden');

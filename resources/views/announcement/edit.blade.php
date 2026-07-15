@@ -14,12 +14,6 @@
         </a>
     </div>
 
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
-
     <form action="{{ route('announcements.update', $announcement->id) }}" method="POST"
         class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 max-w-3xl">
         @csrf
@@ -88,7 +82,8 @@
                         class="text-red-500">*</span></label>
                 <textarea name="message" rows="6"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400 @error('message') border-red-500 @enderror"
-                    placeholder="Write details of the announcement here..." required>{{ old('message', $announcement->message) }}</textarea>
+                    placeholder="Write details of the announcement here..."
+                    required>{{ old('message', $announcement->message) }}</textarea>
                 @error('message')
                     <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
                 @enderror

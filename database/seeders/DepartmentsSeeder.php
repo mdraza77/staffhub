@@ -17,52 +17,67 @@ class DepartmentsSeeder extends Seeder
             [
                 'name' => 'Human Resources',
                 'slug' => 'human-resources',
-                'description' => 'Manages recruitment, employee relations, and company policies.'
+                'description' => 'Manages recruitment, onboarding, employee relations, and company policies.'
             ],
             [
-                'name' => 'Information Technology',
-                'slug' => 'information-technology',
-                'description' => 'Handles software, hardware, and technical infrastructure.'
+                'name' => 'Engineering',
+                'slug' => 'engineering',
+                'description' => 'Develops and maintains software products and technical solutions.'
             ],
             [
-                'name' => 'Finance',
-                'slug' => 'finance',
-                'description' => 'Responsible for budgeting, accounting, and financial planning.'
+                'name' => 'Quality Assurance',
+                'slug' => 'quality-assurance',
+                'description' => 'Ensures product quality through testing and validation.'
             ],
             [
-                'name' => 'Marketing',
-                'slug' => 'marketing',
-                'description' => 'Promotes products and manages brand awareness.'
+                'name' => 'Product Management',
+                'slug' => 'product-management',
+                'description' => 'Defines product strategy, roadmap, and business requirements.'
+            ],
+            [
+                'name' => 'UI/UX Design',
+                'slug' => 'ui-ux-design',
+                'description' => 'Designs user interfaces and improves user experience.'
+            ],
+            [
+                'name' => 'DevOps & Infrastructure',
+                'slug' => 'devops-infrastructure',
+                'description' => 'Manages deployments, cloud infrastructure, and system reliability.'
+            ],
+            [
+                'name' => 'Finance & Accounts',
+                'slug' => 'finance-accounts',
+                'description' => 'Handles accounting, payroll, budgeting, and financial reporting.'
             ],
             [
                 'name' => 'Sales',
                 'slug' => 'sales',
-                'description' => 'Handles customer acquisition and revenue generation.'
+                'description' => 'Drives revenue growth and customer acquisition.'
             ],
             [
-                'name' => 'Operations',
-                'slug' => 'operations',
-                'description' => 'Oversees daily business operations and processes.'
+                'name' => 'Marketing',
+                'slug' => 'marketing',
+                'description' => 'Promotes products, branding, and digital marketing campaigns.'
             ],
             [
                 'name' => 'Customer Support',
                 'slug' => 'customer-support',
-                'description' => 'Assists customers and resolves support issues.'
+                'description' => 'Provides customer assistance and resolves service issues.'
             ],
             [
-                'name' => 'Research & Development',
-                'slug' => 'research-development',
-                'description' => 'Focuses on innovation and new product development.'
+                'name' => 'Operations',
+                'slug' => 'operations',
+                'description' => 'Oversees day-to-day business operations and process management.'
             ],
             [
                 'name' => 'Administration',
                 'slug' => 'administration',
-                'description' => 'Manages office administration and internal coordination.'
+                'description' => 'Handles office management and internal coordination.'
             ],
             [
                 'name' => 'Legal & Compliance',
                 'slug' => 'legal-compliance',
-                'description' => 'Ensures legal compliance and handles corporate legal matters.'
+                'description' => 'Ensures regulatory compliance and manages legal matters.'
             ],
         ];
 

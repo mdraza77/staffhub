@@ -14,16 +14,6 @@
         </a>
     </div>
 
-    @if ($errors->any())
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            <ul class="list-disc list-inside text-sm font-medium">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <form action="{{ route('defects.update', $defect->id) }}" method="POST"
         class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8">
         @csrf
@@ -78,8 +68,7 @@
                 <select name="environment"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
                     required>
-                    <option value="production"
-                        {{ old('environment', $defect->environment) === 'production' ? 'selected' : '' }}>Production
+                    <option value="production" {{ old('environment', $defect->environment) === 'production' ? 'selected' : '' }}>Production
                     </option>
                     <option value="staging" {{ old('environment', $defect->environment) === 'staging' ? 'selected' : '' }}>
                         Staging</option>
@@ -141,8 +130,7 @@
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
                     <option value="">Select Assignee</option>
                     @foreach ($employees as $employee)
-                        <option value="{{ $employee->id }}"
-                            {{ old('assigned_to', $defect->assigned_to) == $employee->id ? 'selected' : '' }}>
+                        <option value="{{ $employee->id }}" {{ old('assigned_to', $defect->assigned_to) == $employee->id ? 'selected' : '' }}>
                             {{ $employee->name }} ({{ $employee->designation ?? 'Developer' }})
                         </option>
                     @endforeach
@@ -158,8 +146,7 @@
                     <option value="open" {{ old('status', $defect->status) === 'open' ? 'selected' : '' }}>Open</option>
                     <option value="in_progress" {{ old('status', $defect->status) === 'in_progress' ? 'selected' : '' }}>In
                         Progress</option>
-                    <option value="ready_for_testing"
-                        {{ old('status', $defect->status) === 'ready_for_testing' ? 'selected' : '' }}>Ready For Testing
+                    <option value="ready_for_testing" {{ old('status', $defect->status) === 'ready_for_testing' ? 'selected' : '' }}>Ready For Testing
                     </option>
                     <option value="closed" {{ old('status', $defect->status) === 'closed' ? 'selected' : '' }}>Closed
                     </option>
@@ -175,7 +162,8 @@
             <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Defect Description <span
                         class="text-red-500">*</span></label>
-                <textarea name="description" id="defect-description-editor" placeholder="Write a detailed summary of the bug...">{{ old('description', $defect->description) }}</textarea>
+                <textarea name="description" id="defect-description-editor"
+                    placeholder="Write a detailed summary of the bug...">{{ old('description', $defect->description) }}</textarea>
             </div>
 
             <div class="md:col-span-2">
@@ -202,7 +190,7 @@
 
     {{-- ClassicEditor init --}}
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             ClassicEditor
                 .create(document.querySelector('#defect-description-editor'), {
                     toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList',

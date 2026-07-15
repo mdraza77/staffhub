@@ -18,19 +18,6 @@
         @endcan
     </div>
 
-    {{-- Flash Messages --}}
-    @if (session('success'))
-        <div
-            class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 text-sm">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 text-sm">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
-
     {{-- Table --}}
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
@@ -62,7 +49,8 @@
                                             <a href="{{ route('roles.show', $role->id) }}">
                                                 <p
                                                     class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-                                                    {{ $role->name }}</p>
+                                                    {{ $role->name }}
+                                                </p>
                                             </a>
                                             @if ($role->name === 'Super Admin')
                                                 <span
@@ -138,8 +126,7 @@
                                             </form>
                                         @else
                                             {{-- Super Admin cannot delete --}}
-                                            <span class="p-2 text-gray-200 cursor-not-allowed"
-                                                title="Cannot delete System Role">
+                                            <span class="p-2 text-gray-200 cursor-not-allowed" title="Cannot delete System Role">
                                                 <i class="fa-solid fa-trash text-base"></i>
                                             </span>
                                         @endif
@@ -187,26 +174,26 @@
     </script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#role').DataTable({
                 destroy: true,
                 dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
                 buttons: [{
-                        extend: 'copy',
-                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                    }
+                    extend: 'copy',
+                    className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
+                },
+                {
+                    extend: 'excel',
+                    className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                },
+                {
+                    extend: 'print',
+                    className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
+                }
                 ],
                 pageLength: 10,
                 language: {

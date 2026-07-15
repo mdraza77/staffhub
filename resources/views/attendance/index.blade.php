@@ -53,7 +53,7 @@
         </form>
     </div>
 
-    @if (session('success'))
+    {{-- @if (session('success'))
         <div
             class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
             <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
@@ -65,7 +65,7 @@
             class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
             <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
         </div>
-    @endif
+    @endif --}}
 
     {{-- <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex items-center justify-between">
         <div class="font-medium text-gray-700">

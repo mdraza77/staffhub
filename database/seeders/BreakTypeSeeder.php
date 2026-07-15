@@ -14,21 +14,27 @@ class BreakTypeSeeder extends Seeder
     {
         $types = [
             [
-                'name' => 'Tea Break',
+                'name' => 'Tea / Coffee Break',
                 'duration_minutes' => 15,
                 'icon' => 'fa-solid fa-mug-hot',
                 'is_active' => true,
             ],
             [
                 'name' => 'Lunch Break',
-                'duration_minutes' => 45,
+                'duration_minutes' => 60,
                 'icon' => 'fa-solid fa-utensils',
                 'is_active' => true,
             ],
             [
-                'name' => 'Quick Refreshment',
+                'name' => 'Personal Break',
                 'duration_minutes' => 10,
-                'icon' => 'fa-solid fa-apple-whole',
+                'icon' => 'fa-solid fa-person-walking',
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Prayer Break',
+                'duration_minutes' => 15,
+                'icon' => 'fa-solid fa-hands-praying',
                 'is_active' => true,
             ],
         ];

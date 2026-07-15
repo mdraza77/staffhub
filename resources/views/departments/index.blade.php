@@ -25,28 +25,28 @@
         </div>
 
         <!-- Success/Error Messages -->
-        @if (session('success'))
-            <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3 animate-fade-in">
-                <i class="fa-solid fa-circle-check text-green-600 text-lg mt-0.5"></i>
-                <div class="flex-1">
-                    <p class="text-green-800 font-medium">{{ session('success') }}</p>
-                </div>
-                <button onclick="this.parentElement.remove()" class="text-green-600 hover:text-green-700">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+        {{-- @if (session('success'))
+        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3 animate-fade-in">
+            <i class="fa-solid fa-circle-check text-green-600 text-lg mt-0.5"></i>
+            <div class="flex-1">
+                <p class="text-green-800 font-medium">{{ session('success') }}</p>
             </div>
+            <button onclick="this.parentElement.remove()" class="text-green-600 hover:text-green-700">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
         @endif
 
         @if ($errors->any())
-            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
-                <p class="text-red-800 font-medium mb-2">Please fix the following errors:</p>
-                <ul class="list-disc list-inside space-y-1 text-red-700 text-sm">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
+            <p class="text-red-800 font-medium mb-2">Please fix the following errors:</p>
+            <ul class="list-disc list-inside space-y-1 text-red-700 text-sm">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif --}}
 
         <!-- Departments Table Card -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -101,16 +101,14 @@
                                             @endcan
                                         @else
                                             @can('Department-Restore')
-                                                <button
-                                                    class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                <button class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                                                     title="Restore" onclick="confirmRestore({{ $department->id }})">
                                                     <i class="fa-solid fa-rotate-left text-lg"></i>
                                                 </button>
                                             @endcan
                                             @can('Department-ForceDelete')
                                                 <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                    title="Permanent Delete"
-                                                    onclick="confirmPermanentDelete({{ $department->id }})">
+                                                    title="Permanent Delete" onclick="confirmPermanentDelete({{ $department->id }})">
                                                     <i class="fa-solid fa-trash-can text-lg"></i>
                                                 </button>
                                             @endcan
@@ -118,7 +116,7 @@
                                     </div>
                                 </td>
                             </tr>
-                        {{-- @empty
+                            {{-- @empty
                             <tr>
                                 <td colspan="5" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
@@ -138,63 +136,63 @@
             {{ $departments->links() }}
         </div>
     </div>
-@push('scripts')
-    <script>
-        function confirmDelete(departmentId) {
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You can revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + departmentId).submit();
-                }
-            });
-        }
+    @push('scripts')
+        <script>
+            function confirmDelete(departmentId) {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You can revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('delete-form-' + departmentId).submit();
+                    }
+                });
+            }
 
-        function confirmRestore(departmentId) {
-            Swal.fire({
-                title: "Restore Department?",
-                text: "This department will be restored to active status.",
-                icon: "info",
-                showCancelButton: true,
-                confirmButtonColor: "#10b981",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, restore it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('restore-form-' + departmentId).submit();
-                }
-            });
-        }
+            function confirmRestore(departmentId) {
+                Swal.fire({
+                    title: "Restore Department?",
+                    text: "This department will be restored to active status.",
+                    icon: "info",
+                    showCancelButton: true,
+                    confirmButtonColor: "#10b981",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, restore it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('restore-form-' + departmentId).submit();
+                    }
+                });
+            }
 
-        function confirmPermanentDelete(departmentId) {
-            Swal.fire({
-                title: "Permanent Delete?",
-                text: "This cannot be undone! The department will be permanently deleted.",
-                icon: "error",
-                showCancelButton: true,
-                confirmButtonColor: "#dc2626",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete permanently!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('permanent-delete-form-' + departmentId).submit();
-                }
-            });
-        }
-    </script>
+            function confirmPermanentDelete(departmentId) {
+                Swal.fire({
+                    title: "Permanent Delete?",
+                    text: "This cannot be undone! The department will be permanently deleted.",
+                    icon: "error",
+                    showCancelButton: true,
+                    confirmButtonColor: "#dc2626",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete permanently!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('permanent-delete-form-' + departmentId).submit();
+                    }
+                });
+            }
+        </script>
 
-    <script>
-        $(document).ready(function() {
-            $('#departments').DataTable({
-                destroy: true,
-                dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
-                buttons: [{
+        <script>
+            $(document).ready(function () {
+                $('#departments').DataTable({
+                    destroy: true,
+                    dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
+                    buttons: [{
                         extend: 'copy',
                         className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
                     },
@@ -210,33 +208,33 @@
                         extend: 'print',
                         className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
                     }
-                ],
-                pageLength: 10,
-                language: {
-                    search: "",
-                    searchPlaceholder: "Search here...",
-                    lengthMenu: "_MENU_",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
-                }
+                    ],
+                    pageLength: 10,
+                    language: {
+                        search: "",
+                        searchPlaceholder: "Search here...",
+                        lengthMenu: "_MENU_",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries"
+                    }
+                });
             });
-        });
-    </script>
-@endpush
+        </script>
+    @endpush
 
     <!-- Hidden delete forms for each department -->
     @foreach ($departments as $department)
-        <form id="delete-form-{{ $department->id }}" action="{{ route('departments.destroy', $department->id) }}"
-            method="POST" class="hidden">
+        <form id="delete-form-{{ $department->id }}" action="{{ route('departments.destroy', $department->id) }}" method="POST"
+            class="hidden">
             @csrf
             @method('DELETE')
         </form>
         @if ($department->deleted_at !== null)
-            <form id="restore-form-{{ $department->id }}" action="{{ route('departments.restore', $department->id) }}"
-                method="POST" class="hidden">
+            <form id="restore-form-{{ $department->id }}" action="{{ route('departments.restore', $department->id) }}" method="POST"
+                class="hidden">
                 @csrf
             </form>
-            <form id="permanent-delete-form-{{ $department->id }}"
-                action="{{ route('departments.force-delete', $department->id) }}" method="POST" class="hidden">
+            <form id="permanent-delete-form-{{ $department->id }}" action="{{ route('departments.force-delete', $department->id) }}"
+                method="POST" class="hidden">
                 @csrf
                 @method('DELETE')
             </form>

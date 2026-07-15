@@ -16,11 +16,11 @@ class HolidaySeeder extends Seeder
 
         $holidays = [
             [
-                'name' => 'New Year\'s Day',
+                'name' => "New Year's Day",
                 'start_date' => "$currentYear-01-01",
                 'end_date' => "$currentYear-01-01",
                 'type' => 'public',
-                'description' => 'Celebration of the start of the New Year.',
+                'description' => 'Celebration of the New Year.',
                 'status' => 'active',
             ],
             [
@@ -28,23 +28,7 @@ class HolidaySeeder extends Seeder
                 'start_date' => "$currentYear-01-26",
                 'end_date' => "$currentYear-01-26",
                 'type' => 'public',
-                'description' => 'Honors the date on which the Constitution of India came into effect.',
-                'status' => 'active',
-            ],
-            [
-                'name' => 'Holi Festival',
-                'start_date' => "$currentYear-03-14",
-                'end_date' => "$currentYear-03-15",
-                'type' => 'public',
-                'description' => 'Festival of colors and spring celebration.',
-                'status' => 'active',
-            ],
-            [
-                'name' => 'Company Foundation Day',
-                'start_date' => "$currentYear-05-10",
-                'end_date' => "$currentYear-05-10",
-                'type' => 'company',
-                'description' => 'Annual holiday celebrating the foundation of StaffHub.',
+                'description' => 'Republic Day of India.',
                 'status' => 'active',
             ],
             [
@@ -52,7 +36,7 @@ class HolidaySeeder extends Seeder
                 'start_date' => "$currentYear-08-15",
                 'end_date' => "$currentYear-08-15",
                 'type' => 'public',
-                'description' => 'Commemorates the nation\'s independence.',
+                'description' => 'Independence Day of India.',
                 'status' => 'active',
             ],
             [
@@ -60,15 +44,7 @@ class HolidaySeeder extends Seeder
                 'start_date' => "$currentYear-10-02",
                 'end_date' => "$currentYear-10-02",
                 'type' => 'public',
-                'description' => 'Birthday of Mahatma Gandhi.',
-                'status' => 'active',
-            ],
-            [
-                'name' => 'Diwali Festival',
-                'start_date' => "$currentYear-11-08",
-                'end_date' => "$currentYear-11-10",
-                'type' => 'public',
-                'description' => 'Festival of lights celebration.',
+                'description' => 'Birth anniversary of Mahatma Gandhi.',
                 'status' => 'active',
             ],
             [
@@ -76,17 +52,49 @@ class HolidaySeeder extends Seeder
                 'start_date' => "$currentYear-12-25",
                 'end_date' => "$currentYear-12-25",
                 'type' => 'public',
-                'description' => 'Celebration of Christmas.',
+                'description' => 'Christmas celebration.',
                 'status' => 'active',
             ],
             [
-                'name' => 'Employee Birthday (Optional)',
-                'start_date' => "$currentYear-06-15",
-                'end_date' => "$currentYear-06-15",
-                'type' => 'optional',
-                'description' => 'Optional holiday for employees to celebrate their birthdays.',
+                'name' => 'Holi',
+                'start_date' => "$currentYear-03-14",
+                'end_date' => "$currentYear-03-14",
+                'type' => 'public',
+                'description' => 'Festival of Colours.',
                 'status' => 'active',
-            ]
+            ],
+            [
+                'name' => 'Good Friday',
+                'start_date' => "$currentYear-04-18",
+                'end_date' => "$currentYear-04-18",
+                'type' => 'public',
+                'description' => 'Christian religious observance.',
+                'status' => 'active',
+            ],
+            [
+                'name' => 'Eid-ul-Fitr',
+                'start_date' => "$currentYear-03-31",
+                'end_date' => "$currentYear-03-31",
+                'type' => 'public',
+                'description' => 'Festival marking the end of Ramadan.',
+                'status' => 'active',
+            ],
+            [
+                'name' => 'Eid-ul-Adha',
+                'start_date' => "$currentYear-06-07",
+                'end_date' => "$currentYear-06-07",
+                'type' => 'public',
+                'description' => 'Festival of Sacrifice.',
+                'status' => 'active',
+            ],
+            [
+                'name' => 'Diwali',
+                'start_date' => "$currentYear-10-20",
+                'end_date' => "$currentYear-10-20",
+                'type' => 'public',
+                'description' => 'Festival of Lights.',
+                'status' => 'active',
+            ],
         ];
 
         foreach ($holidays as $holiday) {

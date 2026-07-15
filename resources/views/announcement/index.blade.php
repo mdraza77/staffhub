@@ -16,18 +16,6 @@
         @endcan
     </div>
 
-    {{-- Flash Messages --}}
-    @if (session('success'))
-        <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
-
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table id="announcements" class="w-full text-left border-collapse">
@@ -45,7 +33,7 @@
                 <tbody class="divide-y divide-gray-100">
                     @foreach ($announcements as $key => $announcement)
                         <tr
-                            class="transition-colors {{ $announcement->trashed() ? 'bg-red-50 opacity-70' : 'hover:bg-gray-50' }}">
+                            class="transition-colors {{ $announcement->trashed() ? 'opacity-70' : 'hover:bg-gray-50' }}">
                             {{-- # --}}
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $key + 1 }}</td>
 

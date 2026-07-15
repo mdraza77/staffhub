@@ -13,7 +13,7 @@
     <script>
         // Check localStorage or system settings for theme preferences immediately
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia(
-                '(prefers-color-scheme: dark)').matches)) {
+            '(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
@@ -123,6 +123,20 @@
                 display: none !important;
             }
         }
+
+        /* Prevent double-tap hover bug on touch screens/mobile devices */
+        @media (hover: none) {
+            #sidebar-nav a:hover,
+            #sidebar-nav summary:hover {
+                background-color: transparent !important;
+                color: inherit !important;
+            }
+            .dark #sidebar-nav a:hover,
+            .dark #sidebar-nav summary:hover {
+                background-color: transparent !important;
+                color: inherit !important;
+            }
+        }
     </style>
 </head>
 
@@ -157,8 +171,8 @@
                     </button>
                 </li>
 
-                <li class="relative group pr-3">
-                    <a class="flex items-center gap-2 cursor-pointer py-2" href="#">
+                <li class="relative pr-3">
+                    <a class="flex items-center gap-2 cursor-pointer py-2" id="profile-dropdown-trigger" href="javascript:void(0);">
                         @if (Auth::user()->profile)
                             <img src="{{ auth()->user()->profile }}" alt="Profile"
                                 class="w-8 h-8 rounded-full object-cover border border-gray-200">
@@ -167,16 +181,16 @@
                                 class="w-8 h-8 rounded-full object-cover border border-gray-200">
                         @endif
                         <span
-                            class="hidden md:block text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">
+                            class="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 dark:text-zinc-300 dark:hover:text-blue-400 transition-colors">
                             {{ Auth::user()->name }}
                         </span>
                     </a>
 
-                    <ul
-                        class="absolute right-0 mt-1 w-48 bg-white border border-gray-100 rounded-lg shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <ul id="profile-dropdown-menu"
+                        class="absolute right-0 mt-1 w-48 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-lg shadow-lg py-2 opacity-0 invisible transition-all duration-200 z-50">
 
                         <li>
-                            <a class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors"
+                            <a class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                                 href="{{ route('profile.index') }}">
                                 <i class="fa-solid fa-user-gear text-lg"></i>
                                 <span>Profile</span>
@@ -184,11 +198,11 @@
                         </li>
 
                         <li>
-                            <hr class="border-gray-100 my-1">
+                            <hr class="border-gray-100 dark:border-zinc-800 my-1">
                         </li>
 
                         <li>
-                            <a class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                            <a class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
                                 href="javascript:void(0);" onclick="confirmLogout()">
                                 <i class="fa-solid fa-power-off text-lg"></i>
                                 <span>Sign Out</span>
@@ -229,10 +243,12 @@
                 @endcan
 
                 {{-- ===== GROUP: ORGANIZATION ===== --}}
-                @if (auth()->check() &&
+                @if (
+                        auth()->check() &&
                         (auth()->user()->can('Employee-Index') ||
                             auth()->user()->can('Employee-Create') ||
-                            auth()->user()->can('Department-Index')))
+                            auth()->user()->can('Department-Index'))
+                    )
                     <li
                         class="sidebar-group-header text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
                         Organization
@@ -262,11 +278,13 @@
                 @endcan
 
                 {{-- ===== GROUP: TIME & OPERATIONS ===== --}}
-                @if (auth()->check() &&
+                @if (
+                        auth()->check() &&
                         (auth()->user()->can('Attendance-Index') ||
                             auth()->user()->can('LeaveType-Index') ||
                             auth()->user()->can('Leave-Index') ||
-                            auth()->user()->can('Holiday-Index')))
+                            auth()->user()->can('Holiday-Index'))
+                    )
                     <li
                         class="sidebar-group-header text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
                         Time & Operations
@@ -314,12 +332,14 @@
                 @endcan
 
                 {{-- ===== GROUP: WORK ===== --}}
-                @if (auth()->check() &&
+                @if (
+                        auth()->check() &&
                         (auth()->user()->can('Task-Index') ||
                             auth()->user()->can('Defect-Index') ||
                             auth()->user()->can('Break-Room-Access') ||
                             auth()->user()->can('BreakType-Manage') ||
-                            auth()->user()->can('Break-History-View')))
+                            auth()->user()->can('Break-History-View'))
+                    )
                     <li
                         class="sidebar-group-header text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
                         Work & Breaks
@@ -352,10 +372,12 @@
                         request()->routeIs('break-types.*') ||
                         request()->routeIs('breaks.history');
                 @endphp
-                @if (auth()->check() &&
+                @if (
+                        auth()->check() &&
                         (auth()->user()->can('Break-Room-Access') ||
                             auth()->user()->can('BreakType-Manage') ||
-                            auth()->user()->can('Break-History-View')))
+                            auth()->user()->can('Break-History-View'))
+                    )
                     <li>
                         <details class="group" {{ $breaksActive ? 'open' : '' }}>
                             <summary
@@ -401,11 +423,13 @@
                 @endif
 
                 {{-- ===== GROUP: MANAGEMENT ===== --}}
-                @if (auth()->check() &&
+                @if (
+                        auth()->check() &&
                         (auth()->user()->can('Announcement-Index') ||
                             auth()->user()->can('Salary-View') ||
                             auth()->user()->can('Payslip-Index') ||
-                            auth()->user()->can('AccessManagement-Index')))
+                            auth()->user()->can('AccessManagement-Index'))
+                    )
                     <li
                         class="sidebar-group-header text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
                         Management
@@ -472,11 +496,13 @@
                 @endcan
 
                 {{-- ===== GROUP: SYSTEM ===== --}}
-                @if (auth()->check() &&
+                @if (
+                        auth()->check() &&
                         (auth()->user()->can('Employee-Index') ||
                             auth()->user()->can('Employee-Create') ||
                             auth()->user()->can('Company-Index') ||
-                            auth()->user()->can('Settings-Index')))
+                            auth()->user()->can('Settings-Index'))
+                    )
                     <li
                         class="sidebar-group-header text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
                         System
@@ -612,7 +638,7 @@
         }
 
         // Restore sidebar collapsed state on desktop
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const sidebar = document.getElementById('sidebar');
             const main = document.getElementById('main');
             const logoContainer = document.getElementById('header-logo-container');
@@ -630,9 +656,30 @@
                 }
             }
 
+            // Profile dropdown click toggle
+            const profileTrigger = document.getElementById('profile-dropdown-trigger');
+            const profileMenu = document.getElementById('profile-dropdown-menu');
+            if (profileTrigger && profileMenu) {
+                profileTrigger.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    profileMenu.classList.toggle('opacity-0');
+                    profileMenu.classList.toggle('invisible');
+                    profileMenu.classList.toggle('opacity-100');
+                    profileMenu.classList.toggle('visible');
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!profileTrigger.contains(e.target) && !profileMenu.contains(e.target)) {
+                        profileMenu.classList.add('opacity-0', 'invisible');
+                        profileMenu.classList.remove('opacity-100', 'visible');
+                    }
+                });
+            }
+
             // Expand sidebar if a parent module with submodules is clicked while collapsed
             if (sidebar) {
-                sidebar.addEventListener('click', function(e) {
+                sidebar.addEventListener('click', function (e) {
                     const summary = e.target.closest('summary');
                     if (summary && sidebar.classList.contains('collapsed')) {
                         e.preventDefault();
@@ -647,7 +694,7 @@
         });
 
         // Close sidebar when clicking outside of it on mobile
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 

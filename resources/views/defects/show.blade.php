@@ -24,17 +24,6 @@
         </div>
     </div>
 
-    @if (session('success'))
-        <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         <!-- Left Column: Core Description & Steps & Logs (Col Span 2) -->
@@ -102,8 +91,7 @@
                                 <div
                                     class="flex flex-col md:flex-row md:items-center justify-between gap-1 text-[11px] text-gray-400">
                                     <div class="flex items-center gap-1.5">
-                                        <span
-                                            class="font-bold text-gray-700 text-sm">{{ $history->user->name ?? 'System' }}</span>
+                                        <span class="font-bold text-gray-700 text-sm">{{ $history->user->name ?? 'System' }}</span>
                                         @if ($history->user && $history->user->roles->isNotEmpty())
                                             <span
                                                 class="px-1.5 py-0.2 bg-gray-100 text-gray-500 rounded text-[9px] font-medium border border-gray-200">
@@ -269,8 +257,8 @@
                                 <option value="open" {{ $defect->status === 'open' ? 'selected' : '' }}>Open</option>
                                 <option value="in_progress" {{ $defect->status === 'in_progress' ? 'selected' : '' }}>In
                                     Progress</option>
-                                <option value="ready_for_testing"
-                                    {{ $defect->status === 'ready_for_testing' ? 'selected' : '' }}>Ready For Testing
+                                <option value="ready_for_testing" {{ $defect->status === 'ready_for_testing' ? 'selected' : '' }}>
+                                    Ready For Testing
                                 </option>
                                 <option value="closed" {{ $defect->status === 'closed' ? 'selected' : '' }}>Closed</option>
                                 <option value="reopened" {{ $defect->status === 'reopened' ? 'selected' : '' }}>Reopened
@@ -334,8 +322,7 @@
                                     <i class="fa-solid fa-file-image text-[13px] text-blue-500 flex-shrink-0"></i>
                                     {{ $attach->file_name }}
                                 </a>
-                                <span
-                                    class="text-[9px] text-gray-400 font-medium font-mono ml-auto">{{ $attach->file_size }}
+                                <span class="text-[9px] text-gray-400 font-medium font-mono ml-auto">{{ $attach->file_size }}
                                     KB</span>
                             </div>
                             <div

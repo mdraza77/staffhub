@@ -10,13 +10,6 @@
         </div>
     </div>
 
-    {{-- Flash Messages --}}
-    @if (session('success'))
-        <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
-    @endif
-
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table id="salaries" class="w-full text-left border-collapse">
@@ -39,7 +32,7 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     @if ($employee->profile)
-                                        <img src="{{ asset('storage/' . $employee->profile) }}" alt=""
+                                        <img src="{{ $employee->profile }}" alt=""
                                             class="w-10 h-10 rounded-full object-cover border border-gray-200">
                                     @else
                                         <div

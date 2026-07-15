@@ -15,29 +15,6 @@
         </a>
     </div>
 
-    {{-- Success/Error messages --}}
-    @if (session('success'))
-        <div
-            class="mb-5 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 text-sm shadow-sm">
-            <i class="fa-solid fa-circle-check text-green-600"></i>
-            <span>{{ session('success') }}</span>
-        </div>
-    @endif
-
-    @if ($errors->any())
-        <div class="mb-5 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm shadow-sm">
-            <div class="flex items-center gap-2 mb-2 font-semibold">
-                <i class="fa-solid fa-circle-exclamation text-red-600"></i>
-                <span>Please fix the following validation errors:</span>
-            </div>
-            <ul class="list-disc list-inside space-y-1 text-xs">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <form action="{{ route('company.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -63,8 +40,8 @@
                                 <span class="text-[10px] text-blue-500 font-medium">No Logo Uploaded</span>
                             </div>
                             <img id="logo-preview"
-                                class="w-32 h-32 rounded-xl object-contain border border-gray-200 p-2 shadow-sm hidden"
-                                src="" alt="Preview">
+                                class="w-32 h-32 rounded-xl object-contain border border-gray-200 p-2 shadow-sm hidden" src=""
+                                alt="Preview">
                         @endif
                     </div>
 
@@ -112,8 +89,8 @@
                         <div>
                             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Phone
                                 Number <span class="text-red-500">*</span></label>
-                            <input type="text" name="phone_number"
-                                value="{{ old('phone_number', $setting->phone_number) }}" required
+                            <input type="text" name="phone_number" value="{{ old('phone_number', $setting->phone_number) }}"
+                                required
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
 
@@ -194,24 +171,21 @@
                         <div>
                             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Bank Name
                                 <span class="text-red-500">*</span></label>
-                            <input type="text" name="bank_name" value="{{ old('bank_name', $setting->bank_name) }}"
-                                required
+                            <input type="text" name="bank_name" value="{{ old('bank_name', $setting->bank_name) }}" required
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Account
                                 Number <span class="text-red-500">*</span></label>
-                            <input type="text" name="ac_number" value="{{ old('ac_number', $setting->ac_number) }}"
-                                required
+                            <input type="text" name="ac_number" value="{{ old('ac_number', $setting->ac_number) }}" required
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">IFSC Code
                                 <span class="text-red-500">*</span></label>
-                            <input type="text" name="ifsc_code" value="{{ old('ifsc_code', $setting->ifsc_code) }}"
-                                required
+                            <input type="text" name="ifsc_code" value="{{ old('ifsc_code', $setting->ifsc_code) }}" required
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
                         </div>
 
@@ -253,7 +227,7 @@
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
 
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     preview.src = e.target.result;
                     preview.classList.remove('hidden');
                     if (placeholder) {

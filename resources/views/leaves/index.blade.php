@@ -17,27 +17,6 @@
         @endcan
     </div>
 
-    @if (session('success'))
-        <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
-
-    @if ($errors->any())
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            <ul class="list-disc list-inside text-sm">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
@@ -78,8 +57,7 @@
                                     <span
                                         class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Approved</span>
                                 @elseif($leave->status === 'rejected')
-                                    <span
-                                        class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Rejected</span>
+                                    <span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Rejected</span>
                                 @else
                                     <span
                                         class="bg-yellow-100 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full">Pending</span>
@@ -177,7 +155,8 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Reason <span
                                 class="text-red-500">*</span></label>
                         <textarea name="reason" rows="3" placeholder="Briefly explain why you need this leave..."
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500" required></textarea>
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
+                            required></textarea>
                     </div>
                 </div>
                 <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
@@ -202,26 +181,26 @@
     </script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#leaves').DataTable({
                 destroy: true,
                 dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
                 buttons: [{
-                        extend: 'copy',
-                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                    }
+                    extend: 'copy',
+                    className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
+                },
+                {
+                    extend: 'excel',
+                    className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                },
+                {
+                    extend: 'print',
+                    className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
+                }
                 ],
                 pageLength: 10,
                 language: {

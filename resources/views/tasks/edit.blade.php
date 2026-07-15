@@ -14,7 +14,7 @@
         </a>
     </div>
 
-    @if ($errors->any())
+    {{-- @if ($errors->any())
         <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
             <ul class="list-disc list-inside text-sm font-medium">
                 @foreach ($errors->all() as $error)
@@ -22,7 +22,7 @@
                 @endforeach
             </ul>
         </div>
-    @endif
+    @endif --}}
 
     <form action="{{ route('tasks.update', $task->id) }}" method="POST"
         class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8">

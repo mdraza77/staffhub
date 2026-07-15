@@ -15,14 +15,6 @@
             </a>
         </div>
 
-        @if (session('success'))
-            <div
-                class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm flex items-center gap-2">
-                <i class="fa-solid fa-circle-check"></i>
-                <span>{{ session('success') }}</span>
-            </div>
-        @endif
-
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse" id="break-types-table">

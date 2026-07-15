@@ -27,8 +27,7 @@
         </div>
     @endif
     @if (session('error'))
-        <div
-            class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
             <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
         </div>
     @endif
@@ -155,12 +154,11 @@
                         <div
                             class="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-all relative overflow-hidden pl-5">
                             {{-- Priority Indicator Bar --}}
-                            <div
-                                class="absolute left-0 top-0 bottom-0 w-1.5 
-                                {{ $announcement->priority === 'high' ? 'bg-red-500' : '' }}
-                                {{ $announcement->priority === 'medium' ? 'bg-amber-500' : '' }}
-                                {{ $announcement->priority === 'low' ? 'bg-blue-500' : '' }}
-                            ">
+                            <div class="absolute left-0 top-0 bottom-0 w-1.5 
+                                                                                                                        {{ $announcement->priority === 'high' ? 'bg-red-500' : '' }}
+                                                                                                                        {{ $announcement->priority === 'medium' ? 'bg-amber-500' : '' }}
+                                                                                                                        {{ $announcement->priority === 'low' ? 'bg-blue-500' : '' }}
+                                                                                                                    ">
                             </div>
 
                             <div class="flex items-start justify-between gap-4 mb-2">
@@ -168,12 +166,11 @@
                                     class="font-semibold text-gray-800 hover:text-blue-600 transition-colors text-sm">
                                     {{ $announcement->title }}
                                 </a>
-                                <span
-                                    class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border
-                                    {{ $announcement->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
-                                    {{ $announcement->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
-                                    {{ $announcement->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
-                                ">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border
+                                                                                                                            {{ $announcement->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
+                                                                                                                            {{ $announcement->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
+                                                                                                                            {{ $announcement->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
+                                                                                                                        ">
                                     {{ $announcement->priority }}
                                 </span>
                             </div>
@@ -239,21 +236,21 @@
                                     <td class="px-6 py-3.5">
                                         <span
                                             class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border
-                                            {{ $task->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
-                                            {{ $task->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
-                                            {{ $task->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
-                                        ">
+                                                                                                                                    {{ $task->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
+                                                                                                                                    {{ $task->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
+                                                                                                                                    {{ $task->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
+                                                                                                                                ">
                                             {{ $task->priority }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-3.5">
                                         <span
                                             class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase
-                                            {{ $task->status === 'completed' ? 'bg-green-100 text-green-700' : '' }}
-                                            {{ $task->status === 'testing' ? 'bg-purple-100 text-purple-700' : '' }}
-                                            {{ $task->status === 'working' ? 'bg-blue-100 text-blue-700' : '' }}
-                                            {{ $task->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                                        ">
+                                                                                                                                    {{ $task->status === 'completed' ? 'bg-green-100 text-green-700' : '' }}
+                                                                                                                                    {{ $task->status === 'testing' ? 'bg-purple-100 text-purple-700' : '' }}
+                                                                                                                                    {{ $task->status === 'working' ? 'bg-blue-100 text-blue-700' : '' }}
+                                                                                                                                    {{ $task->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                                                                                                                                ">
                                             {{ $task->status }}
                                         </span>
                                     </td>
@@ -279,8 +276,8 @@
                             <i class="fa-solid fa-users text-blue-500 text-base"></i>
                             <h2 class="text-base font-semibold text-gray-800">Recently Added Employees</h2>
                         </div>
-                        <a href="{{ route('employees.index') }}"
-                            class="text-sm text-blue-600 hover:underline font-medium">View All</a>
+                        <a href="{{ route('employees.index') }}" class="text-sm text-blue-600 hover:underline font-medium">View
+                            All</a>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
@@ -301,7 +298,7 @@
                                         <td class="px-6 py-3">
                                             <div class="flex items-center gap-3">
                                                 @if ($emp->profile)
-                                                    <img src="{{ asset('storage/' . $emp->profile) }}"
+                                                    <img src="{{ $emp->profile }}"
                                                         class="w-9 h-9 rounded-full object-cover border border-gray-200"
                                                         alt="{{ $emp->name }}">
                                                 @else
@@ -311,7 +308,19 @@
                                                     </div>
                                                 @endif
                                                 <div>
-                                                    <p class="font-medium text-gray-800 text-xs">{{ $emp->name }}</p>
+                                                    {{-- <p class="font-medium text-gray-800 text-xs">{{ $emp->name }}</p> --}}
+                                                    @if (auth()->user()->can('Employee-View'))
+                                                        <a href="{{ route('employees.show', $emp->id) }}">
+                                                            <p
+                                                                class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                                                                {{ $emp->name }}
+                                                            </p>
+                                                        </a>
+                                                    @else
+                                                        <span class="text-sm font-medium text-gray-800">
+                                                            {{ $emp->name }}
+                                                        </span>
+                                                    @endif
                                                     <p class="text-[10px] text-gray-400">{{ $emp->email }}</p>
                                                 </div>
                                             </div>

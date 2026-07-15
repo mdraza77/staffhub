@@ -14,12 +14,6 @@
         </a>
     </div>
 
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
-
     <div class="max-w-xl">
         <form action="{{ route('payroll.payslips.store') }}" method="POST" id="generate-form"
             class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8 space-y-6">

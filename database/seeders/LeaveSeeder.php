@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Leave;
 use App\Models\LeaveType;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class LeaveSeeder extends Seeder
@@ -19,64 +19,97 @@ class LeaveSeeder extends Seeder
             $query->where('name', 'Super Admin');
         })->get();
 
-        $leaveTypes = LeaveType::all();
-
-        if ($users->isEmpty() || $leaveTypes->isEmpty()) {
+        if ($users->isEmpty()) {
             return;
         }
 
-        $reasons = [
-            'Family medical emergency',
-            'Personal work at home',
-            'Going to hometown for a festival',
-            'Not feeling well, severe headache',
-            'Doctor appointment and routine checkup',
-            "Attending friend's wedding ceremony",
-            'Urgent repair work at house',
-            'Resting due to fever and cold',
-            "Renewing driver's license and passport",
-            'Travel plans with family'
+        $leaveData = [
+            'Casual Leave' => [
+                'Personal work at home',
+                'Family function',
+                'Attending a wedding ceremony',
+                'Travel plans with family',
+            ],
+            'Sick Leave' => [
+                'Fever and cold',
+                'Doctor appointment',
+                'Migraine and severe headache',
+                'Food poisoning and rest advised',
+            ],
+            'Earned / Privilege Leave' => [
+                'Family vacation',
+                'Outstation travel plans',
+                'Personal commitments',
+                'Long weekend leave',
+            ],
+            'Maternity Leave' => [
+                'Maternity leave application',
+            ],
+            'Paternity Leave' => [
+                'Paternity leave for newborn child',
+            ],
+            'Compensatory Off' => [
+                'Worked on weekend deployment',
+                'Worked on public holiday',
+            ],
+            'Bereavement Leave' => [
+                'Family bereavement',
+            ],
+            'Marriage Leave' => [
+                'Marriage ceremony and related events',
+            ],
+            'Loss of Pay (LOP)' => [
+                'Additional personal leave requirement',
+            ],
         ];
 
-        foreach ($users as $user) {
+        $statuses = [
+            'approved',
+            'approved',
+            'approved',
+            'approved',
+            'approved',
+            'approved',
+            'approved',
+            'pending',
+            'pending',
+            'rejected',
+        ];
+
+        foreach ($users as $index => $user) {
             if (Leave::where('user_id', $user->id)->exists()) {
                 continue;
             }
 
-            // 1. Create a past leave (approved or rejected)
-            $pastLeaveType = $leaveTypes->random();
-            $pastDays = rand(1, 3);
-            $pastStart = now()->subDays(rand(10, 30));
-            $pastEnd = (clone $pastStart)->addDays($pastDays - 1);
-            $pastStatus = rand(0, 10) > 3 ? 'approved' : 'rejected';
-            $pastRemark = $pastStatus === 'approved' ? 'Approved by HR Manager.' : 'Rejected due to critical project deadline.';
+            $leaveType = LeaveType::inRandomOrder()->first();
+
+            $reasons = $leaveData[$leaveType->name] ?? [
+                'Personal leave request'
+            ];
+
+            $reason = $reasons[array_rand($reasons)];
+
+            $startDate = Carbon::now()->addDays(rand(2, 20));
+
+            $endDate = (clone $startDate)->addDays(rand(0, 3));
+
+            $totalDays = $startDate->diffInDays($endDate) + 1;
+
+            $status = $statuses[$index % count($statuses)];
 
             Leave::create([
                 'user_id' => $user->id,
-                'leave_type_id' => $pastLeaveType->id,
-                'start_date' => $pastStart->format('Y-m-d'),
-                'end_date' => $pastEnd->format('Y-m-d'),
-                'total_days' => $pastDays,
-                'reason' => $reasons[array_rand($reasons)],
-                'status' => $pastStatus,
-                'admin_remark' => $pastRemark,
-            ]);
-
-            // 2. Create a future pending leave
-            $futureLeaveType = $leaveTypes->random();
-            $futureDays = rand(1, 4);
-            $futureStart = now()->addDays(rand(2, 15));
-            $futureEnd = (clone $futureStart)->addDays($futureDays - 1);
-
-            Leave::create([
-                'user_id' => $user->id,
-                'leave_type_id' => $futureLeaveType->id,
-                'start_date' => $futureStart->format('Y-m-d'),
-                'end_date' => $futureEnd->format('Y-m-d'),
-                'total_days' => $futureDays,
-                'reason' => $reasons[array_rand($reasons)],
-                'status' => 'pending',
-                'admin_remark' => null,
+                'leave_type_id' => $leaveType->id,
+                'start_date' => $startDate->format('Y-m-d'),
+                'end_date' => $endDate->format('Y-m-d'),
+                'total_days' => $totalDays,
+                'reason' => $reason,
+                'status' => $status,
+                'admin_remark' => match ($status) {
+                    'approved' => 'Approved by reporting manager.',
+                    'rejected' => 'Leave request rejected due to business requirements.',
+                    default => null,
+                },
             ]);
         }
     }

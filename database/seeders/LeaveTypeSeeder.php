@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\LeaveType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\LeaveType;
 
 class LeaveTypeSeeder extends Seeder
 {
@@ -20,30 +20,34 @@ class LeaveTypeSeeder extends Seeder
             ],
             [
                 'name' => 'Sick Leave',
-                'days_allowed' => 10,
+                'days_allowed' => 12,
             ],
             [
-                'name' => 'Earned Leave',
+                'name' => 'Earned / Privilege Leave',
                 'days_allowed' => 18,
             ],
             [
                 'name' => 'Maternity Leave',
-                'days_allowed' => 180,
+                'days_allowed' => 182,  // 26 weeks
             ],
             [
                 'name' => 'Paternity Leave',
                 'days_allowed' => 15,
             ],
             [
-                'name' => 'Marriage Leave',
-                'days_allowed' => 7,
-            ],
-            [
-                'name' => 'Bereavement Leave',
+                'name' => 'Compensatory Off',
                 'days_allowed' => 5,
             ],
             [
-                'name' => 'Unpaid Leave',
+                'name' => 'Bereavement Leave',
+                'days_allowed' => 3,
+            ],
+            [
+                'name' => 'Marriage Leave',
+                'days_allowed' => 5,
+            ],
+            [
+                'name' => 'Loss of Pay (LOP)',
                 'days_allowed' => 0,
             ],
         ];

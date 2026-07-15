@@ -16,13 +16,6 @@
         </a>
     </div>
 
-    {{-- Error Flash --}}
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 text-sm">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
-
     <form action="{{ route('roles.update', $role->id) }}" method="POST">
         @csrf
         @method('PUT')

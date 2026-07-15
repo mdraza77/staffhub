@@ -17,30 +17,30 @@
         @endcan
     </div>
 
-    @if (session('success'))
-        <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
+    {{-- @if (session('success'))
+    <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
+        <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+    </div>
     @endif
     @if (session('info'))
-        <div class="mb-4 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-info-circle"></i> {{ session('info') }}
-        </div>
+    <div class="mb-4 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg flex items-center gap-2">
+        <i class="fa-solid fa-info-circle"></i> {{ session('info') }}
+    </div>
     @endif
     @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
+    <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+        <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
+    </div>
     @endif
     @if ($errors->any())
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            <ul class="list-disc list-inside text-sm">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+        <ul class="list-disc list-inside text-sm">
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif --}}
 
     <!-- Tab Navigation (Sub-Modules) -->
     <div class="mb-6 border-b border-gray-200 dark:border-zinc-800">
@@ -148,8 +148,7 @@
                                                 !in_array($task->status, ['completed', 'closed']);
                                         @endphp
                                         @if ($deadline)
-                                            <span
-                                                class="{{ $isOverdue ? 'text-red-650 dark:text-red-400 font-bold' : '' }}">
+                                            <span class="{{ $isOverdue ? 'text-red-650 dark:text-red-400 font-bold' : '' }}">
                                                 {{ $deadline->format('d M, Y') }}
                                                 @if ($isOverdue)
                                                     <i class="fa-solid fa-circle-exclamation" title="Overdue"></i>
@@ -164,8 +163,7 @@
                                             <span
                                                 class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
                                         @elseif($task->status === 'in_progress')
-                                            <span
-                                                class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
+                                            <span class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
                                                 Progress</span>
                                         @elseif($task->status === 'testing')
                                             <span
@@ -262,8 +260,7 @@
                                                     !in_array($task->status, ['completed', 'closed']);
                                             @endphp
                                             @if ($deadline)
-                                                <span
-                                                    class="{{ $isOverdue ? 'text-red-650 dark:text-red-400 font-bold' : '' }}">
+                                                <span class="{{ $isOverdue ? 'text-red-650 dark:text-red-400 font-bold' : '' }}">
                                                     {{ $deadline->format('d M, Y') }}
                                                     @if ($isOverdue)
                                                         <i class="fa-solid fa-circle-exclamation" title="Overdue"></i>
@@ -278,8 +275,7 @@
                                                 <span
                                                     class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
                                             @elseif($task->status === 'in_progress')
-                                                <span
-                                                    class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
+                                                <span class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
                                                     Progress</span>
                                             @elseif($task->status === 'testing')
                                                 <span
@@ -389,8 +385,7 @@
                                             <span
                                                 class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
                                         @elseif($task->status === 'in_progress')
-                                            <span
-                                                class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
+                                            <span class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
                                                 Progress</span>
                                         @elseif($task->status === 'testing')
                                             <span
@@ -406,10 +401,10 @@
                                     <td class="px-6 py-4 text-center flex justify-center gap-2">
                                         {{-- View --}}
                                         {{-- @can('Task-View')
-                                            <a href="{{ route('tasks.show', $task->id) }}" title="View Details"
-                                                class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i class="fa-solid fa-eye text-base"></i>
-                                            </a>
+                                        <a href="{{ route('tasks.show', $task->id) }}" title="View Details"
+                                            class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                            <i class="fa-solid fa-eye text-base"></i>
+                                        </a>
                                         @endcan --}}
                                         @can('Task-Edit')
                                             <a href="{{ route('tasks.edit', $task->id) }}"
@@ -424,9 +419,8 @@
                                                 title="Delete Task">
                                                 <i class="fa-solid fa-trash text-base"></i>
                                             </button>
-                                            <form id="delete-form-{{ $task->id }}"
-                                                action="{{ route('tasks.destroy', $task->id) }}" method="POST"
-                                                class="hidden">
+                                            <form id="delete-form-{{ $task->id }}" action="{{ route('tasks.destroy', $task->id) }}"
+                                                method="POST" class="hidden">
                                                 @csrf
                                                 @method('DELETE')
                                             </form>
@@ -461,9 +455,9 @@
             });
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Tab switching logic
-            $('#taskTab button').on('click', function() {
+            $('#taskTab button').on('click', function () {
                 // Clear active styles
                 $('#taskTab button')
                     .removeClass(
@@ -490,7 +484,7 @@
                 localStorage.setItem('activeTaskTab', $(this).attr('id'));
 
                 // Adjust column calculation for active Datatables
-                setTimeout(function() {
+                setTimeout(function () {
                     $.fn.dataTable.tables({
                         visible: true,
                         api: true
@@ -503,21 +497,21 @@
                 destroy: true,
                 dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100 dark:border-zinc-800"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600 dark:text-zinc-455"i><"flex items-center"p>>',
                 buttons: [{
-                        extend: 'copy',
-                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                    }
+                    extend: 'copy',
+                    className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
+                },
+                {
+                    extend: 'excel',
+                    className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                },
+                {
+                    extend: 'print',
+                    className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
+                }
                 ],
                 pageLength: 10,
                 language: {
@@ -532,21 +526,21 @@
                 destroy: true,
                 dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100 dark:border-zinc-800"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600 dark:text-zinc-455"i><"flex items-center"p>>',
                 buttons: [{
-                        extend: 'copy',
-                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                    }
+                    extend: 'copy',
+                    className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
+                },
+                {
+                    extend: 'excel',
+                    className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                },
+                {
+                    extend: 'print',
+                    className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
+                }
                 ],
                 pageLength: 10,
                 language: {
@@ -562,21 +556,21 @@
                     destroy: true,
                     dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100 dark:border-zinc-800"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600 dark:text-zinc-455"i><"flex items-center"p>>',
                     buttons: [{
-                            extend: 'copy',
-                            className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                        },
-                        {
-                            extend: 'excel',
-                            className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                        },
-                        {
-                            extend: 'pdf',
-                            className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                        },
-                        {
-                            extend: 'print',
-                            className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                        }
+                        extend: 'copy',
+                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'print',
+                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
+                    }
                     ],
                     pageLength: 10,
                     language: {
