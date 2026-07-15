@@ -46,7 +46,7 @@ class ProfileController extends Controller implements HasMiddleware
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request, User $employee): RedirectResponse
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = auth()->user();
 
@@ -88,11 +88,11 @@ class ProfileController extends Controller implements HasMiddleware
 
             if ($request->hasFile('profile')) {
                 // Delete old image if exists
-                if ($employee->profile) {
-                    if (str_starts_with($employee->profile, 'http')) {
-                        $this->deleteImageKitFileByUrl($employee->profile, $imageKit);
+                if ($user->profile) {
+                    if (str_starts_with($user->profile, 'http')) {
+                        $this->deleteImageKitFileByUrl($user->profile, $imageKit);
                     } else {
-                        Storage::disk('public')->delete($employee->profile);
+                        Storage::disk('public')->delete($user->profile);
                     }
                 }
 
@@ -135,7 +135,16 @@ class ProfileController extends Controller implements HasMiddleware
         $user = auth()->user();
 
         if ($user->profile) {
-            Storage::disk('public')->delete($user->profile);
+            if (str_starts_with($user->profile, 'http')) {
+                $imageKit = new ImageKit(
+                    env('IMAGEKIT_PUBLIC_KEY'),
+                    env('IMAGEKIT_PRIVATE_KEY'),
+                    env('IMAGEKIT_URL_ENDPOINT')
+                );
+                $this->deleteImageKitFileByUrl($user->profile, $imageKit);
+            } else {
+                Storage::disk('public')->delete($user->profile);
+            }
             $user->update(['profile' => null]);
         }
 
@@ -163,5 +172,29 @@ class ProfileController extends Controller implements HasMiddleware
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    /**
+     * Helper to delete a file from ImageKit by its URL.
+     */
+    private function deleteImageKitFileByUrl($url, $imageKit)
+    {
+        if (empty($url) || !str_starts_with($url, 'http')) {
+            return;
+        }
+
+        try {
+            $fileName = basename(parse_url($url, PHP_URL_PATH));
+            $filesList = $imageKit->listFiles([
+                'searchQuery' => 'name = "' . $fileName . '"'
+            ]);
+
+            if (!$filesList->error && !empty($filesList->result)) {
+                $fileId = $filesList->result[0]->fileId;
+                $imageKit->deleteFile($fileId);
+            }
+        } catch (\Exception $e) {
+            Log::warning('Failed to delete file from ImageKit: ' . $e->getMessage());
+        }
     }
 }

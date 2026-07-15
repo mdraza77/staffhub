@@ -545,7 +545,7 @@
                 </div>
                 <div class="flex items-center gap-3">
                     @if (auth()->user()->profile)
-                        <img src="{{ asset('storage/' . auth()->user()->profile) }}"
+                        <img src="{{ auth()->user()->profile }}"
                             class="w-12 h-12 rounded-full object-cover border-2 border-blue-100"
                             alt="{{ auth()->user()->name }}">
                     @else
