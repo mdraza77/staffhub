@@ -230,12 +230,14 @@
 
                 {{-- Current profile preview --}}
                 @if ($employee->profile)
-                    <div class="flex items-center gap-4 mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <img src="{{ asset('storage/' . $employee->profile) }}" alt="Current Profile"
-                            class="w-16 h-16 rounded-full object-cover border-2 border-gray-200">
+                    <div
+                        class="flex items-center gap-4 mb-3 p-3 bg-gray-50 dark:bg-zinc-950/40 rounded-lg border border-gray-200 dark:border-zinc-800">
+                        <img src="{{ $employee->profile }}" alt="Current Profile"
+                            class="w-16 h-16 rounded-full object-cover border-2 border-gray-200 dark:border-zinc-800">
                         <div>
-                            <p class="text-sm font-medium text-gray-700">Current Photo</p>
-                            <p class="text-xs text-gray-500 font-normal">Upload a new image below to replace it</p>
+                            <p class="text-sm font-medium text-gray-700 dark:text-zinc-300">Current Photo</p>
+                            <p class="text-xs text-gray-500 dark:text-zinc-400 font-normal">Upload a new image below to
+                                replace it</p>
                         </div>
                     </div>
                 @endif
@@ -254,13 +256,15 @@
 
                 {{-- Current signature preview --}}
                 @if ($employee->signature)
-                    <div class="flex items-center gap-4 mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <img src="{{ asset('storage/' . $employee->signature) }}" alt="Current Signature"
-                            class="w-16 h-16 object-contain border-2 border-gray-200 bg-white mix-blend-multiply"
+                    <div
+                        class="flex items-center gap-4 mb-3 p-3 bg-gray-50 dark:bg-zinc-950/40 rounded-lg border border-gray-200 dark:border-zinc-800">
+                        <img src="{{ $employee->signature }}" alt="Current Signature"
+                            class="w-16 h-16 object-contain border-2 border-gray-200 dark:border-zinc-800 bg-white dark:bg-transparent mix-blend-multiply dark:mix-blend-screen dark:invert"
                             draggable="false">
                         <div>
-                            <p class="text-sm font-medium text-gray-700">Current Signature</p>
-                            <p class="text-xs text-gray-500 font-normal">Upload a new signature below to replace it</p>
+                            <p class="text-sm font-medium text-gray-700 dark:text-zinc-300">Current Signature</p>
+                            <p class="text-xs text-gray-500 dark:text-zinc-400 font-normal">Upload a new signature below to
+                                replace it</p>
                         </div>
                     </div>
                 @endif

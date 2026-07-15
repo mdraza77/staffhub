@@ -35,7 +35,7 @@
             {{-- Profile Picture + Basic Info --}}
             <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 flex flex-col items-center text-center">
                 @if ($employee->profile)
-                    <img src="{{ asset('storage/' . $employee->profile) }}" alt="{{ $employee->name }}"
+                    <img src="{{ $employee->profile }}" alt="{{ $employee->name }}"
                         class="w-28 h-28 rounded-full object-cover border-4 border-blue-100 shadow mb-4">
                 @else
                     <div
@@ -116,11 +116,14 @@
 
             {{-- Signature Card --}}
             @if ($employee->signature)
-                <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-                    <h3 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Signature</h3>
-                    <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg border border-gray-100">
-                        <img src="{{ asset('storage/' . $employee->signature) }}" alt="Signature"
-                            class="max-h-16 object-contain mix-blend-multiply" draggable="false">
+                <div class="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm p-5">
+                    <h3 class="text-sm font-semibold text-gray-700 dark:text-zinc-300 mb-3 uppercase tracking-wide">
+                        Signature</h3>
+                    <div
+                        class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-zinc-950/40 rounded-lg border border-gray-100 dark:border-zinc-800">
+                        <img src="{{ $employee->signature }}" alt="Signature"
+                            class="max-h-16 object-contain mix-blend-multiply dark:mix-blend-screen dark:invert"
+                            draggable="false">
                     </div>
                 </div>
             @endif

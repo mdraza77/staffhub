@@ -100,7 +100,7 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     @if ($employee->profile)
-                                        <img src="{{ asset('storage/' . $employee->profile) }}" alt="{{ $employee->name }}"
+                                        <img src="{{ $employee->profile }}" alt="{{ $employee->name }}"
                                             class="w-10 h-10 rounded-full object-cover border border-gray-200 {{ $employee->trashed() ? 'grayscale' : '' }}">
                                     @else
                                         <div

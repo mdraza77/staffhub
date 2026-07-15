@@ -160,7 +160,7 @@
                 <li class="relative group pr-3">
                     <a class="flex items-center gap-2 cursor-pointer py-2" href="#">
                         @if (Auth::user()->profile)
-                            <img src="{{ asset('storage/' . auth()->user()->profile) }}" alt="Profile"
+                            <img src="{{ auth()->user()->profile }}" alt="Profile"
                                 class="w-8 h-8 rounded-full object-cover border border-gray-200">
                         @else
                             <img src="{{ asset('img/profile-img.png') }}" alt="Profile"

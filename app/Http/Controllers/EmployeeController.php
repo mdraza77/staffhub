@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use ImageKit\ImageKit;
 use Spatie\Permission\Models\Role;
 
 class EmployeeController extends Controller implements HasMiddleware
@@ -84,6 +85,12 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
+        $imageKit = new ImageKit(
+            env('IMAGEKIT_PUBLIC_KEY'),
+            env('IMAGEKIT_PRIVATE_KEY'),
+            env('IMAGEKIT_URL_ENDPOINT')
+        );
+
         // Auto-populate if not explicitly filled
         if (!$request->filled('employee_id')) {
             $todayYear = Carbon::now()->format('y');
@@ -129,15 +136,45 @@ class EmployeeController extends Controller implements HasMiddleware
             $signaturePath = null;
 
             // Handle Profile Image Upload
+            // if ($request->hasFile('profile')) {
+            //     // public/storage/profiles mein save hoga
+            //     $profilePath = $request->file('profile')->store('profiles', 'public');
+            // }
+
+            // Handle Signature Upload
+            // if ($request->hasFile('signature')) {
+            //     // public/storage/signatures mein save hoga
+            //     $signaturePath = $request->file('signature')->store('signatures', 'public');
+            // }
+
+            // Handle Profile Picture Upload
             if ($request->hasFile('profile')) {
-                // public/storage/profiles mein save hoga
-                $profilePath = $request->file('profile')->store('profiles', 'public');
+                $upload = $imageKit->uploadFile([
+                    'file' => fopen($request->file('profile')->getRealPath(), 'r'),
+                    'fileName' => time() . '_' . $request->file('profile')->getClientOriginalName(),
+                    'folder' => '/StaffHub/profile_pictures'
+                ]);
+
+                if ($upload->error) {
+                    throw new \Exception('ImageKit Profile Upload Error: ' . json_encode($upload->error));
+                }
+
+                $profilePath = $upload->result->url;
             }
 
             // Handle Signature Upload
             if ($request->hasFile('signature')) {
-                // public/storage/signatures mein save hoga
-                $signaturePath = $request->file('signature')->store('signatures', 'public');
+                $upload = $imageKit->uploadFile([
+                    'file' => fopen($request->file('signature')->getRealPath(), 'r'),
+                    'fileName' => time() . '_' . $request->file('signature')->getClientOriginalName(),
+                    'folder' => '/StaffHub/signatures'
+                ]);
+
+                if ($upload->error) {
+                    throw new \Exception('ImageKit Signature Upload Error: ' . json_encode($upload->error));
+                }
+
+                $signaturePath = $upload->result->url;
             }
 
             // Create Employee/User
@@ -223,6 +260,12 @@ class EmployeeController extends Controller implements HasMiddleware
             'phone.regex' => 'The phone number format must be valid (e.g. +918544568958 or 918544568958).',
         ]);
 
+        $imageKit = new ImageKit(
+            env('IMAGEKIT_PUBLIC_KEY'),
+            env('IMAGEKIT_PRIVATE_KEY'),
+            env('IMAGEKIT_URL_ENDPOINT')
+        );
+
         try {
             DB::beginTransaction();
 
@@ -242,22 +285,52 @@ class EmployeeController extends Controller implements HasMiddleware
                 $data['password'] = Hash::make($request->password);
             }
 
-            // Naya profile image upload hua toh purana delete karo
+            // Naya profile image upload hua toh ImageKit use karo
             if ($request->hasFile('profile')) {
                 // Purani image delete karo agar exist karti hai
                 if ($employee->profile) {
-                    Storage::disk('public')->delete($employee->profile);
+                    if (str_starts_with($employee->profile, 'http')) {
+                        $this->deleteImageKitFileByUrl($employee->profile, $imageKit);
+                    } else {
+                        Storage::disk('public')->delete($employee->profile);
+                    }
                 }
-                $data['profile'] = $request->file('profile')->store('profiles', 'public');
+
+                $upload = $imageKit->uploadFile([
+                    'file' => fopen($request->file('profile')->getRealPath(), 'r'),
+                    'fileName' => time() . '_' . $request->file('profile')->getClientOriginalName(),
+                    'folder' => '/StaffHub/profile_pictures'
+                ]);
+
+                if ($upload->error) {
+                    throw new \Exception('ImageKit Profile Upload Error: ' . json_encode($upload->error));
+                }
+
+                $data['profile'] = $upload->result->url;
             }
 
-            // Naya signature image upload hua toh purana delete karo
+            // Naya signature image upload hua toh ImageKit use karo
             if ($request->hasFile('signature')) {
                 // Purani signature delete karo agar exist karti hai
                 if ($employee->signature) {
-                    Storage::disk('public')->delete($employee->signature);
+                    if (str_starts_with($employee->signature, 'http')) {
+                        $this->deleteImageKitFileByUrl($employee->signature, $imageKit);
+                    } else {
+                        Storage::disk('public')->delete($employee->signature);
+                    }
                 }
-                $data['signature'] = $request->file('signature')->store('signatures', 'public');
+
+                $upload = $imageKit->uploadFile([
+                    'file' => fopen($request->file('signature')->getRealPath(), 'r'),
+                    'fileName' => time() . '_' . $request->file('signature')->getClientOriginalName(),
+                    'folder' => '/StaffHub/signatures'
+                ]);
+
+                if ($upload->error) {
+                    throw new \Exception('ImageKit Signature Upload Error: ' . json_encode($upload->error));
+                }
+
+                $data['signature'] = $upload->result->url;
             }
 
             $employee->update($data);
@@ -275,11 +348,6 @@ class EmployeeController extends Controller implements HasMiddleware
             DB::rollBack();
 
             Log::error('Employee Update Failed: ' . $e->getMessage());
-
-            // Nai image agar upload ho gayi thi par DB update fail hua toh usse bhi delete karo
-            if (isset($data['profile'])) {
-                Storage::disk('public')->delete($data['profile']);
-            }
 
             return back()->withInput()->with('error', 'Something went wrong while updating the employee. Please try again.');
         }
@@ -304,12 +372,55 @@ class EmployeeController extends Controller implements HasMiddleware
     {
         $employee = User::withTrashed()->findOrFail($id);
 
+        $imageKit = new ImageKit(
+            env('IMAGEKIT_PUBLIC_KEY'),
+            env('IMAGEKIT_PRIVATE_KEY'),
+            env('IMAGEKIT_URL_ENDPOINT')
+        );
+
         // Profile image bhi delete karo permanently
         if ($employee->profile) {
-            Storage::disk('public')->delete($employee->profile);
+            if (str_starts_with($employee->profile, 'http')) {
+                $this->deleteImageKitFileByUrl($employee->profile, $imageKit);
+            } else {
+                Storage::disk('public')->delete($employee->profile);
+            }
+        }
+
+        // Signature image bhi delete karo permanently
+        if ($employee->signature) {
+            if (str_starts_with($employee->signature, 'http')) {
+                $this->deleteImageKitFileByUrl($employee->signature, $imageKit);
+            } else {
+                Storage::disk('public')->delete($employee->signature);
+            }
         }
 
         $employee->forceDelete();
         return redirect()->route('employees.index')->with('success', 'Employee permanently deleted.');
+    }
+
+    /**
+     * Helper to delete a file from ImageKit by its URL.
+     */
+    private function deleteImageKitFileByUrl($url, $imageKit)
+    {
+        if (empty($url) || !str_starts_with($url, 'http')) {
+            return;
+        }
+
+        try {
+            $fileName = basename(parse_url($url, PHP_URL_PATH));
+            $filesList = $imageKit->listFiles([
+                'searchQuery' => 'name = "' . $fileName . '"'
+            ]);
+
+            if (!$filesList->error && !empty($filesList->result)) {
+                $fileId = $filesList->result[0]->fileId;
+                $imageKit->deleteFile($fileId);
+            }
+        } catch (\Exception $e) {
+            Log::warning('Failed to delete file from ImageKit: ' . $e->getMessage());
+        }
     }
 }
