@@ -31,16 +31,14 @@ class UserSeeder extends Seeder
         $todayMonth = Carbon::now()->format('m');  // e.g., 07
         $prefix = "SH-{$todayYear}{$todayMonth}-";
 
-        $lastEmployee = User::where('employee_id', 'LIKE', $prefix . '%')
-            ->orderBy('id', 'desc')
-            ->first();
+        $existingEmployeeIds = User::where('employee_id', 'LIKE', $prefix . '%')
+            ->pluck('employee_id')
+            ->map(function ($id) {
+                return (int) substr($id, -3);
+            })
+            ->toArray();
 
-        if ($lastEmployee) {
-            $lastSerial = (int) substr($lastEmployee->employee_id, -3);
-            $nextSeq = $lastSerial + 1;
-        } else {
-            $nextSeq = 1;
-        }
+        $nextSeq = !empty($existingEmployeeIds) ? max($existingEmployeeIds) + 1 : 1;
 
         // Placeholder for user array structure compatibility
         $nextEmployeeId = '';
