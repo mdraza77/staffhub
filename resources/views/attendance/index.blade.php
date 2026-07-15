@@ -123,11 +123,11 @@
                                 </div>
                             </td> --}}
                             <td class="px-6 py-4 text-sm text-gray-600 font-bold text-xs">
-                                {{ $attendance->user->name ? $attendance->user->name : 'N/A' }}
-                                ({{ $attendance->user->employee_id ?? ' ' }})
+                                {{ $attendance->user?->name ?? 'Deleted User' }}
+                                ({{ $attendance->user?->employee_id ?? ' ' }})
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600">
-                                {{ $attendance->user->department ? $attendance->user->department->name : 'N/A' }}
+                                {{ $attendance->user?->department ? $attendance->user->department->name : 'N/A' }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600">
                                 {{ $attendance->date ? \Carbon\Carbon::parse($attendance->date)->format('D d, M, Y') : 'N/A' }}

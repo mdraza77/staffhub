@@ -16,16 +16,63 @@
         @endcan
     </div>
 
-    {{-- Flash Messages --}}
-    @if (session('success'))
-        <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+    {{-- Toast Notification --}}
+    @if (session('success') || session('error') || session('status'))
+        <div id="toast-container" class="fixed top-5 right-5 z-[9999] pointer-events-none flex flex-col gap-3">
+            <div id="session-toast"
+                class="pointer-events-auto flex items-center gap-3 bg-white dark:bg-zinc-900 border border-gray-150 dark:border-zinc-800 shadow-xl rounded-xl p-4 min-w-[320px] max-w-sm transition-all duration-500 ease-out translate-y-[-20px] opacity-0">
+                @if (session('success') || session('status'))
+                    <div
+                        class="flex-shrink-0 w-10 h-10 rounded-lg bg-green-50 dark:bg-green-950/30 flex items-center justify-center text-green-600 dark:text-green-400">
+                        <i class="fa-solid fa-circle-check text-lg"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <h4 class="text-sm font-semibold text-gray-800 dark:text-zinc-100">Success</h4>
+                        <p class="text-xs text-gray-500 dark:text-zinc-400 mt-0.5">
+                            {{ session('success') ?? session('status') }}</p>
+                    </div>
+                @else
+                    <div
+                        class="flex-shrink-0 w-10 h-10 rounded-lg bg-red-50 dark:bg-red-950/30 flex items-center justify-center text-red-600 dark:text-red-400">
+                        <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <h4 class="text-sm font-semibold text-gray-800 dark:text-zinc-100">Error</h4>
+                        <p class="text-xs text-gray-500 dark:text-zinc-400 mt-0.5">{{ session('error') }}</p>
+                    </div>
+                @endif
+                <button onclick="dismissToast()"
+                    class="text-gray-400 hover:text-gray-600 dark:hover:text-zinc-200 transition-colors ml-2 focus:outline-none">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
         </div>
-    @endif
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const toast = document.getElementById('session-toast');
+                if (toast) {
+                    setTimeout(() => {
+                        toast.classList.remove('translate-y-[-20px]', 'opacity-0');
+                    }, 100);
+
+                    setTimeout(() => {
+                        dismissToast();
+                    }, 4000);
+                }
+            });
+
+            function dismissToast() {
+                const toast = document.getElementById('session-toast');
+                if (toast) {
+                    toast.classList.add('translate-y-[-20px]', 'opacity-0');
+                    setTimeout(() => {
+                        const container = document.getElementById('toast-container');
+                        if (container) container.remove();
+                    }, 500);
+                }
+            }
+        </script>
     @endif
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
