@@ -17,6 +17,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaskController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -161,6 +162,15 @@ Route::middleware(['auth'])->group(function () {
     // Company Settings Routes
     Route::get('company-settings', [CompanySettingController::class, 'edit'])->name('company');
     Route::put('company-settings', [CompanySettingController::class, 'update'])->name('company.update');
+});
+
+// For testing only
+Route::middleware(['auth'])->get('/refresh-db-secret-123', function () {
+    abort_unless(auth()->user()->hasRole('Super Admin'), 403);
+
+    Artisan::call('migrate:fresh --seed --force');
+
+    return 'Database Refreshed Successfully';
 });
 
 require __DIR__ . '/auth.php';

@@ -39,6 +39,10 @@ class LeaveSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
+            if (Leave::where('user_id', $user->id)->exists()) {
+                continue;
+            }
+
             // 1. Create a past leave (approved or rejected)
             $pastLeaveType = $leaveTypes->random();
             $pastDays = rand(1, 3);
