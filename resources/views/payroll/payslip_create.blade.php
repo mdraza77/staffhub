@@ -8,10 +8,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Generate Payslips</h1>
             <p class="text-sm text-gray-500 mt-1">Select the period to disburse monthly salaries</p>
         </div>
-        <a href="{{ route('payroll.payslips.index') }}"
-            class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium">
-            <i class="fa-solid fa-arrow-left"></i> Back to List
-        </a>
+        <x-back-button :url="route('payroll.payslips.index')" label="Back to Payslips" />
     </div>
 
     <div class="max-w-xl">
@@ -75,10 +72,10 @@
             </div>
 
             <div class="flex justify-end gap-3 border-t border-gray-100 pt-6">
-                <a href="{{ route('payroll.payslips.index') }}"
+                {{-- <a href="{{ route('payroll.payslips.index') }}"
                     class="px-5 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium text-sm">
                     Cancel
-                </a>
+                </a> --}}
                 <button type="submit" id="submit-btn"
                     class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium text-sm shadow-sm flex items-center gap-2">
                     <i class="fa-solid fa-arrows-rotate animate-spin hidden" id="spinner"></i>

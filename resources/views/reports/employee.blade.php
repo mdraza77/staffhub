@@ -10,10 +10,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Employees Report</h1>
             <p class="text-sm text-gray-500 mt-1">Filter and view detailed employee records</p>
         </div>
-        <a href="{{ route('dashboard') }}"
-            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors shadow-sm">Back
-            to Employees
-        </a>
+        <x-back-button :url="route('employees.index')" label="Back to Employees" />
     </div>
 
     {{-- ===== FILTER CARD ===== --}}
@@ -52,8 +49,7 @@
                         class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
                         <option value="">All Departments</option>
                         @foreach ($departments as $dept)
-                            <option value="{{ $dept->id }}"
-                                {{ request('department_id') == $dept->id ? 'selected' : '' }}>
+                            <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>
                                 {{ $dept->name }}
                             </option>
                         @endforeach
@@ -107,14 +103,16 @@
                     </label>
                     <input type="date" name="joining_from"
                         value="{{ request('joining_from', now()->subMonths(3)->format('Y-m-d')) }}""
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                class=" w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2
+                        focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-500 mb-1">
                         <i class="fa-solid fa-calendar mr-1"></i> Joining Date To
                     </label>
                     <input type="date" name="joining_to" value="{{ request('joining_to', now()->format('Y-m-d')) }}""
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                class=" w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2
+                        focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
                 </div>
             </div>
 
@@ -187,13 +185,12 @@
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-3">
                                     @if ($employee->profile)
-                                        <img src="{{ asset('storage/' . $employee->profile) }}"
-                                            alt="{{ $employee->name }}"
+                                        <img src="{{ asset('storage/' . $employee->profile) }}" alt="{{ $employee->name }}"
                                             class="w-9 h-9 rounded-full object-cover border border-gray-200 {{ $employee->trashed() ? 'grayscale' : '' }}">
                                     @else
                                         <div
                                             class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm border
-                                            {{ $employee->trashed() ? 'bg-gray-100 text-gray-400' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
+                                                                    {{ $employee->trashed() ? 'bg-gray-100 text-gray-400' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
                                             {{ strtoupper(substr($employee->name, 0, 2)) }}
                                         </div>
                                     @endif
@@ -207,8 +204,7 @@
                             <td class="px-4 py-3 text-sm text-gray-600">
                                 @if (auth()->user()->can('Employee-View'))
                                     <a href="{{ route('employees.show', $employee->id) }}">
-                                        <p
-                                            class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                                        <p class="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
                                             {{ $employee->employee_id ?? '—' }}
                                         </p>
                                     </a>
@@ -245,13 +241,11 @@
                                         Deleted
                                     </span>
                                 @elseif ($employee->status === 'active')
-                                    <span
-                                        class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         Active
                                     </span>
                                 @elseif ($employee->status === 'inactive')
-                                    <span
-                                        class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                    <span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         Inactive
                                     </span>
                                 @else
@@ -281,7 +275,7 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#report-table').DataTable({
                 destroy: true,
                 dom: '<"flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4"lB>' +
@@ -289,30 +283,30 @@
                     '<"flex flex-col sm:flex-row justify-between items-center gap-3 mt-4 pt-3 border-t border-gray-100"ip>',
 
                 buttons: [{
-                        extend: 'copy',
-                        text: '<i class="fa-solid fa-copy mr-1"></i> Copy',
-                        className: 'dt-btn dt-btn-gray',
-                    },
-                    {
-                        extend: 'excel',
-                        text: '<i class="fa-solid fa-file-excel mr-1"></i> Excel',
-                        className: 'dt-btn dt-btn-green',
-                        title: 'Employee Report - {{ now()->format('d M Y') }}',
-                    },
-                    {
-                        extend: 'pdf',
-                        text: '<i class="fa-solid fa-file-pdf mr-1"></i> PDF',
-                        className: 'dt-btn dt-btn-red',
-                        title: 'Employee Report - {{ now()->format('d M Y') }}',
-                        orientation: 'landscape',
-                        pageSize: 'A4',
-                    },
-                    {
-                        extend: 'print',
-                        text: '<i class="fa-solid fa-print mr-1"></i> Print',
-                        className: 'dt-btn dt-btn-blue',
-                        title: 'Employee Report',
-                    },
+                    extend: 'copy',
+                    text: '<i class="fa-solid fa-copy mr-1"></i> Copy',
+                    className: 'dt-btn dt-btn-gray',
+                },
+                {
+                    extend: 'excel',
+                    text: '<i class="fa-solid fa-file-excel mr-1"></i> Excel',
+                    className: 'dt-btn dt-btn-green',
+                    title: 'Employee Report - {{ now()->format('d M Y') }}',
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="fa-solid fa-file-pdf mr-1"></i> PDF',
+                    className: 'dt-btn dt-btn-red',
+                    title: 'Employee Report - {{ now()->format('d M Y') }}',
+                    orientation: 'landscape',
+                    pageSize: 'A4',
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fa-solid fa-print mr-1"></i> Print',
+                    className: 'dt-btn dt-btn-blue',
+                    title: 'Employee Report',
+                },
                 ],
 
                 pageLength: 10,
@@ -336,7 +330,7 @@
                 columnDefs: [{
                     orderable: false,
                     targets: [0]
-                }, ],
+                },],
             });
         });
     </script>

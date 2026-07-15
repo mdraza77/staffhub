@@ -17,10 +17,7 @@
                     </a>
                 @endcan
             @endif
-            <a href="{{ route('announcements.index') }}"
-                class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium text-sm">
-                <i class="fa-solid fa-arrow-left"></i> Back to List
-            </a>
+            <x-back-button :url="route('announcements.index')" label="Back to Announcements" />
         </div>
     </div>
 
@@ -29,8 +26,7 @@
             <h2 class="text-xl font-bold text-gray-800">{{ $announcement->title }}</h2>
             <div>
                 @if ($announcement->trashed())
-                    <span
-                        class="bg-red-50 text-red-600 border border-red-200 text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <span class="bg-red-50 text-red-600 border border-red-200 text-xs font-semibold px-3 py-1.5 rounded-full">
                         <i class="fa-solid fa-ban text-[10px] mr-1"></i> Deleted
                     </span>
                 @elseif ($announcement->status === 'published')
@@ -59,12 +55,11 @@
             <div>
                 <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Priority</p>
                 <p class="mt-1 text-sm font-medium text-gray-800">
-                    <span
-                        class="px-2.5 py-1 rounded text-xs font-bold border uppercase
-                        {{ $announcement->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
-                        {{ $announcement->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
-                        {{ $announcement->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
-                    ">
+                    <span class="px-2.5 py-1 rounded text-xs font-bold border uppercase
+                                {{ $announcement->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
+                                {{ $announcement->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
+                                {{ $announcement->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
+                            ">
                         {{ $announcement->priority }}
                     </span>
                 </p>

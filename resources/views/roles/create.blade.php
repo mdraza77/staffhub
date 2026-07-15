@@ -10,10 +10,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Create Role</h1>
             <p class="text-sm text-gray-500 mt-1">Define a new role and assign permissions</p>
         </div>
-        <a href="{{ route('roles.index') }}"
-            class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium text-sm">
-            <i class="fa-solid fa-arrow-left"></i> Back to Roles
-        </a>
+        <x-back-button :url="route('roles.index')" label="Back to Roles" />
     </div>
 
     <form action="{{ route('roles.store') }}" method="POST">
@@ -68,10 +65,10 @@
                         </button>
                     @endcan
 
-                    <a href="{{ route('roles.index') }}"
+                    {{-- <a href="{{ route('roles.index') }}"
                         class="block text-center mt-3 text-sm text-gray-500 hover:text-gray-700 transition-colors">
                         Cancel
-                    </a>
+                    </a> --}}
 
                 </div>
             </div>
@@ -80,12 +77,12 @@
             <div class="lg:col-span-2 flex flex-col gap-4">
 
                 {{-- Validation Error for permissions --}}
-                @error('permission')
-                    <div
-                        class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 text-sm">
-                        <i class="fa-solid fa-triangle-exclamation"></i> {{ $message }}
-                    </div>
-                @enderror
+                {{-- @error('permission')
+                <div
+                    class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 text-sm">
+                    <i class="fa-solid fa-triangle-exclamation"></i> {{ $message }}
+                </div>
+                @enderror --}}
 
                 @forelse ($permissions as $module => $perms)
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

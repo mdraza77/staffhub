@@ -10,10 +10,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Edit Role</h1>
             <p class="text-sm text-gray-500 mt-1">Update permissions for <strong>{{ $role->name }}</strong></p>
         </div>
-        <a href="{{ route('roles.index') }}"
-            class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium text-sm">
-            <i class="fa-solid fa-arrow-left"></i> Back to Roles
-        </a>
+        <x-back-button :url="route('roles.index')" label="Back to Roles" />
     </div>
 
     <form action="{{ route('roles.update', $role->id) }}" method="POST">
@@ -35,8 +32,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Role Name <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="name" value="{{ old('name', $role->name) }}"
-                            placeholder="e.g. HR Manager"
+                        <input type="text" name="name" value="{{ old('name', $role->name) }}" placeholder="e.g. HR Manager"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('name') border-red-500 @enderror"
                             {{ $role->name === 'Super Admin' ? 'readonly' : '' }}>
                         @error('name')
@@ -82,10 +78,10 @@
                         @endif
                     @endcan
 
-                    <a href="{{ route('roles.index') }}"
+                    {{-- <a href="{{ route('roles.index') }}"
                         class="block text-center mt-3 text-sm text-gray-500 hover:text-gray-700 transition-colors">
                         Cancel
-                    </a>
+                    </a> --}}
 
                 </div>
             </div>
@@ -123,17 +119,14 @@
                         {{-- Permission Checkboxes --}}
                         <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3" id="module-{{ Str::slug($module) }}">
                             @foreach ($perms as $perm)
-                                <label
-                                    class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all group
-                                    {{ in_array($perm->name, old('permission', $rolePermissions)) ? 'border-blue-300 bg-blue-50' : 'border-gray-100 hover:border-blue-200 hover:bg-blue-50' }}
-                                    has-[:checked]:border-blue-300 has-[:checked]:bg-blue-50">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all group
+                                                            {{ in_array($perm->name, old('permission', $rolePermissions)) ? 'border-blue-300 bg-blue-50' : 'border-gray-100 hover:border-blue-200 hover:bg-blue-50' }}
+                                                            has-[:checked]:border-blue-300 has-[:checked]:bg-blue-50">
                                     <input type="checkbox" name="permission[]" value="{{ $perm->name }}"
                                         class="perm-checkbox w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer"
-                                        data-module="{{ Str::slug($module) }}"
-                                        {{ in_array($perm->name, old('permission', $rolePermissions)) ? 'checked' : '' }}>
+                                        data-module="{{ Str::slug($module) }}" {{ in_array($perm->name, old('permission', $rolePermissions)) ? 'checked' : '' }}>
                                     <div>
-                                        <p
-                                            class="text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-colors">
+                                        <p class="text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-colors">
                                             {{ explode('-', $perm->name)[1] ?? $perm->name }}
                                         </p>
                                         <p class="text-xs text-gray-400">{{ $perm->name }}</p>
@@ -200,7 +193,7 @@
         }
 
         document.querySelectorAll('.perm-checkbox').forEach(cb => {
-            cb.addEventListener('change', function() {
+            cb.addEventListener('change', function () {
                 const slug = this.dataset.module;
                 const moduleCheckboxes = document.querySelectorAll(`[data-module="${slug}"]`);
                 const allChecked = [...moduleCheckboxes].every(c => c.checked);

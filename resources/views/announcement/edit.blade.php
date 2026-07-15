@@ -8,10 +8,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Edit Announcement</h1>
             <p class="text-sm text-gray-500 mt-1">Modify the details of your announcement</p>
         </div>
-        <a href="{{ route('announcements.index') }}"
-            class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium">
-            <i class="fa-solid fa-arrow-left"></i> Back to List
-        </a>
+        <x-back-button :url="route('announcements.index')" label="Back to Announcements" />
     </div>
 
     <form action="{{ route('announcements.update', $announcement->id) }}" method="POST"
@@ -92,10 +89,6 @@
         </div>
 
         <div class="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-6">
-            <a href="{{ route('announcements.index') }}"
-                class="px-5 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium text-sm">
-                Cancel
-            </a>
             <button type="submit"
                 class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium text-sm shadow-sm">
                 Update Announcement

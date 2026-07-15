@@ -24,10 +24,7 @@
                     </a>
                 @endif
             @endcan
-            <a href="{{ route('roles.index') }}"
-                class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium text-sm">
-                <i class="fa-solid fa-arrow-left"></i> Back to Roles
-            </a>
+            <x-back-button :url="route('roles.index')" label="Back to Roles" />
         </div>
     </div>
 
