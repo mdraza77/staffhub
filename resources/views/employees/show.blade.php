@@ -122,7 +122,7 @@
                     <div
                         class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-zinc-950/40 rounded-lg border border-gray-100 dark:border-zinc-800">
                         <img src="{{ $employee->signature }}" alt="Signature"
-                            class="max-h-16 object-contain mix-blend-multiply dark:mix-blend-screen dark:invert"
+                            class="max-h-16 object-contain mix-blend-multiply dark:mix-blend-screen"
                             draggable="false">
                     </div>
                 </div>
@@ -326,9 +326,6 @@
 
         </div>
     </div>
-
-
-
 @endsection
 
 @push('scripts')
@@ -338,7 +335,7 @@
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this! All employee records will be archived/deleted.",
+                text: "You can revert this! All employee records will be archived/deleted.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444', // bg-red-500

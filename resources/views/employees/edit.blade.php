@@ -202,7 +202,7 @@
                     <div
                         class="flex items-center gap-4 mb-3 p-3 bg-gray-50 dark:bg-zinc-950/40 rounded-lg border border-gray-200 dark:border-zinc-800">
                         <img src="{{ $employee->signature }}" alt="Current Signature"
-                            class="w-16 h-16 object-contain border-2 border-gray-200 dark:border-zinc-800 bg-white dark:bg-transparent mix-blend-multiply dark:mix-blend-screen dark:invert"
+                            class="w-16 h-16 object-contain border-2 border-gray-200 dark:border-zinc-800 bg-white dark:bg-transparent mix-blend-multiply dark:mix-blend-screen"
                             draggable="false">
                         <div>
                             <p class="text-sm font-medium text-gray-700 dark:text-zinc-300">Current Signature</p>

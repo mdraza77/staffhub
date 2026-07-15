@@ -17,7 +17,6 @@
         @endcan
     </div>
 
-
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table id="leaves" class="w-full text-left border-collapse">
@@ -78,7 +77,7 @@
                                             </form>
 
                                             <form action="{{ route('leaves.updateStatus', $leave->id) }}" method="POST"
-                                                onsubmit="return confirm('Are you sure you want to reject this leave?');">
+                                                onclick="confirmDelete(event)" id="reject-leave-form">
                                                 @csrf
                                                 <input type="hidden" name="status" value="rejected">
                                                 <button type="submit"
@@ -94,13 +93,6 @@
                                 @endif
                             </td>
                         </tr>
-                        {{-- @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-gray-500">
-                                <i class="fa-regular fa-folder-open text-3xl text-gray-300 mb-2 block"></i>
-                                No leave requests found.
-                            </td>
-                        </tr> --}}
                     @endforeach
                 </tbody>
             </table>
@@ -108,8 +100,8 @@
     </div>
 
     <div id="applyLeaveModal"
-        class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 flex items-center justify-center transition-opacity">
-        <div class="bg-white rounded-xl shadow-lg w-full max-w-lg mx-4 overflow-hidden">
+        class="fixed inset-0 z-50 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 invisible pointer-events-none transition-all duration-300 ease-out">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-lg mx-4 overflow-hidden transform scale-95 opacity-0 -translate-y-4 transition-all duration-300 ease-out">
             <div class="flex justify-between items-center bg-gray-50 px-6 py-4 border-b border-gray-100">
                 <h3 class="text-lg font-bold text-gray-800">Apply for Leave</h3>
                 <button type="button" onclick="toggleModal('applyLeaveModal')" class="text-gray-400 hover:text-gray-600">
@@ -174,10 +166,56 @@
 
 @push('scripts')
     <script>
+        // Simple Vanilla JS to toggle Tailwind Modals with transitions
         function toggleModal(modalID) {
             const modal = document.getElementById(modalID);
-            modal.classList.toggle('hidden');
+            if (modal) {
+                const isOpen = !modal.classList.contains('invisible');
+                if (isOpen) {
+                    closeModal(modal);
+                } else {
+                    openModal(modal);
+                }
+            }
         }
+
+        function openModal(modal) {
+            modal.classList.remove('invisible', 'opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100', 'pointer-events-auto');
+            
+            const content = modal.querySelector('.bg-white');
+            if (content) {
+                content.classList.remove('scale-95', 'opacity-0', '-translate-y-4');
+                content.classList.add('scale-100', 'opacity-100', 'translate-y-0');
+            }
+        }
+
+        function closeModal(modal) {
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            
+            const content = modal.querySelector('.bg-white');
+            if (content) {
+                content.classList.remove('scale-100', 'opacity-100', 'translate-y-0');
+                content.classList.add('scale-95', 'opacity-0', '-translate-y-4');
+            }
+            
+            setTimeout(() => {
+                if (modal.classList.contains('opacity-0')) {
+                    modal.classList.add('invisible');
+                }
+            }, 300);
+        }
+
+        // Close modal when clicking outside (on the backdrop overlay)
+        window.addEventListener('click', function (e) {
+            const modalOverlays = document.querySelectorAll('.fixed.inset-0.z-50');
+            modalOverlays.forEach(modal => {
+                if (e.target === modal) {
+                    closeModal(modal);
+                }
+            });
+        });
     </script>
 
     <script>
@@ -185,22 +223,15 @@
             $('#leaves').DataTable({
                 destroy: true,
                 dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
-                buttons: [{
-                    extend: 'copy',
-                    className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                },
-                {
-                    extend: 'excel',
-                    className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                },
-                {
-                    extend: 'pdf',
-                    className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                },
-                {
-                    extend: 'print',
-                    className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                }
+                buttons: [
+                    {
+                        extend: 'excel',
+                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
+                    }
                 ],
                 pageLength: 10,
                 language: {
@@ -211,5 +242,26 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        function confirmDelete(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You cannot revert this! This will be marked as Rejected.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444', // bg-red-500
+                cancelButtonColor: '#4b5563', // bg-gray-600
+                confirmButtonText: 'Yes, reject leave!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('reject-leave-form').submit();
+                }
+            });
+        }
     </script>
 @endpush

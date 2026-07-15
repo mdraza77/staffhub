@@ -126,11 +126,13 @@
 
         /* Prevent double-tap hover bug on touch screens/mobile devices */
         @media (hover: none) {
+
             #sidebar-nav a:hover,
             #sidebar-nav summary:hover {
                 background-color: transparent !important;
                 color: inherit !important;
             }
+
             .dark #sidebar-nav a:hover,
             .dark #sidebar-nav summary:hover {
                 background-color: transparent !important;
@@ -172,7 +174,8 @@
                 </li>
 
                 <li class="relative pr-3">
-                    <a class="flex items-center gap-2 cursor-pointer py-2" id="profile-dropdown-trigger" href="javascript:void(0);">
+                    <a class="flex items-center gap-2 cursor-pointer py-2" id="profile-dropdown-trigger"
+                        href="javascript:void(0);">
                         @if (Auth::user()->profile)
                             <img src="{{ auth()->user()->profile }}" alt="Profile"
                                 class="w-8 h-8 rounded-full object-cover border border-gray-200">
@@ -182,7 +185,7 @@
                         @endif
                         <span
                             class="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 dark:text-zinc-300 dark:hover:text-blue-400 transition-colors">
-                            {{ Auth::user()->name }}
+                            {{ explode(' ', Auth::user()->name)[0] }}
                         </span>
                     </a>
 
@@ -193,7 +196,7 @@
                             <a class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                                 href="{{ route('profile.index') }}">
                                 <i class="fa-solid fa-user-gear text-lg"></i>
-                                <span>Profile</span>
+                                <span>My Profile</span>
                             </a>
                         </li>
 

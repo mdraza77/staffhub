@@ -91,8 +91,8 @@
                         </tr>
 
                         <div id="editLeaveTypeModal{{ $type->id }}"
-                            class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 flex items-center justify-center transition-opacity">
-                            <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 overflow-hidden">
+                            class="fixed inset-0 z-50 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 invisible pointer-events-none transition-all duration-300 ease-out">
+                            <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 overflow-hidden transform scale-95 opacity-0 -translate-y-4 transition-all duration-300 ease-out">
                                 <div
                                     class="flex justify-between items-center bg-gray-50 px-6 py-4 border-b border-gray-100">
                                     <h3 class="text-lg font-bold text-gray-800">Edit Leave Type</h3>
@@ -151,8 +151,8 @@
     </div>
 
     <div id="addLeaveTypeModal"
-        class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 flex items-center justify-center transition-opacity">
-        <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 overflow-hidden">
+        class="fixed inset-0 z-50 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 invisible pointer-events-none transition-all duration-300 ease-out">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 overflow-hidden transform scale-95 opacity-0 -translate-y-4 transition-all duration-300 ease-out">
             <div class="flex justify-between items-center bg-gray-50 px-6 py-4 border-b border-gray-100">
                 <h3 class="text-lg font-bold text-gray-800">Add New Leave Type</h3>
                 <button type="button" onclick="toggleModal('addLeaveTypeModal')" class="text-gray-400 hover:text-gray-600">
@@ -197,11 +197,56 @@
 
 @push('scripts')
     <script>
-        // Simple Vanilla JS to toggle Tailwind Modals
+        // Simple Vanilla JS to toggle Tailwind Modals with transitions
         function toggleModal(modalID) {
             const modal = document.getElementById(modalID);
-            modal.classList.toggle('hidden');
+            if (modal) {
+                const isOpen = !modal.classList.contains('invisible');
+                if (isOpen) {
+                    closeModal(modal);
+                } else {
+                    openModal(modal);
+                }
+            }
         }
+
+        function openModal(modal) {
+            modal.classList.remove('invisible', 'opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100', 'pointer-events-auto');
+            
+            const content = modal.querySelector('.bg-white');
+            if (content) {
+                content.classList.remove('scale-95', 'opacity-0', '-translate-y-4');
+                content.classList.add('scale-100', 'opacity-100', 'translate-y-0');
+            }
+        }
+
+        function closeModal(modal) {
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            
+            const content = modal.querySelector('.bg-white');
+            if (content) {
+                content.classList.remove('scale-100', 'opacity-100', 'translate-y-0');
+                content.classList.add('scale-95', 'opacity-0', '-translate-y-4');
+            }
+            
+            setTimeout(() => {
+                if (modal.classList.contains('opacity-0')) {
+                    modal.classList.add('invisible');
+                }
+            }, 300);
+        }
+
+        // Close modal when clicking outside (on the backdrop overlay)
+        window.addEventListener('click', function (e) {
+            const modalOverlays = document.querySelectorAll('.fixed.inset-0.z-50');
+            modalOverlays.forEach(modal => {
+                if (e.target === modal) {
+                    closeModal(modal);
+                }
+            });
+        });
 
         // SweetAlert for Delete Confirmation
         function confirmDelete(id) {
