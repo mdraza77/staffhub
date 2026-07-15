@@ -3,17 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
+use ImageKit\ImageKit;
 
 class ProfileController extends Controller implements HasMiddleware
 {
@@ -24,11 +26,13 @@ class ProfileController extends Controller implements HasMiddleware
             new Middleware('permission:Employee-Profile-Index', only: ['index']),
         ];
     }
+
     public function index()
     {
         $user = auth()->user()->load('department');
         return view('profile.index', compact('user'));
     }
+
     /**
      * Display the user's profile form.
      */
@@ -42,26 +46,32 @@ class ProfileController extends Controller implements HasMiddleware
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request, User $employee): RedirectResponse
     {
         $user = auth()->user();
 
         $request->validate([
-            'name'          => 'required|string|max:255',
-            'email'         => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password'      => 'nullable|string|min:8|confirmed',
-            'phone'         => 'nullable|string|max:20',
-            'designation'   => 'nullable|string|max:255',
-            'profile'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8|confirmed',
+            'phone' => 'nullable|string|max:20',
+            'designation' => 'nullable|string|max:255',
+            'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        $imageKit = new ImageKit(
+            env('IMAGEKIT_PUBLIC_KEY'),
+            env('IMAGEKIT_PRIVATE_KEY'),
+            env('IMAGEKIT_URL_ENDPOINT')
+        );
 
         try {
             DB::beginTransaction();
 
             $data = [
-                'name'        => $request->name,
-                'email'       => $request->email,
-                'phone'       => $request->phone,
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
                 'designation' => $request->designation,
             ];
 
@@ -69,18 +79,42 @@ class ProfileController extends Controller implements HasMiddleware
                 $data['password'] = Hash::make($request->password);
             }
 
+            // if ($request->hasFile('profile')) {
+            //     if ($user->profile) {
+            //         Storage::disk('public')->delete($user->profile);
+            //     }
+            //     $data['profile'] = $request->file('profile')->store('profiles', 'public');
+            // }
+
             if ($request->hasFile('profile')) {
-                if ($user->profile) {
-                    Storage::disk('public')->delete($user->profile);
+                // Delete old image if exists
+                if ($employee->profile) {
+                    if (str_starts_with($employee->profile, 'http')) {
+                        $this->deleteImageKitFileByUrl($employee->profile, $imageKit);
+                    } else {
+                        Storage::disk('public')->delete($employee->profile);
+                    }
                 }
-                $data['profile'] = $request->file('profile')->store('profiles', 'public');
+
+                $upload = $imageKit->uploadFile([
+                    'file' => fopen($request->file('profile')->getRealPath(), 'r'),
+                    'fileName' => time() . '_' . $request->file('profile')->getClientOriginalName(),
+                    'folder' => '/StaffHub/profile_pictures'
+                ]);
+
+                if ($upload->error) {
+                    throw new \Exception('ImageKit Profile Upload Error: ' . json_encode($upload->error));
+                }
+
+                $data['profile'] = $upload->result->url;
             }
 
             $user->update($data);
 
             DB::commit();
 
-            return redirect()->route('profile.index')
+            return redirect()
+                ->route('profile.index')
                 ->with('success', 'Profile updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -90,7 +124,8 @@ class ProfileController extends Controller implements HasMiddleware
                 Storage::disk('public')->delete($data['profile']);
             }
 
-            return back()->withInput()
+            return back()
+                ->withInput()
                 ->with('error', 'Something went wrong. Please try again.');
         }
     }
@@ -104,7 +139,8 @@ class ProfileController extends Controller implements HasMiddleware
             $user->update(['profile' => null]);
         }
 
-        return redirect()->route('profile.index')
+        return redirect()
+            ->route('profile.index')
             ->with('success', 'Profile photo removed.');
     }
 

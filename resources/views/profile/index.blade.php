@@ -45,8 +45,7 @@
                     {{-- Avatar --}}
                     <div class="relative mb-4 group">
                         @if ($user->profile)
-                            <img src="{{ asset('storage/' . $user->profile) }}" alt="{{ $user->name }}"
-                                id="profile-preview"
+                            <img src="{{ $user->profile }}" alt="{{ $user->name }}" id="profile-preview"
                                 class="w-28 h-28 rounded-full object-cover border-4 border-blue-100 shadow">
                         @else
                             <div id="profile-initials"
