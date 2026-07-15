@@ -8,10 +8,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Edit Employee</h1>
             <p class="text-sm text-gray-500 mt-1">Update the details for {{ $employee->name }}</p>
         </div>
-        <a href="{{ route('employees.index') }}"
-            class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
-            <i class="fa-solid fa-arrow-left"></i> Back to List
-        </a>
+        <x-back-button :url="route('employees.index')" label="Back to Employees" />
     </div>
 
 
@@ -100,8 +97,7 @@
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
                     <option value="">Select Department</option>
                     @foreach ($departments as $dept)
-                        <option value="{{ $dept->id }}"
-                            {{ old('department_id', $employee->department_id) == $dept->id ? 'selected' : '' }}>
+                        <option value="{{ $dept->id }}" {{ old('department_id', $employee->department_id) == $dept->id ? 'selected' : '' }}>
                             {{ $dept->name }}
                         </option>
                     @endforeach
@@ -156,8 +152,7 @@
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white @error('role') border-red-500 @enderror">
                     <option value="">— No Role —</option>
                     @foreach ($roles as $role)
-                        <option value="{{ $role->name }}"
-                            {{ old('role', $employeeRole) == $role->name ? 'selected' : '' }}>
+                        <option value="{{ $role->name }}" {{ old('role', $employeeRole) == $role->name ? 'selected' : '' }}>
                             {{ $role->name }}
                         </option>
                     @endforeach
@@ -223,8 +218,9 @@
         </div>
 
         <div class="mt-8 flex justify-end gap-3">
-            <a href="{{ route('employees.index') }}"
+            {{-- <a href="{{ route('employees.index') }}"
                 class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">Cancel</a>
+            --}}
             @can('Employee-Edit')
                 <button type="submit"
                     class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm">Update

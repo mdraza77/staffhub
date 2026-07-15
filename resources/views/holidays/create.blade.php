@@ -8,10 +8,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Add New Holiday</h1>
             <p class="text-sm text-gray-500 mt-1">Define a new holiday for the company calendar</p>
         </div>
-        <a href="{{ route('holidays.index') }}"
-            class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium">
-            <i class="fa-solid fa-arrow-left"></i> Back to List
-        </a>
+        <x-back-button :url="route('holidays.index')" label="Back to Holidays" />
     </div>
 
     @if (session('error'))
@@ -49,7 +46,8 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">End Date <span class="text-gray-400 text-xs">(Optional)</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">End Date <span
+                        class="text-gray-400 text-xs">(Optional)</span></label>
                 <input type="date" name="end_date" value="{{ old('end_date') }}"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('end_date') border-red-500 @enderror">
                 @error('end_date')
@@ -99,10 +97,10 @@
         </div>
 
         <div class="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-6">
-            <a href="{{ route('holidays.index') }}"
+            {{-- <a href="{{ route('holidays.index') }}"
                 class="px-5 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium text-sm">
                 Cancel
-            </a>
+            </a> --}}
             <button type="submit"
                 class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium text-sm shadow-sm">
                 Save Holiday

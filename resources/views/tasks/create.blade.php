@@ -8,21 +8,8 @@
             <h1 class="text-2xl font-bold text-gray-800">Assign New Task</h1>
             <p class="text-sm text-gray-500 mt-1">Create and assign a task to your team members.</p>
         </div>
-        <a href="{{ route('tasks.index') }}"
-            class="text-gray-600 hover:text-indigo-600 transition-colors flex items-center gap-1 font-medium">
-            <i class="fa-solid fa-arrow-left"></i> Back to Tasks
-        </a>
+        <x-back-button :url="route('tasks.index')" label="Back to Tasks" />
     </div>
-
-    {{-- @if ($errors->any())
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            <ul class="list-disc list-inside text-sm font-medium">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif --}}
 
     <form action="{{ route('tasks.store') }}" method="POST"
         class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8">
@@ -32,8 +19,7 @@
 
             <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
-                <input type="text" name="project_name" value="{{ old('project_name') }}"
-                    placeholder="e.g., Steel Pvt. Ltd."
+                <input type="text" name="project_name" value="{{ old('project_name') }}" placeholder="e.g., Steel Pvt. Ltd."
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
             </div>
             <div class="md:col-span-2">
@@ -97,14 +83,16 @@
 
             <div class="md:col-span-2 mt-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Detailed Instructions</label>
-                <textarea name="description" id="task-editor" placeholder="Write detailed instructions here...">{{ old('description') }}</textarea>
+                <textarea name="description" id="task-editor"
+                    placeholder="Write detailed instructions here...">{{ old('description') }}</textarea>
             </div>
 
         </div>
 
         <div class="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-5">
-            <a href="{{ route('tasks.index') }}"
+            {{-- <a href="{{ route('tasks.index') }}"
                 class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">Cancel</a>
+            --}}
             @can('Task-Create')
                 <button type="submit"
                     class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-sm flex items-center gap-2">
@@ -119,7 +107,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             ClassicEditor
                 .create(document.querySelector('#task-editor'), {
                     toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList',

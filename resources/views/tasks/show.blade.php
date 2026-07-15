@@ -10,10 +10,7 @@
         </div>
         <div class="flex items-center gap-3">
             @can('Task-Index')
-                <a href="{{ route('tasks.index') }}"
-                    class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">Back
-                    to Tasks
-                </a>
+                <x-back-button :url="route('tasks.index')" label="Back to Tasks" />
             @endcan
             @can('Task-Edit')
                 <a href="{{ route('tasks.edit', $task->id) }}"
@@ -23,26 +20,6 @@
             @endcan
         </div>
     </div>
-
-    {{-- @if (session('success'))
-        <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
-    @if ($errors->any())
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            <ul class="list-disc list-inside text-sm">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif --}}
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 

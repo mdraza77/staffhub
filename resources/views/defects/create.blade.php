@@ -8,21 +8,8 @@
             <h1 class="text-2xl font-bold text-gray-800">Report a Bug</h1>
             <p class="text-sm text-gray-500 mt-1">Log defect findings with reproducer details and parameters.</p>
         </div>
-        <a href="{{ route('defects.index') }}"
-            class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
-            <i class="fa-solid fa-arrow-left"></i> Back to List
-        </a>
+        <x-back-button :url="route('defects.index')" label="Back to Defects" />
     </div>
-
-    {{-- @if ($errors->any())
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            <ul class="list-disc list-inside text-sm font-medium">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif --}}
 
     <form action="{{ route('defects.store') }}" method="POST"
         class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8">
@@ -58,8 +45,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Target Module <span
                         class="text-red-500">*</span></label>
-                <input type="text" name="module" value="{{ old('module') }}"
-                    placeholder="e.g., Authentication, Payments"
+                <input type="text" name="module" value="{{ old('module') }}" placeholder="e.g., Authentication, Payments"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
                     required>
             </div>
@@ -142,7 +128,8 @@
             <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Defect Description <span
                         class="text-red-500">*</span></label>
-                <textarea name="description" id="defect-description-editor" placeholder="Write a detailed summary of the bug..."></textarea>
+                <textarea name="description" id="defect-description-editor"
+                    placeholder="Write a detailed summary of the bug..."></textarea>
             </div>
 
             <div class="md:col-span-2">
@@ -154,8 +141,9 @@
         </div>
 
         <div class="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-5">
-            <a href="{{ route('defects.index') }}"
+            {{-- <a href="{{ route('defects.index') }}"
                 class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">Cancel</a>
+            --}}
             <button type="submit"
                 class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-sm">Report
                 Defect</button>
@@ -169,7 +157,7 @@
 
     {{-- ClassicEditor init --}}
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             ClassicEditor
                 .create(document.querySelector('#defect-description-editor'), {
                     toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList',

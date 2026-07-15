@@ -8,10 +8,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Edit Defect Details</h1>
             <p class="text-sm text-gray-500 mt-1">Modify reported properties for {{ $defect->defect_id }}.</p>
         </div>
-        <a href="{{ route('defects.index') }}"
-            class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
-            <i class="fa-solid fa-arrow-left"></i> Back to List
-        </a>
+        <x-back-button :url="route('defects.index')" label="Back to Defects" />
     </div>
 
     <form action="{{ route('defects.update', $defect->id) }}" method="POST"
@@ -175,8 +172,9 @@
         </div>
 
         <div class="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-5">
-            <a href="{{ route('defects.index') }}"
+            {{-- <a href="{{ route('defects.index') }}"
                 class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">Cancel</a>
+            --}}
             <button type="submit"
                 class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-sm">Update
                 Details</button>

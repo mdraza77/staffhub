@@ -8,21 +8,8 @@
             <h1 class="text-2xl font-bold text-gray-800">Edit Task Details</h1>
             <p class="text-sm text-gray-500 mt-1">Update task properties and descriptions.</p>
         </div>
-        <a href="{{ route('tasks.index') }}"
-            class="text-gray-600 hover:text-indigo-600 transition-colors flex items-center gap-1 font-medium">
-            <i class="fa-solid fa-arrow-left"></i> Back to Tasks
-        </a>
+        <x-back-button :url="route('tasks.index')" label="Back to Tasks" />
     </div>
-
-    {{-- @if ($errors->any())
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            <ul class="list-disc list-inside text-sm font-medium">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif --}}
 
     <form action="{{ route('tasks.update', $task->id) }}" method="POST"
         class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8">
@@ -124,8 +111,8 @@
         </div>
 
         <div class="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-5">
-            <a href="{{ route('tasks.index') }}"
-                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">Cancel</a>
+            {{-- <a href="{{ route('tasks.index') }}"
+                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">Cancel</a> --}}
             @can('Task-Edit')
                 <button type="submit"
                     class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-sm flex items-center gap-2">

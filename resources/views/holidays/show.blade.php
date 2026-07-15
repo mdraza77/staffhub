@@ -17,10 +17,7 @@
                     </a>
                 @endcan
             @endif
-            <a href="{{ route('holidays.index') }}"
-                class="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 font-medium text-sm">
-                <i class="fa-solid fa-arrow-left"></i> Back to List
-            </a>
+            <x-back-button :url="route('holidays.index')" label="Back to Holidays" />
         </div>
     </div>
 
@@ -33,11 +30,13 @@
                         <i class="fa-solid fa-ban text-[10px] mr-1"></i> Deleted
                     </span>
                 @elseif ($holiday->status === 'active')
-                    <span class="bg-green-50 text-green-700 border border-green-200 text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <span
+                        class="bg-green-50 text-green-700 border border-green-200 text-xs font-semibold px-3 py-1.5 rounded-full">
                         <i class="fa-solid fa-circle text-green-500 text-[8px] mr-1"></i> Active
                     </span>
                 @else
-                    <span class="bg-yellow-50 text-yellow-700 border border-yellow-200 text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <span
+                        class="bg-yellow-50 text-yellow-700 border border-yellow-200 text-xs font-semibold px-3 py-1.5 rounded-full">
                         <i class="fa-solid fa-circle text-yellow-500 text-[8px] mr-1"></i> Inactive
                     </span>
                 @endif
@@ -75,7 +74,8 @@
                 <p class="mt-1 text-sm font-medium text-gray-800">
                     <i class="fa-solid fa-hourglass-half text-amber-500 mr-1.5"></i>
                     @if ($holiday->end_date)
-                        {{ $holiday->start_date->diffInDays($holiday->end_date) + 1 }} {{ Str::plural('Day', $holiday->start_date->diffInDays($holiday->end_date) + 1) }}
+                        {{ $holiday->start_date->diffInDays($holiday->end_date) + 1 }}
+                        {{ Str::plural('Day', $holiday->start_date->diffInDays($holiday->end_date) + 1) }}
                     @else
                         1 Day
                     @endif
@@ -103,7 +103,8 @@
                 @endcan
 
                 @can('holiday-ForceDelete')
-                    <form action="{{ route('holidays.force-delete', $holiday->id) }}" method="POST" id="force-delete-form-{{ $holiday->id }}">
+                    <form action="{{ route('holidays.force-delete', $holiday->id) }}" method="POST"
+                        id="force-delete-form-{{ $holiday->id }}">
                         @csrf
                         @method('DELETE')
                         <button type="button" onclick="confirmForceDelete({{ $holiday->id }}, '{{ addslashes($holiday->name) }}')"

@@ -20,10 +20,7 @@
                     </a>
                 @endif
             @endcan
-            <a href="{{ route('employees.index') }}"
-                class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
-                <i class="fa-solid fa-arrow-left"></i> Back to List
-            </a>
+            <x-back-button :url="route('employees.index')" label="Back to Employees" />
         </div>
     </div>
 
@@ -122,8 +119,7 @@
                     <div
                         class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-zinc-950/40 rounded-lg border border-gray-100 dark:border-zinc-800">
                         <img src="{{ $employee->signature }}" alt="Signature"
-                            class="max-h-16 object-contain mix-blend-multiply dark:mix-blend-screen"
-                            draggable="false">
+                            class="max-h-16 object-contain mix-blend-multiply dark:mix-blend-screen" draggable="false">
                     </div>
                 </div>
             @endif
@@ -134,8 +130,7 @@
                     <div class="bg-white rounded-xl border border-green-150 shadow-sm p-5">
                         <h3 class="text-sm font-semibold text-green-600 mb-3 uppercase tracking-wide">Restore Employee</h3>
                         <p class="text-xs text-gray-500 mb-4">Restore this employee's profile to active status.</p>
-                        <form id="restore-employee-form" action="{{ route('employees.restore', $employee->id) }}"
-                            method="POST">
+                        <form id="restore-employee-form" action="{{ route('employees.restore', $employee->id) }}" method="POST">
                             @csrf
                             <button type="button" onclick="confirmRestore(event)"
                                 class="w-full px-4 py-2 bg-green-50 text-green-600 border border-green-200 rounded-lg hover:bg-green-600 hover:text-white transition-all text-sm font-medium">
@@ -149,8 +144,7 @@
                     <div class="bg-white rounded-xl border border-red-100 shadow-sm p-5">
                         <h3 class="text-sm font-semibold text-red-600 mb-3 uppercase tracking-wide">Danger Zone</h3>
                         <p class="text-xs text-gray-500 mb-4">Permanently delete this employee.</p>
-                        <form id="delete-employee-form" action="{{ route('employees.destroy', $employee->id) }}"
-                            method="POST">
+                        <form id="delete-employee-form" action="{{ route('employees.destroy', $employee->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="button" onclick="confirmDelete(event)"
@@ -240,14 +234,12 @@
                     <div>
                         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Status</p>
                         @if ($employee->status === 'active')
-                            <span
-                                class="px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">Active</span>
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">Active</span>
                         @elseif ($employee->status === 'inactive')
                             <span
                                 class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">Inactive</span>
                         @else
-                            <span
-                                class="px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600">Terminated</span>
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600">Terminated</span>
                         @endif
                     </div>
 
@@ -313,8 +305,7 @@
 
                         @if ($employee->status === 'terminated')
                             <li class="ml-6">
-                                <span
-                                    class="absolute -left-[9px] w-4 h-4 rounded-full bg-red-500 border-2 border-white"></span>
+                                <span class="absolute -left-[9px] w-4 h-4 rounded-full bg-red-500 border-2 border-white"></span>
                                 <p class="text-xs text-gray-400">Employment Terminated</p>
                                 <p class="text-sm font-medium text-red-600 mt-0.5">Account marked as terminated</p>
                             </li>

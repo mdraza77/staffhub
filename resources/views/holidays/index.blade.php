@@ -25,7 +25,7 @@
                         <th class="px-6 py-3 font-semibold">Name</th>
                         <th class="px-6 py-3 font-semibold">Start & End Date</th>
                         <th class="px-6 py-3 font-semibold">Type</th>
-                        {{-- <th class="px-6 py-3 font-semibold">Description</th> --}}
+                        <th class="px-6 py-3 font-semibold">Description</th>
                         <th class="px-6 py-3 font-semibold">Status</th>
                         <th class="px-6 py-3 font-semibold text-center">Actions</th>
                     </tr>
@@ -73,9 +73,9 @@
                             </td>
 
                             {{-- Description --}}
-                            {{-- <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                            <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
                                 {{ $holiday->description ?? '—' }}
-                            </td> --}}
+                            </td>
 
                             {{-- Status Badge --}}
                             <td class="px-6 py-4">
