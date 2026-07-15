@@ -31,7 +31,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -99,7 +98,7 @@
             }
 
             /* Hide details dropdown submenus/chevron arrows in collapsed mode */
-            #sidebar.collapsed details summary i.bi-chevron-down {
+            #sidebar.collapsed details summary i.fa-chevron-down {
                 display: none !important;
             }
 
@@ -158,7 +157,7 @@
                 <span
                     class="header-logo-text text-gray-800 dark:text-zinc-200 font-bold transition-all duration-300">{{ $globalSetting->name ?? 'StaffHub' }}</span>
             </a>
-            <i class="bi bi-list text-2xl cursor-pointer text-gray-800 hover:text-blue-600 transition-colors toggle-sidebar-btn md:hidden"
+            <i class="fa-solid fa-bars text-2xl cursor-pointer text-gray-800 hover:text-blue-600 transition-colors toggle-sidebar-btn md:hidden"
                 onclick="toggleSidebar()"></i>
         </div>
 
@@ -207,7 +206,8 @@
                         <li>
                             <a class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
                                 href="javascript:void(0);" onclick="confirmLogout()">
-                                <i class="fa-solid fa-power-off text-lg"></i>
+                                {{-- <i class="fa-solid fa-power-off text-lg"></i> --}}
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
                                 <span>Sign Out</span>
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
@@ -228,7 +228,7 @@
         <!-- Desktop Floating Toggle Button -->
         <button id="sidebar-toggle-btn" onclick="toggleSidebar()"
             class="hidden md:flex absolute top-4 -right-5 w-10 h-10 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-850 rounded-full items-center justify-center cursor-pointer shadow-md hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all duration-200 focus:outline-none z-50">
-            <i id="sidebar-toggle-icon" class="bi bi-chevron-left text-lg text-gray-600 dark:text-zinc-400"></i>
+            <i id="sidebar-toggle-icon" class="fa-solid fa-chevron-left text-base text-gray-600 dark:text-zinc-400"></i>
         </button>
 
         <div class="h-full overflow-y-auto py-4 px-3" id="sidebar-scroll">
@@ -390,7 +390,7 @@
                                     <span>Break Room</span>
                                 </div>
                                 <i
-                                    class="bi bi-chevron-down transition-transform duration-300 {{ $breaksActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
+                                    class="fa-solid fa-chevron-down transition-transform duration-300 {{ $breaksActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
                             </summary>
                             <ul class="pl-9 pr-2 py-2 space-y-1">
                                 @can('Break-Room-Access')
@@ -462,7 +462,7 @@
                                     <span>Payroll Mgmt</span>
                                 </div>
                                 <i
-                                    class="bi bi-chevron-down transition-transform duration-300 {{ $payrollActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
+                                    class="fa-solid fa-chevron-down transition-transform duration-300 {{ $payrollActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
                             </summary>
                             <ul class="pl-9 pr-2 py-2 space-y-1">
                                 @can('Salary-View')
@@ -530,7 +530,7 @@
                                     <span>Reports</span>
                                 </div>
                                 <i
-                                    class="bi bi-chevron-down transition-transform duration-300 {{ $reportsActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
+                                    class="fa-solid fa-chevron-down transition-transform duration-300 {{ $reportsActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
                             </summary>
                             <ul class="pl-9 pr-2 py-2 space-y-1">
                                 @can('Employee-Index')
@@ -560,7 +560,7 @@
                                     <span>Settings</span>
                                 </div>
                                 <i
-                                    class="bi bi-chevron-down transition-transform duration-300 {{ $settingsActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
+                                    class="fa-solid fa-chevron-down transition-transform duration-300 {{ $settingsActive ? 'rotate-180' : 'group-open:-rotate-180' }}"></i>
                             </summary>
                             <ul class="pl-9 pr-2 py-2 space-y-1">
                                 @can('Company-Index')
@@ -625,12 +625,12 @@
                 // Toggle icon
                 if (toggleIcon) {
                     if (sidebar.classList.contains('collapsed')) {
-                        toggleIcon.classList.remove('bi-chevron-left');
-                        toggleIcon.classList.add('bi-list');
+                        toggleIcon.classList.remove('fa-chevron-left');
+                        toggleIcon.classList.add('fa-bars');
                         localStorage.setItem('sidebar-collapsed', 'true');
                     } else {
-                        toggleIcon.classList.remove('bi-list');
-                        toggleIcon.classList.add('bi-chevron-left');
+                        toggleIcon.classList.remove('fa-bars');
+                        toggleIcon.classList.add('fa-chevron-left');
                         localStorage.setItem('sidebar-collapsed', 'false');
                     }
                 }
@@ -653,8 +653,8 @@
                     if (main) main.classList.add('collapsed');
                     if (logoContainer) logoContainer.classList.add('collapsed');
                     if (toggleIcon) {
-                        toggleIcon.classList.remove('bi-chevron-left');
-                        toggleIcon.classList.add('bi-list');
+                        toggleIcon.classList.remove('fa-chevron-left');
+                        toggleIcon.classList.add('fa-bars');
                     }
                 }
             }
