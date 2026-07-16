@@ -10,10 +10,7 @@
         </div>
 
         @can('Task-Create')
-            <a href="{{ route('tasks.create') }}"
-                class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-plus"></i> Assign New Task
-            </a>
+            <x-create-button :url="route('tasks.create')" label="Assign New Task" />
         @endcan
     </div>
 
@@ -430,6 +427,6 @@
             });
         }
 
-        
+
     </script>
 @endpush

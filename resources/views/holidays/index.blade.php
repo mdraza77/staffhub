@@ -9,10 +9,7 @@
             <p class="text-sm text-gray-500 mt-1">Manage your workforce</p>
         </div>
         @can('Holiday-Create')
-            <a href="{{ route('holidays.create') }}"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-plus"></i> Add Holidays
-            </a>
+            <x-create-button :url="route('holidays.create')" label="Add Holidays" />
         @endcan
     </div>
 

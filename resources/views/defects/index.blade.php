@@ -10,10 +10,7 @@
         </div>
 
         @can('Defect-Create')
-            <a href="{{ route('defects.create') }}"
-                class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-plus"></i> Report a Bug
-            </a>
+            <x-create-button :url="route('defects.create')" label="Report a Bug" />
         @endcan
     </div>
 

@@ -11,10 +11,7 @@
             <p class="text-sm text-gray-500 mt-1">Manage access control for your team</p>
         </div>
         @can('AccessManagement-Create')
-            <a href="{{ route('roles.create') }}"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm text-sm">
-                <i class="fa-solid fa-plus"></i> Add Role
-            </a>
+            <x-create-button :url="route('roles.create')" label="Add Role" />
         @endcan
     </div>
 

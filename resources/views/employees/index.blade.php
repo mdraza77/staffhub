@@ -9,10 +9,7 @@
             <p class="text-sm text-gray-500 mt-1">Manage your workforce</p>
         </div>
         @can('Employee-Create')
-            <a href="{{ route('employees.create') }}"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-plus"></i> Add Employee
-            </a>
+            <x-create-button :url="route('employees.create')" label="Add Employee" />
         @endcan
     </div>
 
@@ -47,7 +44,7 @@
                                     @else
                                         <div
                                             class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border
-                                            {{ $employee->trashed() ? 'bg-gray-200 text-gray-400 border-gray-300' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
+                                                                    {{ $employee->trashed() ? 'bg-gray-200 text-gray-400 border-gray-300' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
                                             {{ strtoupper(substr($employee->name, 0, 2)) }}
                                         </div>
                                     @endif
@@ -115,13 +112,11 @@
                                         <i class="fa-solid fa-ban text-[10px] mr-1"></i>Deleted
                                     </span>
                                 @elseif ($employee->status === 'active')
-                                    <span
-                                        class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         <i class="fa-solid fa-circle text-[8px] mr-1"></i>Active
                                     </span>
                                 @elseif ($employee->status === 'inactive')
-                                    <span
-                                        class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                    <span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         <i class="fa-solid fa-circle text-[8px] mr-1"></i>Inactive
                                     </span>
                                 @else
@@ -168,10 +163,10 @@
 
                                         {{-- View --}}
                                         {{-- @can('Employee-View')
-                                            <a href="{{ route('employees.show', $employee->id) }}" title="View Details"
-                                                class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i class="fa-solid fa-eye text-base"></i>
-                                            </a>
+                                        <a href="{{ route('employees.show', $employee->id) }}" title="View Details"
+                                            class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                            <i class="fa-solid fa-eye text-base"></i>
+                                        </a>
                                         @endcan --}}
 
                                         {{-- Edit --}}
@@ -275,37 +270,4 @@
             });
         }
     </script>
-
-    {{-- <script>
-        $(document).ready(function() {
-            $('#employees').DataTable({
-                destroy: true,
-                dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
-                buttons: [{
-                        extend: 'copy',
-                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                    }
-                ],
-                pageLength: 10,
-                language: {
-                    search: "",
-                    searchPlaceholder: "Search here...",
-                    lengthMenu: "_MENU_",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
-                }
-            });
-        });
-    </script> --}}
 @endpush

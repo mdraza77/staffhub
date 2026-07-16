@@ -15,12 +15,7 @@
                 </nav>
             </div>
             @can('Department-Create')
-                <a href="{{ route('departments.create') }}">
-                    <button type="button"
-                        class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm">
-                        <i class="fa-solid fa-plus text-lg"></i> Create Department
-                    </button>
-                </a>
+                <x-create-button :url="route('departments.create')" label="Add Department" />
             @endcan
         </div>
 

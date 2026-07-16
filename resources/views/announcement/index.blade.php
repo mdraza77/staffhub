@@ -9,10 +9,7 @@
             <p class="text-sm text-gray-500 mt-1">Share company updates and news with your team</p>
         </div>
         @can('Announcement-Create')
-            <a href="{{ route('announcements.create') }}"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-plus"></i> Add Announcement
-            </a>
+            <x-create-button :url="route('announcements.create')" label="Add Announcement" />
         @endcan
     </div>
 
