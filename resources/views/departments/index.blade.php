@@ -67,7 +67,7 @@
                                             @can('Department-Delete')
                                                 <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                                     title="Delete" onclick="confirmDelete({{ $department->id }})">
-                                                    <i class="fa-solid fa-trash text-lg"></i>
+                                                    <i class="fa-solid fa-trash-can text-lg"></i>
                                                 </button>
                                             @endcan
                                         @else
@@ -77,12 +77,12 @@
                                                     <i class="fa-solid fa-rotate-left text-lg"></i>
                                                 </button>
                                             @endcan
-                                            @can('Department-ForceDelete')
-                                                <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                    title="Permanent Delete" onclick="confirmPermanentDelete({{ $department->id }})">
-                                                    <i class="fa-solid fa-trash-can text-lg"></i>
-                                                </button>
-                                            @endcan
+                                            {{-- @can('Department-ForceDelete')
+                                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                title="Permanent Delete" onclick="confirmPermanentDelete({{ $department->id }})">
+                                                <i class="fa-solid fa-trash-can text-lg"></i>
+                                            </button>
+                                            @endcan --}}
                                         @endif
                                     </div>
                                 </td>
@@ -91,9 +91,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="mt-3">
-            {{ $departments->links() }}
         </div>
     </div>
     @push('scripts')

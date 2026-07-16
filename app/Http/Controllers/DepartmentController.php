@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Department;
-use Illuminate\Support\Str;
-use SweetAlert2\Laravel\Swal;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use SweetAlert2\Laravel\Swal;
 
 class DepartmentController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Department-Index',  only: ['index']),
+            new Middleware('permission:Department-Index', only: ['index']),
             new Middleware('permission:Department-Create', only: ['create', 'store']),
-            new Middleware('permission:Department-Edit',   only: ['edit', 'update']),
+            new Middleware('permission:Department-Edit', only: ['edit', 'update']),
             new Middleware('permission:Department-Delete', only: ['destroy']),
             new Middleware('permission:Department-Restore', only: ['restore']),
             new Middleware('permission:Department-ForceDelete', only: ['forceDelete']),
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $departments = Department::withTrashed()->latest()->paginate(10);
-        // Return view with layout
+        $departments = Department::withTrashed()->latest()->get();
         return view('departments.index', compact('departments'));
     }
 
@@ -52,7 +52,6 @@ class DepartmentController extends Controller implements HasMiddleware
         ]);
 
         try {
-
             Department::create([
                 'name' => $validated['name'],
                 'slug' => Str::slug($validated['name']),
@@ -65,7 +64,6 @@ class DepartmentController extends Controller implements HasMiddleware
 
             return redirect()->route('departments.index');
         } catch (\Exception $e) {
-
             Log::error('Department Creation Failed', [
                 'error' => $e->getMessage(),
                 'user_id' => auth()->id(),

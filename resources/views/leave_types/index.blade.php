@@ -36,35 +36,53 @@
                             <td class="px-6 py-4 text-sm font-bold text-gray-800">{{ $type->name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 text-center font-medium">{{ $type->days_allowed }}
                             </td>
-                            <td class="px-6 py-4 text-center">
-                                @if ($type->is_active)
+                            <td class="px-6 py-4 text-center"
+                                title="{{ $type->deleted_at ? 'Deleted on ' . $type->deleted_at->format('d M Y') . ' and status is ' . ($type->is_active ? 'Active' : 'Inactive') : ($type->is_active ? 'Active' : 'Inactive') }}">
+                                @if ($type->trashed())
                                     <span
-                                        class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Active</span>
+                                        class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Deleted</span>
+                                @elseif ($type->is_active)
+                                    <span
+                                        class="inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-inset ring-green-500/20">Active</span>
                                 @else
                                     <span
-                                        class="bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1 rounded-full">Inactive</span>
+                                        class="inline-flex items-center rounded-md bg-gray-400/10 px-2 py-1 text-xs font-medium text-gray-400 ring-1 ring-inset ring-gray-500/20">Inactive</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center">
-                                @can('LeaveType-Edit')
-                                    <button onclick="toggleModal('editLeaveTypeModal{{ $type->id }}')"
-                                        class="text-blue-600 hover:text-blue-800 mx-2 transition-colors" title="Edit">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                @endcan
+                                @if ($type->trashed())
+                                    {{-- @can('LeaveType-Restore') --}}
+                                        <button type="button" onclick="confirmRestore({{ $type->id }})"
+                                            class="text-green-600 hover:text-green-800 mx-2 transition-colors" title="Restore">
+                                            <i class="fa-solid fa-rotate-left text-base"></i>
+                                        </button>
+                                    {{-- @endcan --}}
 
-                                @can('LeaveType-Delete')
-                                    <button type="button" onclick="confirmDelete({{ $type->id }})"
-                                        class="text-red-600 hover:text-red-800 mx-2 transition-colors" title="Delete">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                @endcan
+                                    <form id="restore-form-{{ $type->id }}"
+                                        action="{{ route('leave-types.restore', $type->id) }}" method="POST" class="hidden">
+                                        @csrf
+                                    </form>
+                                @else
+                                    @can('LeaveType-Edit')
+                                        <button onclick="toggleModal('editLeaveTypeModal{{ $type->id }}')"
+                                            class="text-blue-600 hover:text-blue-800 mx-2 transition-colors" title="Edit">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                    @endcan
 
-                                <form id="delete-form-{{ $type->id }}"
-                                    action="{{ route('leave-types.destroy', $type->id) }}" method="POST" class="hidden">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
+                                    @can('LeaveType-Delete')
+                                        <button type="button" onclick="confirmDelete({{ $type->id }})"
+                                            class="text-red-600 hover:text-red-800 mx-2 transition-colors" title="Delete">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    @endcan
+
+                                    <form id="delete-form-{{ $type->id }}"
+                                        action="{{ route('leave-types.destroy', $type->id) }}" method="POST" class="hidden">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                @endif
                             </td>
                         </tr>
 
@@ -236,5 +254,21 @@
                 }
             });
         }
+
+        function confirmRestore(leaveTypeId) {
+                Swal.fire({
+                    title: "Restore Leave Type?",
+                    text: "This leave type will be restored to active status.",
+                    icon: "info",
+                    showCancelButton: true,
+                    confirmButtonColor: "#10b981",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, restore it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('restore-form-' + leaveTypeId).submit();
+                    }
+                });
+            }
     </script>
 @endpush

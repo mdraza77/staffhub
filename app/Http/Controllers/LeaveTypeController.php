@@ -4,27 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\LeaveType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Log;
 
 class LeaveTypeController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:LeaveType-Index',  only: ['index']),
+            new Middleware('permission:LeaveType-Index', only: ['index']),
             new Middleware('permission:LeaveType-Create', only: ['store']),
-            new Middleware('permission:LeaveType-Edit',   only: ['update']),
+            new Middleware('permission:LeaveType-Edit', only: ['update']),
             new Middleware('permission:LeaveType-Delete', only: ['destroy']),
         ];
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $leaveTypes = LeaveType::latest()->get();
+        $leaveTypes = LeaveType::withTrashed()->latest()->get();
         return view('leave_types.index', compact('leaveTypes'));
     }
 
@@ -108,11 +109,30 @@ class LeaveTypeController extends Controller implements HasMiddleware
     public function destroy(LeaveType $leaveType)
     {
         try {
+            $leaveType->update([
+                'is_active' => false,
+            ]);
+
             $leaveType->delete();
             return back()->with('success', 'Leave type deleted successfully.');
         } catch (\Exception $e) {
             Log::error('Leave Type Delete Error: ' . $e->getMessage());
             return back()->with('error', 'Cannot delete this leave type. It might be in use.');
         }
+    }
+
+    public function restore($id)
+    {
+        $leaveType = LeaveType::withTrashed()->findOrFail($id);
+
+        $leaveType->restore();
+
+        $leaveType->update([
+            'is_active' => true,
+        ]);
+
+        return redirect()
+            ->route('leave-types.index')
+            ->with('success', 'Leave type restored successfully.');
     }
 }

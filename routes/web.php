@@ -49,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('employees', EmployeeController::class);
     Route::controller(EmployeeController::class)->prefix('employees')->name('employees.')->group(function () {
         Route::post('/{employee}/restore', 'restore')->name('restore');
-        Route::delete('/{employee}/force-delete', 'forceDelete')->name('force-delete');
+        // Route::delete('/{employee}/force-delete', 'forceDelete')->name('force-delete');
     });
 
     // Attendance Routes
@@ -57,7 +57,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/attendance/punch', [AttendanceController::class, 'punch'])->name('attendance.punch');
 
     // Leave Types Routes
-    Route::resource('leave-types', LeaveTypeController::class)->except(['create', 'show', 'edit']);
+    Route::resource('leave-types', LeaveTypeController::class);
+    Route::controller(LeaveTypeController::class)->prefix('leave-types')->name('leave-types.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::post('/{leave}/status', 'updateStatus')->name('updateStatus');
+        Route::post('/{leave}/restore', 'restore')->name('restore');
+    });
 
     // Leaves Routes
     Route::controller(LeaveController::class)->prefix('leaves')->name('leaves.')->group(function () {

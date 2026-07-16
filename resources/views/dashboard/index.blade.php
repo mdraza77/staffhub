@@ -20,17 +20,17 @@
     </div>
 
     {{-- Flash Messages --}}
-    @if (session('success'))
-        <div
-            class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
+    {{-- @if (session('success'))
+    <div
+        class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
+        <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+    </div>
     @endif
     @if (session('error'))
-        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
+    <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
+        <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
+    </div>
+    @endif --}}
 
     {{-- ===== STAT CARDS ===== --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
@@ -155,10 +155,10 @@
                             class="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-gray-50 transition-all relative overflow-hidden pl-5">
                             {{-- Priority Indicator Bar --}}
                             <div class="absolute left-0 top-0 bottom-0 w-1.5 
-                                                                                                                        {{ $announcement->priority === 'high' ? 'bg-red-500' : '' }}
-                                                                                                                        {{ $announcement->priority === 'medium' ? 'bg-amber-500' : '' }}
-                                                                                                                        {{ $announcement->priority === 'low' ? 'bg-blue-500' : '' }}
-                                                                                                                    ">
+                                                                                                                                {{ $announcement->priority === 'high' ? 'bg-red-500' : '' }}
+                                                                                                                                {{ $announcement->priority === 'medium' ? 'bg-amber-500' : '' }}
+                                                                                                                                {{ $announcement->priority === 'low' ? 'bg-blue-500' : '' }}
+                                                                                                                            ">
                             </div>
 
                             <div class="flex items-start justify-between gap-4 mb-2">
@@ -166,11 +166,12 @@
                                     class="font-semibold text-gray-800 hover:text-blue-600 transition-colors text-sm">
                                     {{ $announcement->title }}
                                 </a>
-                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border
-                                                                                                                            {{ $announcement->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
-                                                                                                                            {{ $announcement->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
-                                                                                                                            {{ $announcement->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
-                                                                                                                        ">
+                                <span
+                                    class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border
+                                                                                                                                    {{ $announcement->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
+                                                                                                                                    {{ $announcement->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
+                                                                                                                                    {{ $announcement->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
+                                                                                                                                ">
                                     {{ $announcement->priority }}
                                 </span>
                             </div>
@@ -236,21 +237,21 @@
                                     <td class="px-6 py-3.5">
                                         <span
                                             class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border
-                                                                                                                                    {{ $task->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
-                                                                                                                                    {{ $task->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
-                                                                                                                                    {{ $task->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
-                                                                                                                                ">
+                                                                                                                                            {{ $task->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
+                                                                                                                                            {{ $task->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
+                                                                                                                                            {{ $task->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
+                                                                                                                                        ">
                                             {{ $task->priority }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-3.5">
                                         <span
                                             class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase
-                                                                                                                                    {{ $task->status === 'completed' ? 'bg-green-100 text-green-700' : '' }}
-                                                                                                                                    {{ $task->status === 'testing' ? 'bg-purple-100 text-purple-700' : '' }}
-                                                                                                                                    {{ $task->status === 'working' ? 'bg-blue-100 text-blue-700' : '' }}
-                                                                                                                                    {{ $task->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                                                                                                                                ">
+                                                                                                                                            {{ $task->status === 'completed' ? 'bg-green-100 text-green-700' : '' }}
+                                                                                                                                            {{ $task->status === 'testing' ? 'bg-purple-100 text-purple-700' : '' }}
+                                                                                                                                            {{ $task->status === 'working' ? 'bg-blue-100 text-blue-700' : '' }}
+                                                                                                                                            {{ $task->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                                                                                                                                        ">
                                             {{ $task->status }}
                                         </span>
                                     </td>

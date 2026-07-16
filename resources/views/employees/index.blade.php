@@ -44,7 +44,7 @@
                                     @else
                                         <div
                                             class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border
-                                                                    {{ $employee->trashed() ? 'bg-gray-200 text-gray-400 border-gray-300' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
+                                                                                                                                            {{ $employee->trashed() ? 'bg-gray-200 text-gray-400 border-gray-300' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
                                             {{ strtoupper(substr($employee->name, 0, 2)) }}
                                         </div>
                                     @endif
@@ -64,7 +64,7 @@
                                             @endif
                                             @if ($employee->trashed())
                                                 <span
-                                                    class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-600 uppercase tracking-wide">
+                                                    class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-600 tracking-wide">
                                                     Deleted
                                                 </span>
                                             @endif
@@ -107,11 +107,7 @@
 
                             {{-- Status Badge --}}
                             <td class="px-6 py-4">
-                                @if ($employee->trashed())
-                                    <span class="bg-red-100 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                        <i class="fa-solid fa-ban text-[10px] mr-1"></i>Deleted
-                                    </span>
-                                @elseif ($employee->status === 'active')
+                                @if ($employee->status === 'active')
                                     <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         <i class="fa-solid fa-circle text-[8px] mr-1"></i>Active
                                     </span>
@@ -146,28 +142,19 @@
                                         @endcan
 
                                         {{-- Permanent Delete Form --}}
-                                        @can('Employee-ForceDelete')
-                                            <form action="{{ route('employees.force-delete', $employee->id) }}" method="POST"
-                                                id="force-delete-form-{{ $employee->id }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" title="Permanently Delete"
-                                                    onclick="confirmForceDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
-                                                    class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                                    <i class="fa-solid fa-trash-can text-base"></i>
-                                                </button>
-                                            </form>
-                                        @endcan
-                                    @else
-                                        {{-- NORMAL STATE: View + Edit + Soft Delete --}}
-
-                                        {{-- View --}}
-                                        {{-- @can('Employee-View')
-                                        <a href="{{ route('employees.show', $employee->id) }}" title="View Details"
-                                            class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                            <i class="fa-solid fa-eye text-base"></i>
-                                        </a>
+                                        {{-- @can('Employee-ForceDelete')
+                                        <form action="{{ route('employees.force-delete', $employee->id) }}" method="POST"
+                                            id="force-delete-form-{{ $employee->id }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" title="Permanently Delete"
+                                                onclick="confirmForceDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
+                                                class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                                <i class="fa-solid fa-trash-can text-base"></i>
+                                            </button>
+                                        </form>
                                         @endcan --}}
+                                    @else
 
                                         {{-- Edit --}}
                                         @can('Employee-Edit')
@@ -186,7 +173,7 @@
                                                 <button type="button" title="Delete Employee"
                                                     onclick="confirmSoftDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
                                                     class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
-                                                    <i class="fa-solid fa-trash text-base"></i>
+                                                    <i class="fa-solid fa-trash-can text-base"></i>
                                                 </button>
                                             </form>
                                         @endcan

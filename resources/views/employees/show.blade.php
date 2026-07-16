@@ -326,12 +326,12 @@
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You can revert this! All employee records will be archived/deleted.",
+                text: "Are you sure you want to delete this employee?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444', // bg-red-500
                 cancelButtonColor: '#4b5563', // bg-gray-600
-                confirmButtonText: 'Yes, delete employee!',
+                confirmButtonText: 'Yes, delete!',
                 cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {

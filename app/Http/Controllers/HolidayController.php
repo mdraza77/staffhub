@@ -103,9 +103,13 @@ class HolidayController extends Controller implements HasMiddleware
      */
     public function destroy(Holiday $holiday)
     {
+        $holiday->update([
+            'status' => 'inactive',
+        ]);
+
         $holiday->delete();
 
-        return redirect()->route('holidays.index')->with('success', 'Holiday soft deleted successfully.');
+        return redirect()->route('holidays.index')->with('success', 'Holiday deleted successfully.');
     }
 
     /**
@@ -116,17 +120,10 @@ class HolidayController extends Controller implements HasMiddleware
         $holiday = Holiday::onlyTrashed()->findOrFail($id);
         $holiday->restore();
 
+        $holiday->update([
+            'status' => 'active',
+        ]);
+
         return redirect()->route('holidays.index')->with('success', 'Holiday restored successfully.');
-    }
-
-    /**
-     * Permanently delete the resource.
-     */
-    public function forceDelete($id)
-    {
-        $holiday = Holiday::onlyTrashed()->findOrFail($id);
-        $holiday->forceDelete();
-
-        return redirect()->route('holidays.index')->with('success', 'Holiday permanently deleted.');
     }
 }

@@ -75,7 +75,8 @@
                             </td>
 
                             {{-- Status Badge --}}
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4"
+                                title="{{ $holiday->deleted_at ? 'Deleted on ' . $holiday->deleted_at->format('d M Y') . ' and status is ' . str($holiday->status)->ucfirst() : str($holiday->status)->ucfirst() }}">
                                 @if ($holiday->trashed())
                                     <span class="bg-red-100 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         <i class="fa-solid fa-ban text-[10px] mr-1"></i>Deleted
@@ -117,7 +118,7 @@
                                         @endcan
 
                                         {{-- Permanent Delete Form --}}
-                                        @can('Holiday-ForceDelete')
+                                        {{-- @can('Holiday-ForceDelete')
                                             <form action="{{ route('holidays.force-delete', $holiday->id) }}" method="POST"
                                                 id="force-delete-form-{{ $holiday->id }}">
                                                 @csrf
@@ -128,9 +129,9 @@
                                                     <i class="fa-solid fa-trash-can text-base"></i>
                                                 </button>
                                             </form>
-                                        @endcan
+                                        @endcan --}}
                                     @else
-                                        {{-- NORMAL STATE: View + Edit + Soft Delete --}}
+                                        {{-- NORMAL STATE: Edit + Soft Delete --}}
 
                                         {{-- View --}}
                                         {{-- @can('Holiday-View')
@@ -157,7 +158,7 @@
                                                 <button type="button" title="Delete holiday"
                                                     onclick="confirmSoftDelete({{ $holiday->id }}, '{{ addslashes($holiday->name) }}')"
                                                     class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
-                                                    <i class="fa-solid fa-trash text-base"></i>
+                                                    <i class="fa-solid fa-trash-can text-base"></i>
                                                 </button>
                                             </form>
                                         @endcan

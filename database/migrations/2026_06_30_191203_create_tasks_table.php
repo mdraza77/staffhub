@@ -54,6 +54,7 @@ return new class extends Migration {
                 'closed'
             ])->default('open');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use App\Models\User;
+use App\Services\ImageKitService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -12,7 +13,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use App\Services\ImageKitService;
 use Spatie\Permission\Models\Role;
 
 class EmployeeController extends Controller implements HasMiddleware
@@ -350,14 +350,30 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     public function destroy(User $employee)
     {
-        $employee->delete();  // Soft Delete
-        return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
+        $employee->update([
+            'status' => 'inactive',
+        ]);
+
+        $employee->delete();
+
+        return redirect()
+            ->route('employees.index')
+            ->with('success', 'Employee deleted successfully.');
     }
 
     public function restore($id)
     {
-        User::withTrashed()->findOrFail($id)->restore();
-        return redirect()->route('employees.index')->with('success', 'Employee restored successfully.');
+        $employee = User::withTrashed()->findOrFail($id);
+
+        $employee->restore();
+
+        $employee->update([
+            'status' => 'active',
+        ]);
+
+        return redirect()
+            ->route('employees.index')
+            ->with('success', 'Employee restored successfully.');
     }
 
     public function forceDelete($id)
