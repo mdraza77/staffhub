@@ -229,6 +229,9 @@ class EmployeeController extends Controller implements HasMiddleware
     public function show($id)
     {
         $employee = User::withTrashed()->findOrFail($id);
+        if ($employee->hasRole('Super Admin')) {
+            return redirect()->route('employees.index')->with('error', 'Super Admin account cannot be viewed.');
+        }
         $employee->load('department');
         return view('employees.show', compact('employee'));
     }
@@ -379,7 +382,7 @@ class EmployeeController extends Controller implements HasMiddleware
     public function destroy(User $employee)
     {
         if ($employee->hasRole('Super Admin')) {
-            abort(403, 'Super Admin accounts cannot be deleted.');
+            return redirect()->route('employees.index')->with('error', 'Super Admin account cannot be deleted.');
         }
 
         $employee->update([
