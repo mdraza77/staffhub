@@ -238,6 +238,10 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     public function edit(User $employee)
     {
+        if ($employee->hasRole('Super Admin')) {
+            return redirect()->route('employees.index')->with('error', 'Super Admin account cannot be edited.');
+        }
+
         $departments = Department::all();
         $roles = Role::where('name', '!=', 'Super Admin')->orderBy('name')->get();
         $employeeRole = $employee->roles->first()->name ?? null;
@@ -249,6 +253,10 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     public function update(Request $request, User $employee)
     {
+        if ($employee->hasRole('Super Admin')) {
+            return redirect()->route('employees.index')->with('error', 'Super Admin account cannot be edited.');
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $employee->id,
@@ -370,6 +378,10 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     public function destroy(User $employee)
     {
+        if ($employee->hasRole('Super Admin')) {
+            abort(403, 'Super Admin accounts cannot be deleted.');
+        }
+
         $employee->update([
             'status' => 'inactive',
         ]);
@@ -399,6 +411,10 @@ class EmployeeController extends Controller implements HasMiddleware
     public function forceDelete($id)
     {
         $employee = User::withTrashed()->findOrFail($id);
+
+        if ($employee->hasRole('Super Admin')) {
+            abort(403, 'Super Admin accounts cannot be deleted.');
+        }
 
         $imageKit = ImageKitService::getInstance();
 

@@ -155,28 +155,33 @@
                                         </form>
                                         @endcan --}}
                                     @else
+                                        @if (!$employee->hasRole('Super Admin'))
+                                            {{-- Edit --}}
+                                            @can('Employee-Edit')
+                                                <a href="{{ route('employees.edit', $employee->id) }}" title="Edit Employee"
+                                                    class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
+                                                    <i class="fa-solid fa-pen-to-square text-base"></i>
+                                                </a>
+                                            @endcan
 
-                                        {{-- Edit --}}
-                                        @can('Employee-Edit')
-                                            <a href="{{ route('employees.edit', $employee->id) }}" title="Edit Employee"
-                                                class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
-                                                <i class="fa-solid fa-pen-to-square text-base"></i>
-                                            </a>
-                                        @endcan
-
-                                        {{-- Soft Delete Form --}}
-                                        @can('Employee-Delete')
-                                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
-                                                id="delete-form-{{ $employee->id }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" title="Delete Employee"
-                                                    onclick="confirmSoftDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
-                                                    class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
-                                                    <i class="fa-solid fa-trash-can text-base"></i>
-                                                </button>
-                                            </form>
-                                        @endcan
+                                            {{-- Soft Delete Form --}}
+                                            @can('Employee-Delete')
+                                                <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
+                                                    id="delete-form-{{ $employee->id }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" title="Delete Employee"
+                                                        onclick="confirmSoftDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
+                                                        class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
+                                                        <i class="fa-solid fa-trash-can text-base"></i>
+                                                    </button>
+                                                </form>
+                                            @endcan
+                                        @else
+                                            <span class="text-xs text-gray-400 font-semibold italic flex items-center gap-1">
+                                                <i class="fa-solid fa-lock text-[10px]"></i> Locked
+                                            </span>
+                                        @endif
                                     @endif
                                 </div>
                             </td>

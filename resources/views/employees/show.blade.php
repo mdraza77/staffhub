@@ -12,7 +12,7 @@
         </div>
         <div class="flex items-center gap-3">
             @can('Employee-Edit')
-                @if ($employee->trashed())
+                @if ($employee->trashed() || $employee->hasRole('Super Admin'))
                 @else
                     <a href="{{ route('employees.edit', $employee->id) }}"
                         class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm flex items-center gap-2 shadow-sm">
@@ -141,18 +141,20 @@
                 @endcan
             @else
                 @can('Employee-Delete')
-                    <div class="bg-white rounded-xl border border-red-100 shadow-sm p-5">
-                        <h3 class="text-sm font-semibold text-red-600 mb-3 uppercase tracking-wide">Danger Zone</h3>
-                        <p class="text-xs text-gray-500 mb-4">Permanently delete this employee.</p>
-                        <form id="delete-employee-form" action="{{ route('employees.destroy', $employee->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" onclick="confirmDelete(event)"
-                                class="w-full px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-medium">
-                                <i class="fa-solid fa-trash mr-1"></i> Delete Employee
-                            </button>
-                        </form>
-                    </div>
+                    @if (!$employee->hasRole('Super Admin'))
+                        <div class="bg-white rounded-xl border border-red-100 shadow-sm p-5">
+                            <h3 class="text-sm font-semibold text-red-600 mb-3 uppercase tracking-wide">Danger Zone</h3>
+                            <p class="text-xs text-gray-500 mb-4">Permanently delete this employee.</p>
+                            <form id="delete-employee-form" action="{{ route('employees.destroy', $employee->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" onclick="confirmDelete(event)"
+                                    class="w-full px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-medium">
+                                    <i class="fa-solid fa-trash mr-1"></i> Delete Employee
+                                </button>
+                            </form>
+                        </div>
+                    @endif
                 @endcan
             @endif
 
