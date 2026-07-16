@@ -3,6 +3,24 @@
 @section('title', 'Task Details | StaffHub')
 
 @section('content')
+    @if ($task->trashed())
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3.5 rounded-xl flex items-center gap-3 shadow-sm">
+            <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+            <div>
+                <span class="font-bold">This task has been deleted.</span> It is currently kept as an archived record.
+            </div>
+            @can('Task-Delete')
+                <button type="button" onclick="confirmRestore({{ $task->id }})"
+                    class="ml-auto bg-red-100 hover:bg-red-200 text-red-800 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                    <i class="fa-solid fa-rotate-left"></i> Restore Task
+                </button>
+                <form id="restore-form-{{ $task->id }}" action="{{ route('tasks.restore', $task->id) }}" method="POST" class="hidden">
+                    @csrf
+                </form>
+            @endcan
+        </div>
+    @endif
+
     <div class="mb-6 flex justify-between items-center">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">Task Details</h1>
@@ -12,12 +30,14 @@
             @can('Task-Index')
                 <x-back-button :url="route('tasks.index')" label="Back to Tasks" />
             @endcan
-            @can('Task-Edit')
-                <a href="{{ route('tasks.edit', $task->id) }}"
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
-                    <i class="fa-solid fa-pen-to-square"></i> Edit Task
-                </a>
-            @endcan
+            @if (!$task->trashed())
+                @can('Task-Edit')
+                    <a href="{{ route('tasks.edit', $task->id) }}"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit Task
+                    </a>
+                @endcan
+            @endif
         </div>
     </div>
 
@@ -130,7 +150,12 @@
                         $isAssigner = $userId === $task->assigned_by;
                     @endphp
 
-                    @if ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
+                    @if ($task->trashed())
+                        <div
+                            class="mt-4 bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
+                            <i class="fa-solid fa-lock text-gray-400"></i> Comments are locked because this task is deleted.
+                        </div>
+                    @elseif ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
                         <div
                             class="mt-4 bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
                             <i class="fa-solid fa-lock text-gray-400"></i> Discussion is closed because this task is closed.
@@ -395,7 +420,12 @@
                         $isAssigner = $userId === $task->assigned_by;
                     @endphp
 
-                    @if ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
+                    @if ($task->trashed())
+                        <div
+                            class="bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
+                            <i class="fa-solid fa-lock text-gray-450"></i> File uploads are locked because this task is deleted.
+                        </div>
+                    @elseif ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
                         <div
                             class="bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
                             <i class="fa-solid fa-lock text-gray-450"></i> File uploads are locked because this task is closed.
@@ -457,3 +487,23 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        function confirmRestore(id) {
+            Swal.fire({
+                title: "Restore Task?",
+                text: "This task will be restored to active status.",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#10b981",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, restore it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('restore-form-' + id).submit();
+                }
+            });
+        }
+    </script>
+@endpush

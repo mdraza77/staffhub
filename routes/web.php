@@ -76,10 +76,11 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('roles', RoleController::class);
 
     // Tasks Routes
-    Route::resource('tasks', TaskController::class);
-    Route::post('tasks/{task}/comments', [TaskController::class, 'storeComment'])->name('tasks.comments.store');
-    Route::post('tasks/{task}/documents', [TaskController::class, 'storeDocument'])->name('tasks.documents.store');
-    Route::post('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.status.update');
+    Route::resource('tasks', TaskController::class)->withTrashed();
+    Route::post('tasks/{task}/restore', [TaskController::class, 'restore'])->name('tasks.restore')->withTrashed();
+    Route::post('tasks/{task}/comments', [TaskController::class, 'storeComment'])->name('tasks.comments.store')->withTrashed();
+    Route::post('tasks/{task}/documents', [TaskController::class, 'storeDocument'])->name('tasks.documents.store')->withTrashed();
+    Route::post('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.status.update')->withTrashed();
 
     // Reports Routes
     Route::controller(ReportController::class)->prefix('reports')->name('reports.')->group(function () {

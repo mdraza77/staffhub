@@ -32,17 +32,17 @@ class Task extends Model
     // Relationships
     public function assigner()
     {
-        return $this->belongsTo(User::class, 'assigned_by');
+        return $this->belongsTo(User::class, 'assigned_by')->withTrashed();
     }
 
     public function engineer()
     {
-        return $this->belongsTo(User::class, 'assigned_to');
+        return $this->belongsTo(User::class, 'assigned_to')->withTrashed();
     }
 
     public function tester()
     {
-        return $this->belongsTo(User::class, 'tester_id');
+        return $this->belongsTo(User::class, 'tester_id')->withTrashed();
     }
 
     public function comments()

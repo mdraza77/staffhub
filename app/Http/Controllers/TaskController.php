@@ -24,7 +24,7 @@ class TaskController extends Controller implements HasMiddleware
             new Middleware('permission:Task-Index', only: ['index']),
             new Middleware('permission:Task-Create', only: ['create', 'store']),
             new Middleware('permission:Task-Edit', only: ['edit', 'update']),
-            new Middleware('permission:Task-Delete', only: ['destroy']),
+            new Middleware('permission:Task-Delete', only: ['destroy', 'restore']),
             new Middleware('permission:Task-Comment', only: ['storeComment']),
             new Middleware('permission:Task-Document', only: ['storeDocument']),
             new Middleware('permission:Task-ProgressUpdate', only: ['updateStatus']),
@@ -39,19 +39,19 @@ class TaskController extends Controller implements HasMiddleware
         $userId = Auth::id();
 
         // 1. My Tasks (assigned to user)
-        $myTasks = Task::with(['assigner', 'engineer', 'tester'])
+        $myTasks = Task::withTrashed()->with(['assigner', 'engineer', 'tester'])
             ->where('assigned_to', $userId)
             ->latest()
             ->get();
 
         // 2. Assigned By Me (assigned by user)
-        $assignedByMe = Task::with(['assigner', 'engineer', 'tester'])
+        $assignedByMe = Task::withTrashed()->with(['assigner', 'engineer', 'tester'])
             ->where('assigned_by', $userId)
             ->latest()
             ->get();
 
         // 3. Tasks to Test (where user is the tester)
-        $tasksToTest = Task::with(['assigner', 'engineer', 'tester'])
+        $tasksToTest = Task::withTrashed()->with(['assigner', 'engineer', 'tester'])
             ->where('tester_id', $userId)
             ->latest()
             ->get();
@@ -208,6 +208,18 @@ class TaskController extends Controller implements HasMiddleware
         } catch (\Exception $e) {
             Log::error('Task Delete Error: ' . $e->getMessage());
             return back()->with('error', 'Could not delete the task.');
+        }
+    }
+
+    public function restore($id)
+    {
+        try {
+            $task = Task::withTrashed()->findOrFail($id);
+            $task->restore();
+            return redirect()->route('tasks.index')->with('success', 'Task restored successfully.');
+        } catch (\Exception $e) {
+            Log::error('Task Restore Error: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong while restoring the task.');
         }
     }
 
