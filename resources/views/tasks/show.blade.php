@@ -3,24 +3,6 @@
 @section('title', 'Task Details | StaffHub')
 
 @section('content')
-    @if ($task->trashed())
-        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3.5 rounded-xl flex items-center gap-3 shadow-sm">
-            <i class="fa-solid fa-triangle-exclamation text-lg"></i>
-            <div>
-                <span class="font-bold">This task has been deleted.</span> It is currently kept as an archived record.
-            </div>
-            @can('Task-Delete')
-                <button type="button" onclick="confirmRestore({{ $task->id }})"
-                    class="ml-auto bg-red-100 hover:bg-red-200 text-red-800 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
-                    <i class="fa-solid fa-rotate-left"></i> Restore Task
-                </button>
-                <form id="restore-form-{{ $task->id }}" action="{{ route('tasks.restore', $task->id) }}" method="POST" class="hidden">
-                    @csrf
-                </form>
-            @endcan
-        </div>
-    @endif
-
     <div class="mb-6 flex justify-between items-center">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">Task Details</h1>
@@ -319,7 +301,9 @@
                         $isDropdownDisabled = false;
                         $allowedStatuses = [];
 
-                        if ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner) {
+                        if ($task->trashed()) {
+                            $isDropdownDisabled = true;
+                        } elseif ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner) {
                             $isDropdownDisabled = true;
                         } else {
                             if ($isAdminOrManager || $isAssigner) {
@@ -373,9 +357,14 @@
                             </select>
                         </div>
 
-                        @if ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
+                        @if ($task->trashed())
                             <div
                                 class="bg-gray-50 border border-gray-250 text-gray-550 text-[10px] px-3 py-2 rounded-lg flex items-center gap-1.5 justify-center font-medium italic">
+                                <i class="fa-solid fa-lock text-gray-450"></i> Status changes are locked because this task is deleted.
+                            </div>
+                        @elseif ($task->status === 'closed' && !$isAdminOrManager && !$isAssigner)
+                            <div
+                                class="bg-gray-50 border border-gray-250 text-gray-555 text-[10px] px-3 py-2 rounded-lg flex items-center gap-1.5 justify-center font-medium italic">
                                 <i class="fa-solid fa-lock text-gray-450"></i> Reopening this task is restricted.
                             </div>
                         @endif

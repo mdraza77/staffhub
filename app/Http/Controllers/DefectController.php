@@ -125,7 +125,13 @@ class DefectController extends Controller implements HasMiddleware
     public function show(Defect $defect)
     {
         $defect->load(['reporter', 'assignee', 'attachments.uploader', 'histories.user']);
-        $employees = User::withTrashed()->where('status', 'active')->orderBy('name')->get();
+        $employees = User::withTrashed()
+            ->where(function ($query) use ($defect) {
+                $query->where('status', 'active')
+                      ->orWhere('id', $defect->assigned_to);
+            })
+            ->orderBy('name')
+            ->get();
         $projects = Task::whereNotNull('project_name')->distinct()->pluck('project_name');
         // dd($defect);
         return view('defects.show', compact('defect', 'employees', 'projects'));
@@ -136,7 +142,13 @@ class DefectController extends Controller implements HasMiddleware
      */
     public function edit(Defect $defect)
     {
-        $employees = User::withTrashed()->where('status', 'active')->orderBy('name')->get();
+        $employees = User::withTrashed()
+            ->where(function ($query) use ($defect) {
+                $query->where('status', 'active')
+                      ->orWhere('id', $defect->assigned_to);
+            })
+            ->orderBy('name')
+            ->get();
         $projects = Task::whereNotNull('project_name')->distinct()->pluck('project_name');
         return view('defects.edit', compact('defect', 'employees', 'projects'));
     }

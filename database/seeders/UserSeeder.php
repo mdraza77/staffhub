@@ -21,10 +21,10 @@ class UserSeeder extends Seeder
 
         // 2. Fetch departments for referencing
         $hrDept = Department::where('slug', 'human-resources')->first();
-        $itDept = Department::where('slug', 'information-technology')->first();
+        $itDept = Department::where('slug', 'engineering')->first();
         $opsDept = Department::where('slug', 'operations')->first();
         $adminDept = Department::where('slug', 'administration')->first();
-        $rndDept = Department::where('slug', 'research-development')->first();
+        $rndDept = Department::where('slug', 'engineering')->first();
 
         // Auto-generate employee ID
         $todayYear = Carbon::now()->format('y');  // e.g., 26

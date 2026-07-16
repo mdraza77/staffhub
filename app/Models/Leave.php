@@ -21,12 +21,12 @@ class Leave extends Model
     ];
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     // Yeh leave request kis type ki chhutti ke liye hai?
     public function leaveType()
     {
-        return $this->belongsTo(LeaveType::class);
+        return $this->belongsTo(LeaveType::class)->withTrashed();
     }
 }

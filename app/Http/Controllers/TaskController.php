@@ -64,7 +64,7 @@ class TaskController extends Controller implements HasMiddleware
      */
     public function create()
     {
-        $employees = User::where('status', 'active')->where('id', '!=', Auth::id())->get();
+        $employees = User::withTrashed()->where('status', 'active')->where('id', '!=', Auth::id())->get();
 
         return view('tasks.create', compact('employees'));
     }
@@ -139,7 +139,14 @@ class TaskController extends Controller implements HasMiddleware
      */
     public function edit(Task $task)
     {
-        $employees = User::where('status', 'active')->where('id', '!=', Auth::id())->get();
+        $employees = User::withTrashed()
+            ->where(function ($query) use ($task) {
+                $query->where('status', 'active')
+                      ->orWhereIn('id', [$task->assigned_to, $task->tester_id]);
+            })
+            ->where('id', '!=', Auth::id())
+            ->orderBy('name')
+            ->get();
         return view('tasks.edit', compact('task', 'employees'));
     }
 

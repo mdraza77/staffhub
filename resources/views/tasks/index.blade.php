@@ -132,7 +132,8 @@
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-semibold">
                                         @if ($task->trashed())
-                                            <span class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Deleted</span>
+                                            <span
+                                                class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Deleted</span>
                                         @elseif ($task->status === 'completed')
                                             <span
                                                 class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
@@ -151,15 +152,15 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-center">
-                                        @if (!$task->trashed())
-                                            @can('Task-ProgressUpdate')
-                                                <a href="{{ route('tasks.show', $task->id) }}"
-                                                    class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
-                                                    title="Edit Progress Details">
-                                                    <i class="fa-solid fa-pen-to-square text-base"></i>
-                                                </a>
-                                            @endcan
-                                        @endif
+                                        {{-- @if (!$task->trashed()) --}}
+                                        @can('Task-ProgressUpdate')
+                                            <a href="{{ route('tasks.show', $task->id) }}"
+                                                class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                                                title="Edit Progress Details">
+                                                <i class="fa-solid fa-pen-to-square text-base"></i>
+                                            </a>
+                                        @endcan
+                                        {{-- @endif --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -248,7 +249,8 @@
                                         </td>
                                         <td class="px-6 py-4 text-center text-sm font-semibold">
                                             @if ($task->trashed())
-                                                <span class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Deleted</span>
+                                                <span
+                                                    class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Deleted</span>
                                             @elseif ($task->status === 'completed')
                                                 <span
                                                     class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
@@ -267,15 +269,15 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            @if (!$task->trashed())
-                                                @can('Task-ProgressUpdate')
-                                                    <a href="{{ route('tasks.show', $task->id) }}"
-                                                        class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
-                                                        title="Edit Progress Details">
-                                                        <i class="fa-solid fa-pen-to-square text-base"></i>
-                                                    </a>
-                                                @endcan
-                                            @endif
+                                            {{-- @if (!$task->trashed()) --}}
+                                            @can('Task-ProgressUpdate')
+                                                <a href="{{ route('tasks.show', $task->id) }}"
+                                                    class="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    title="Edit Progress Details">
+                                                    <i class="fa-solid fa-pen-to-square text-base"></i>
+                                                </a>
+                                            @endcan
+                                            {{-- @endif --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -362,7 +364,8 @@
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-semibold">
                                         @if ($task->trashed())
-                                            <span class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Deleted</span>
+                                            <span
+                                                class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Deleted</span>
                                         @elseif ($task->status === 'completed')
                                             <span
                                                 class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
@@ -405,7 +408,7 @@
                                                 <button type="button" onclick="confirmDelete({{ $task->id }})"
                                                     class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                                                     title="Delete Task">
-                                                    <i class="fa-solid fa-trash text-base"></i>
+                                                    <i class="fa-solid fa-trash-can text-base"></i>
                                                 </button>
                                                 <form id="delete-form-{{ $task->id }}" action="{{ route('tasks.destroy', $task->id) }}"
                                                     method="POST" class="hidden">

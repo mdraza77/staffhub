@@ -39,7 +39,7 @@
                     <option value="">Select an Employee</option>
                     @foreach ($employees as $employee)
                         <option value="{{ $employee->id }}" {{ old('assigned_to') == $employee->id ? 'selected' : '' }}>
-                            {{ $employee->name }} ({{ $employee->designation ?? 'Employee' }})
+                            {{ $employee->name }} ({{ $employee->designation ?? 'Employee' }}){{ $employee->trashed() ? ' [Deleted]' : '' }}
                         </option>
                     @endforeach
                 </select>
@@ -52,7 +52,7 @@
                     <option value="">Select a Tester</option>
                     @foreach ($employees as $employee)
                         <option value="{{ $employee->id }}" {{ old('tester_id') == $employee->id ? 'selected' : '' }}>
-                            {{ $employee->name }} ({{ $employee->designation ?? 'Employee' }})
+                            {{ $employee->name }} ({{ $employee->designation ?? 'Employee' }}){{ $employee->trashed() ? ' [Deleted]' : '' }}
                         </option>
                     @endforeach
                 </select>

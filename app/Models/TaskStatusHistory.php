@@ -16,11 +16,11 @@ class TaskStatusHistory extends Model
 
     public function task()
     {
-        return $this->belongsTo(Task::class);
+        return $this->belongsTo(Task::class)->withTrashed();
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'changed_by');
+        return $this->belongsTo(User::class, 'changed_by')->withTrashed();
     }
 }

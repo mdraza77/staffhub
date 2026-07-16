@@ -12,12 +12,14 @@
             @can('Defect-Index')
                 <x-back-button :url="route('defects.index')" label="Back to Defects" />
             @endcan
-            @can('Defect-Edit')
-                <a href="{{ route('defects.edit', $defect->id) }}"
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
-                    <i class="fa-solid fa-pen-to-square"></i> Edit Details
-                </a>
-            @endcan
+            @if (!$defect->trashed())
+                @can('Defect-Edit')
+                    <a href="{{ route('defects.edit', $defect->id) }}"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit Details
+                    </a>
+                @endcan
+            @endif
         </div>
     </div>
 
@@ -238,9 +240,14 @@
                     }
                 @endphp
 
-                @if ($isActionDisabled)
+                @if ($defect->trashed())
                     <div
-                        class="bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
+                        class="bg-gray-50 border border-gray-250 text-gray-550 text-[10px] px-3 py-2 rounded-lg flex items-center gap-2 justify-center font-medium italic">
+                        <i class="fa-solid fa-lock text-gray-450"></i> Status changes are locked because this defect is deleted.
+                    </div>
+                @elseif ($isActionDisabled)
+                    <div
+                        class="bg-gray-50 border border-gray-250 text-gray-550 text-[10px] px-3 py-2 rounded-lg flex items-center gap-2 justify-center font-medium italic">
                         <i class="fa-solid fa-lock text-gray-450"></i> Reopening this defect is restricted.
                     </div>
                 @else
@@ -285,9 +292,14 @@
                         class="bg-teal-50 border border-teal-100 text-teal-700 text-xs px-2 py-0.5 rounded-full">{{ $defect->attachments->count() }}</span>
                 </h3>
 
-                @if ($isStatusClosed)
+                @if ($defect->trashed())
                     <div
-                        class="bg-gray-50 border border-gray-250 text-gray-500 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
+                        class="bg-gray-50 border border-gray-250 text-gray-550 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
+                        <i class="fa-solid fa-lock text-gray-455"></i> Uploads are locked because this defect is deleted.
+                    </div>
+                @elseif ($isStatusClosed)
+                    <div
+                        class="bg-gray-50 border border-gray-250 text-gray-550 text-xs px-4 py-3.5 rounded-xl flex items-center gap-2 justify-center font-medium italic">
                         <i class="fa-solid fa-lock text-gray-450"></i> Uploads are locked on closed defects.
                     </div>
                 @else
@@ -314,7 +326,8 @@
                         <div
                             class="p-3 bg-white border border-gray-100 hover:border-gray-200 rounded-xl text-xs space-y-1.5 shadow-2xs hover:shadow-xs transition-shadow">
                             <div class="flex justify-between items-start gap-1">
-                                <a href="{{ str_starts_with($attach->file_path, 'http') ? $attach->file_path : asset('storage/' . $attach->file_path) }}" target="_blank"
+                                <a href="{{ str_starts_with($attach->file_path, 'http') ? $attach->file_path : asset('storage/' . $attach->file_path) }}"
+                                    target="_blank"
                                     class="text-indigo-650 hover:underline font-bold text-xs truncate flex-1 flex items-center gap-1.5">
                                     <i class="fa-solid fa-file-image text-[13px] text-blue-500 flex-shrink-0"></i>
                                     {{ $attach->file_name }}
@@ -339,3 +352,23 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        function confirmRestore(id) {
+            Swal.fire({
+                title: "Restore Defect?",
+                text: "This defect will be restored to active status.",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#10b981",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, restore it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('restore-form-' + id).submit();
+                }
+            });
+        }
+    </script>
+@endpush

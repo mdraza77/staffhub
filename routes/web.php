@@ -139,14 +139,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('/{defect}', 'show')->name('show');
-        Route::get('/{defect}/edit', 'edit')->name('edit');
-        Route::put('/{defect}', 'update')->name('update');
-        Route::delete('/{defect}', 'destroy')->name('destroy');
+        Route::get('/{defect}', 'show')->name('show')->withTrashed();
+        Route::get('/{defect}/edit', 'edit')->name('edit')->withTrashed();
+        Route::put('/{defect}', 'update')->name('update')->withTrashed();
+        Route::delete('/{defect}', 'destroy')->name('destroy')->withTrashed();
 
         Route::post('/{defect}/restore', 'restore')->name('restore')->withTrashed();
-        Route::post('/{defect}/status', 'updateStatus')->name('status.update');
-        Route::post('/{defect}/attachments', 'storeAttachment')->name('attachments.store');
+        Route::post('/{defect}/status', 'updateStatus')->name('status.update')->withTrashed();
+        Route::post('/{defect}/attachments', 'storeAttachment')->name('attachments.store')->withTrashed();
     });
 
     // Break Types Routes

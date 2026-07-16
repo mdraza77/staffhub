@@ -10,7 +10,7 @@ class DefectStatusHistory extends Model
 
     public function defect()
     {
-        return $this->belongsTo(Defect::class);
+        return $this->belongsTo(Defect::class)->withTrashed();
     }
 
     public function user()
