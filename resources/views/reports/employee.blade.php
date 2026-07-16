@@ -256,15 +256,6 @@
                             </td>
 
                         </tr>
-                        {{-- @empty
-                        <tr>
-                            <td colspan="8" class="px-6 py-12 text-center text-gray-400">
-                                <i class="fa-solid fa-magnifying-glass text-3xl mb-3 block opacity-30"></i>
-                                <p class="text-sm">No employees found matching your filters.</p>
-                                <a href="{{ route('reports.employees') }}"
-                                    class="text-blue-500 text-sm hover:underline mt-1 inline-block">Clear filters</a>
-                            </td>
-                        </tr> --}}
                     @endforeach
                 </tbody>
             </table>
@@ -274,67 +265,6 @@
 @endsection
 
 @push('scripts')
-    <script>
-        $(document).ready(function () {
-            $('#report-table').DataTable({
-                destroy: true,
-                dom: '<"flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4"lB>' +
-                    '<"overflow-x-auto"t>' +
-                    '<"flex flex-col sm:flex-row justify-between items-center gap-3 mt-4 pt-3 border-t border-gray-100"ip>',
-
-                buttons: [{
-                    extend: 'copy',
-                    text: '<i class="fa-solid fa-copy mr-1"></i> Copy',
-                    className: 'dt-btn dt-btn-gray',
-                },
-                {
-                    extend: 'excel',
-                    text: '<i class="fa-solid fa-file-excel mr-1"></i> Excel',
-                    className: 'dt-btn dt-btn-green',
-                    title: 'Employee Report - {{ now()->format('d M Y') }}',
-                },
-                {
-                    extend: 'pdf',
-                    text: '<i class="fa-solid fa-file-pdf mr-1"></i> PDF',
-                    className: 'dt-btn dt-btn-red',
-                    title: 'Employee Report - {{ now()->format('d M Y') }}',
-                    orientation: 'landscape',
-                    pageSize: 'A4',
-                },
-                {
-                    extend: 'print',
-                    text: '<i class="fa-solid fa-print mr-1"></i> Print',
-                    className: 'dt-btn dt-btn-blue',
-                    title: 'Employee Report',
-                },
-                ],
-
-                pageLength: 10,
-                lengthMenu: [
-                    [10, 25, 50, -1],
-                    ['10', '25', '50', 'All']
-                ],
-
-                language: {
-                    search: '',
-                    searchPlaceholder: 'Search in results...',
-                    lengthMenu: 'Show _MENU_ rows',
-                    info: 'Showing _START_ to _END_ of _TOTAL_ entries',
-                    infoEmpty: 'No entries to show',
-                    paginate: {
-                        previous: '<i class="fa-solid fa-chevron-left text-xs"></i>',
-                        next: '<i class="fa-solid fa-chevron-right text-xs"></i>',
-                    },
-                },
-
-                columnDefs: [{
-                    orderable: false,
-                    targets: [0]
-                },],
-            });
-        });
-    </script>
-
     <style>
         .dt-btn {
             display: inline-flex;

@@ -276,7 +276,7 @@
         }
     </script>
 
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             $('#employees').DataTable({
                 destroy: true,
@@ -307,5 +307,5 @@
                 }
             });
         });
-    </script>
+    </script> --}}
 @endpush

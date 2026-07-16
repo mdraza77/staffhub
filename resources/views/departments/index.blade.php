@@ -24,30 +24,6 @@
             @endcan
         </div>
 
-        <!-- Success/Error Messages -->
-        {{-- @if (session('success'))
-        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3 animate-fade-in">
-            <i class="fa-solid fa-circle-check text-green-600 text-lg mt-0.5"></i>
-            <div class="flex-1">
-                <p class="text-green-800 font-medium">{{ session('success') }}</p>
-            </div>
-            <button onclick="this.parentElement.remove()" class="text-green-600 hover:text-green-700">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-        </div>
-        @endif
-
-        @if ($errors->any())
-        <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
-            <p class="text-red-800 font-medium mb-2">Please fix the following errors:</p>
-            <ul class="list-disc list-inside space-y-1 text-red-700 text-sm">
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif --}}
-
         <!-- Departments Table Card -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
@@ -116,17 +92,6 @@
                                     </div>
                                 </td>
                             </tr>
-                            {{-- @empty
-                            <tr>
-                                <td colspan="5" class="px-6 py-12 text-center">
-                                    <div class="flex flex-col items-center justify-center">
-                                        <i class="fa-solid fa-inbox text-6xl text-gray-300 mb-4"></i>
-                                        <p class="text-gray-500 font-medium mb-2">No departments found</p>
-                                        <p class="text-gray-400 text-sm">Click "Create Department" to add your first
-                                            department</p>
-                                    </div>
-                                </td>
-                            </tr> --}}
                         @endforeach
                     </tbody>
                 </table>
@@ -185,39 +150,6 @@
                     }
                 });
             }
-        </script>
-
-        <script>
-            $(document).ready(function () {
-                $('#departments').DataTable({
-                    destroy: true,
-                    dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
-                    buttons: [{
-                        extend: 'copy',
-                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                    }
-                    ],
-                    pageLength: 10,
-                    language: {
-                        search: "",
-                        searchPlaceholder: "Search here...",
-                        lengthMenu: "_MENU_",
-                        info: "Showing _START_ to _END_ of _TOTAL_ entries"
-                    }
-                });
-            });
         </script>
     @endpush
 

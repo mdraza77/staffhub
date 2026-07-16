@@ -1,10 +1,10 @@
-<!-- SweetAlert2 Index -->
+{{-- SweetAlert2 Index --}}
 @include('sweetalert2::index')
 
-<!-- jQuery Script -->
+{{-- jQuery Script --}}
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 
-<!-- DataTable JS Files -->
+{{-- DataTable JS Files --}}
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.tailwindcss.min.js"></script>
 
@@ -15,6 +15,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+{{-- All tables datatable js is here --}}
+<script src="{{ asset('js/datatable-config.js') }}"></script>
 
 @stack('scripts')
 </body>

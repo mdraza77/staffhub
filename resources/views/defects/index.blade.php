@@ -17,22 +17,6 @@
         @endcan
     </div>
 
-    {{-- @if (session('success'))
-        <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
-    @endif
-    @if (session('info'))
-        <div class="mb-4 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-info-circle"></i> {{ session('info') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif --}}
-
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden p-6">
         <div class="overflow-x-auto">
             <table id="defects_table" class="w-full text-left border-collapse">
@@ -113,10 +97,6 @@
                             <td class="px-6 py-4 text-center text-xs text-gray-700">
                                 @if ($defect->assignee)
                                     <div class="flex items-center justify-center gap-1.5">
-                                        <div
-                                            class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-[10px]">
-                                            {{ strtoupper(substr($defect->assignee->name, 0, 2)) }}
-                                        </div>
                                         <span class="font-medium">{{ $defect->assignee->name }}</span>
                                     </div>
                                 @else
@@ -162,12 +142,6 @@
                                         </form>
                                     @endcan
                                 @else
-                                    {{-- @can('Defect-View')
-                                        <a href="{{ route('defects.show', $defect->id) }}" title="View Details"
-                                            class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
-                                            <i class="fa-solid fa-eye text-base"></i>
-                                        </a>
-                                    @endcan --}}
                                     @can('Defect-Edit')
                                         <a href="{{ route('defects.edit', $defect->id) }}" title="Edit Defect"
                                             class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
@@ -198,37 +172,6 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            $('#defects_table').DataTable({
-                destroy: true,
-                dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
-                buttons: [{
-                        extend: 'copy',
-                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                    }
-                ],
-                pageLength: 10,
-                language: {
-                    search: "",
-                    searchPlaceholder: "Search defects...",
-                    lengthMenu: "_MENU_",
-                    info: "Showing _START_ to _END_ of _TOTAL_ defects"
-                }
-            });
-        });
-
         function confirmDelete(id) {
             Swal.fire({
                 title: 'Are you sure?',

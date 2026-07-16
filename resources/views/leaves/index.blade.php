@@ -101,7 +101,8 @@
 
     <div id="applyLeaveModal"
         class="fixed inset-0 z-50 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 invisible pointer-events-none transition-all duration-300 ease-out">
-        <div class="bg-white rounded-xl shadow-lg w-full max-w-lg mx-4 overflow-hidden transform scale-95 opacity-0 -translate-y-4 transition-all duration-300 ease-out">
+        <div
+            class="bg-white rounded-xl shadow-lg w-full max-w-lg mx-4 overflow-hidden transform scale-95 opacity-0 -translate-y-4 transition-all duration-300 ease-out">
             <div class="flex justify-between items-center bg-gray-50 px-6 py-4 border-b border-gray-100">
                 <h3 class="text-lg font-bold text-gray-800">Apply for Leave</h3>
                 <button type="button" onclick="toggleModal('applyLeaveModal')" class="text-gray-400 hover:text-gray-600">
@@ -182,7 +183,7 @@
         function openModal(modal) {
             modal.classList.remove('invisible', 'opacity-0', 'pointer-events-none');
             modal.classList.add('opacity-100', 'pointer-events-auto');
-            
+
             const content = modal.querySelector('.bg-white');
             if (content) {
                 content.classList.remove('scale-95', 'opacity-0', '-translate-y-4');
@@ -193,13 +194,13 @@
         function closeModal(modal) {
             modal.classList.remove('opacity-100', 'pointer-events-auto');
             modal.classList.add('opacity-0', 'pointer-events-none');
-            
+
             const content = modal.querySelector('.bg-white');
             if (content) {
                 content.classList.remove('scale-100', 'opacity-100', 'translate-y-0');
                 content.classList.add('scale-95', 'opacity-0', '-translate-y-4');
             }
-            
+
             setTimeout(() => {
                 if (modal.classList.contains('opacity-0')) {
                     modal.classList.add('invisible');
@@ -213,32 +214,6 @@
             modalOverlays.forEach(modal => {
                 if (e.target === modal) {
                     closeModal(modal);
-                }
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('#leaves').DataTable({
-                destroy: true,
-                dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
-                buttons: [
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    }
-                ],
-                pageLength: 10,
-                language: {
-                    search: "",
-                    searchPlaceholder: "Search here...",
-                    lengthMenu: "_MENU_",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
                 }
             });
         });

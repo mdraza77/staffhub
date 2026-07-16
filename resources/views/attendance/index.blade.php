@@ -53,40 +53,6 @@
         </form>
     </div>
 
-    {{-- @if (session('success'))
-        <div
-            class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div
-            class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 shadow-sm">
-            <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif --}}
-
-    {{-- <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex items-center justify-between">
-        <div class="font-medium text-gray-700">
-            <i class="fa-regular fa-calendar text-blue-600 mr-2"></i>
-            Showing records for: <span
-                class="font-bold text-gray-900">{{ \Carbon\Carbon::parse($date)->format('d M, Y') }}</span>
-        </div>
-
-        <form action="{{ route('attendance.index') }}" method="GET" class="flex items-center gap-2">
-            <input type="date" name="date" value="{{ $date }}"
-                class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-            <button type="submit"
-                class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border border-gray-200">
-                Filter
-            </button>
-            @if (request('date'))
-                <a href="{{ route('attendance.index') }}" class="text-xs text-red-500 hover:underline ml-2">Clear</a>
-            @endif
-        </form>
-    </div> --}}
-
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table id="attendance" class="w-full text-left border-collapse">
@@ -166,55 +132,9 @@
                                 </span>
                             </td>
                         </tr>
-                        {{-- @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-10 text-center text-gray-500">
-                                <div class="flex flex-col items-center justify-center">
-                                    <i class="fa-regular fa-calendar-xmark text-4xl text-gray-300 mb-3"></i>
-                                    <p class="text-base font-medium text-gray-600">No attendance records found for this
-                                        date.</p>
-                                    <p class="text-sm">Employees haven't punched in yet.</p>
-                                </div>
-                            </td>
-                        </tr> --}}
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        $(document).ready(function() {
-            $('#attendance').DataTable({
-                destroy: true,
-                dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
-                buttons: [{
-                        extend: 'copy',
-                        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-gray-300 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-blue-200 transition-colors'
-                    }
-                ],
-                pageLength: 10,
-                language: {
-                    search: "",
-                    searchPlaceholder: "Search here...",
-                    lengthMenu: "_MENU_",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries"
-                }
-            });
-        });
-    </script>
-@endpush

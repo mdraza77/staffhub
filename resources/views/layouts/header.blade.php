@@ -222,6 +222,7 @@
         </nav>
 
     </header>
+    
     <aside id="sidebar"
         class="fixed top-16 left-0 bottom-0 w-64 bg-white dark:bg-zinc-950 border-r border-gray-200 dark:border-zinc-800 z-40 transition-all duration-300 transform md:translate-x-0 -translate-x-full overflow-visible">
 
