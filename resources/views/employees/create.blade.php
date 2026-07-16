@@ -80,15 +80,6 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                <input type="text" name="phone" value="{{ old('phone') }}" placeholder="e.g., +918544568958"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('phone') border-red-500 @enderror">
-                @error('phone')
-                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
                 <select name="department_id"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
@@ -154,9 +145,93 @@
                 @enderror
             </div>
 
+            <div class="md:col-span-2 border-b border-gray-100 pb-2 mb-2 mt-4">
+                <h3 class="text-lg font-semibold text-gray-800">Personal Details</h3>
+            </div>
+
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Profile Picture</label>
-                <input type="file" name="profile" accept="image/*"
+                <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <input type="text" name="phone" value="{{ old('phone') }}" placeholder="e.g., +918544568958"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('phone') border-red-500 @enderror">
+                @error('phone')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact Number</label>
+                <input type="text" name="emergency_contact" value="{{ old('emergency_contact') }}"
+                    placeholder="e.g., +919876543210"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('emergency_contact') border-red-500 @enderror">
+                @error('emergency_contact')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <select name="gender"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white @error('gender') border-red-500 @enderror">
+                    <option value="">Select Gender</option>
+                    <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                    <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                    <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>Other</option>
+                </select>
+                @error('gender')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('date_of_birth') border-red-500 @enderror">
+                @error('date_of_birth')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Blood Group</label>
+                <select name="blood_group"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white @error('blood_group') border-red-500 @enderror">
+                    <option value="">Select Blood Group</option>
+                    @foreach(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $bg)
+                        <option value="{{ $bg }}" {{ old('blood_group') == $bg ? 'selected' : '' }}>{{ $bg }}</option>
+                    @endforeach
+                </select>
+                @error('blood_group')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <textarea name="address" rows="3" placeholder="Enter complete residential address..."
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('address') border-red-500 @enderror">{{ old('address') }}</textarea>
+                @error('address')
+                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="md:col-span-2 border-b border-gray-100 pb-2 mb-2 mt-4">
+                <h3 class="text-lg font-semibold text-gray-800">Documents & Uploads</h3>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Profile Picture</label>
+
+                <div
+                    class="flex items-center gap-4 mb-3 p-3 bg-gray-50 dark:bg-zinc-950/40 rounded-lg border border-gray-200 dark:border-zinc-800">
+                    <img id="profile-preview" src="{{ asset('img/dummy-user-pic.png') }}" alt="Profile Preview"
+                        class="w-16 h-16 rounded-full object-cover border-2 border-gray-200 dark:border-zinc-800">
+                    <div>
+                        <p class="text-sm font-medium text-gray-700 dark:text-zinc-300">Profile Photo</p>
+                        <p class="text-xs text-gray-500 dark:text-zinc-400 font-normal">Upload an image below</p>
+                    </div>
+                </div>
+
+                <input type="file" name="profile" id="profile-input" accept="image/*"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
                 <p class="text-xs text-gray-500 mt-1">Max size: 2MB. Allowed formats: JPG, PNG, GIF.</p>
                 @error('profile')
@@ -165,8 +240,20 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Signature Image</label>
-                <input type="file" name="signature" accept="image/*"
+                <label class="block text-sm font-medium text-gray-700 mb-2">Signature Image</label>
+
+                <div
+                    class="flex items-center gap-4 mb-3 p-3 bg-gray-50 dark:bg-zinc-950/40 rounded-lg border border-gray-200 dark:border-zinc-800">
+                    <img id="signature-preview" src="{{ asset('img/dummy-signature.png') }}" alt="Signature Preview"
+                        class="w-16 h-16 object-contain border-2 border-gray-200 dark:border-zinc-800 bg-white dark:bg-transparent mix-blend-multiply dark:mix-blend-screen"
+                        draggable="false">
+                    <div>
+                        <p class="text-sm font-medium text-gray-700 dark:text-zinc-300">Signature</p>
+                        <p class="text-xs text-gray-500 dark:text-zinc-400 font-normal">Upload an image below</p>
+                    </div>
+                </div>
+
+                <input type="file" name="signature" id="signature-input" accept="image/*"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
                 <p class="text-xs text-gray-500 mt-1">Max size: 2MB. Allowed formats: JPG, PNG, GIF.</p>
                 @error('signature')
@@ -225,6 +312,30 @@
                     this.setCustomValidity('');
                 }
             });
+
+            // Live preview for profile image
+            const profileInput = document.getElementById('profile-input');
+            const profilePreview = document.getElementById('profile-preview');
+            if (profileInput && profilePreview) {
+                profileInput.addEventListener('change', function () {
+                    const file = this.files[0];
+                    if (file) {
+                        profilePreview.src = URL.createObjectURL(file);
+                    }
+                });
+            }
+
+            // Live preview for signature image
+            const signatureInput = document.getElementById('signature-input');
+            const signaturePreview = document.getElementById('signature-preview');
+            if (signatureInput && signaturePreview) {
+                signatureInput.addEventListener('change', function () {
+                    const file = this.files[0];
+                    if (file) {
+                        signaturePreview.src = URL.createObjectURL(file);
+                    }
+                });
+            }
         });
     </script>
 @endpush

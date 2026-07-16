@@ -51,10 +51,15 @@ class UserSeeder extends Seeder
                 'role' => 'Super Admin',
                 'employee_id' => $nextEmployeeId,
                 'phone' => '+917477650108',
+                'emergency_contact' => '+917602897295',
                 'department_id' => $adminDept?->id,
                 'designation' => 'Chief Executive Officer',
                 'joining_date' => '2026-01-01',
-                'status' => 'active'
+                'status' => 'active',
+                'gender' => 'male',
+                'date_of_birth' => '2005-07-29',
+                'address' => 'Islampur, Uttar Dinajpur, 733202, West Bengal',
+                'blood_group' => 'O+'
             ],
             [
                 'name' => 'Amir Alam',
@@ -62,10 +67,15 @@ class UserSeeder extends Seeder
                 'role' => 'Admin',
                 'employee_id' => $nextEmployeeId,
                 'phone' => '+919163198477',
+                'emergency_contact' => '+919163198477',
                 'department_id' => $rndDept?->id,
                 'designation' => 'Software Engineer',
                 'joining_date' => '2026-03-15',
-                'status' => 'active'
+                'status' => 'active',
+                'gender' => 'male',
+                'date_of_birth' => '2004-01-01',
+                'address' => 'Dum Dum, Kolkata, West Bengal',
+                'blood_group' => 'A+'
             ],
             [
                 'name' => 'Taksin Raja',
@@ -73,10 +83,15 @@ class UserSeeder extends Seeder
                 'role' => 'HR Manager',
                 'employee_id' => $nextEmployeeId,
                 'phone' => '+919775360314',
+                'emergency_contact' => '+919775360314',
                 'department_id' => $hrDept?->id,
                 'designation' => 'HR Lead',
                 'joining_date' => '2026-01-15',
-                'status' => 'active'
+                'status' => 'active',
+                'gender' => 'male',
+                'date_of_birth' => '2004-11-02',
+                'address' => 'Islampur, Uttar Dinajpur, 733202, West Bengal',
+                'blood_group' => 'A+'
             ],
             [
                 'name' => 'Bob Developer',
@@ -171,10 +186,15 @@ class UserSeeder extends Seeder
                     'password' => Hash::make('Raza@StaffHub'),
                     'employee_id' => $employeeId,
                     'phone' => $userData['phone'],
+                    'emergency_contact' => $userData['emergency_contact'] ?? null,
                     'department_id' => $userData['department_id'],
                     'designation' => $userData['designation'],
                     'joining_date' => $userData['joining_date'],
                     'status' => $userData['status'],
+                    'gender' => $userData['gender'] ?? null,
+                    'date_of_birth' => $userData['date_of_birth'] ?? null,
+                    'address' => $userData['address'] ?? null,
+                    'blood_group' => $userData['blood_group'] ?? null,
                     'signature' => 'signatures/dummy_signature.png',
                 ]
             );

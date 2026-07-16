@@ -114,6 +114,7 @@ class EmployeeController extends Controller implements HasMiddleware
             'password' => 'required|string|min:8|confirmed',
             'employee_id' => 'required|string|unique:users,employee_id',
             'phone' => 'nullable|string|regex:/^\+?[1-9]\d{9,14}$/',
+            'emergency_contact' => 'nullable|string|max:255',
             'department_id' => 'nullable|exists:departments,id',
             'designation' => 'nullable|string|max:255',
             'joining_date' => 'nullable|date',
@@ -121,6 +122,10 @@ class EmployeeController extends Controller implements HasMiddleware
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // Max 2MB image
             'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // Max 2MB signature
             'role' => 'nullable|exists:roles,name',
+            'gender' => 'nullable|in:male,female,other',
+            'date_of_birth' => 'nullable|date|before:today',
+            'blood_group' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'address' => 'nullable|string|max:500',
         ], [
             'phone.regex' => 'The phone number format must be valid (e.g. +918544568958 or 918544568958).',
         ]);
@@ -180,10 +185,15 @@ class EmployeeController extends Controller implements HasMiddleware
                 'password' => Hash::make($request->password),
                 'employee_id' => $request->employee_id,
                 'phone' => $request->phone,
+                'emergency_contact' => $request->emergency_contact,
                 'department_id' => $request->department_id,
                 'designation' => $request->designation,
                 'joining_date' => $request->joining_date,
                 'status' => $request->status,
+                'gender' => $request->gender,
+                'date_of_birth' => $request->date_of_birth,
+                'blood_group' => $request->blood_group,
+                'address' => $request->address,
                 'profile' => $profilePath,
                 'signature' => $signaturePath,
             ]);
@@ -245,6 +255,7 @@ class EmployeeController extends Controller implements HasMiddleware
             'password' => 'nullable|string|min:8|confirmed',
             'employee_id' => 'nullable|string|unique:users,employee_id,' . $employee->id,
             'phone' => 'nullable|string|regex:/^\+?[1-9]\d{9,14}$/',
+            'emergency_contact' => 'nullable|string|max:255',
             'department_id' => 'nullable|exists:departments,id',
             'designation' => 'nullable|string|max:255',
             'joining_date' => 'nullable|date',
@@ -252,6 +263,10 @@ class EmployeeController extends Controller implements HasMiddleware
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'role' => 'nullable|exists:roles,name',
+            'gender' => 'nullable|in:male,female,other',
+            'date_of_birth' => 'nullable|date|before:today',
+            'blood_group' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'address' => 'nullable|string|max:500',
         ], [
             'phone.regex' => 'The phone number format must be valid (e.g. +918544568958 or 918544568958).',
         ]);
@@ -266,10 +281,15 @@ class EmployeeController extends Controller implements HasMiddleware
                 'email' => $request->email,
                 'employee_id' => $request->employee_id,
                 'phone' => $request->phone,
+                'emergency_contact' => $request->emergency_contact,
                 'department_id' => $request->department_id,
                 'designation' => $request->designation,
                 'joining_date' => $request->joining_date,
                 'status' => $request->status,
+                'gender' => $request->gender,
+                'date_of_birth' => $request->date_of_birth,
+                'blood_group' => $request->blood_group,
+                'address' => $request->address,
             ];
 
             // Password sirf tab update hoga jab user ne naya diya ho

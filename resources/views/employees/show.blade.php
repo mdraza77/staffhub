@@ -112,13 +112,13 @@
             </div>
 
             {{-- Signature Card --}}
-            @if ($employee->signature)
+            @if ($employee->signature && $employee->signature !== 'signatures/dummy_signature.png')
                 <div class="bg-white dark:bg-zinc-900 rounded-xl border border-gray-100 dark:border-zinc-800 shadow-sm p-5">
                     <h3 class="text-sm font-semibold text-gray-700 dark:text-zinc-300 mb-3 uppercase tracking-wide">
                         Signature</h3>
                     <div
                         class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-zinc-950/40 rounded-lg border border-gray-100 dark:border-zinc-800">
-                        <img src="{{ $employee->signature }}" alt="Signature"
+                        <img src="{{ str_starts_with($employee->signature, 'http') ? $employee->signature : asset('storage/' . $employee->signature) }}" alt="Signature"
                             class="max-h-16 object-contain mix-blend-multiply dark:mix-blend-screen" draggable="false">
                     </div>
                 </div>
@@ -254,6 +254,45 @@
                         @else
                             <p class="text-sm font-medium text-gray-400">No role assigned</p>
                         @endif
+                    </div>
+
+                </div>
+            </div>
+
+            {{-- Personal Details --}}
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+                    <i class="fa-solid fa-address-card text-teal-500"></i>
+                    <h3 class="text-base font-semibold text-gray-800">Personal Details</h3>
+                </div>
+                <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                    <div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Gender</p>
+                        <p class="text-sm font-medium text-gray-800 capitalize">{{ $employee->gender ?? '—' }}</p>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Date of Birth</p>
+                        <p class="text-sm font-medium text-gray-800">
+                            {{ $employee->date_of_birth ? \Carbon\Carbon::parse($employee->date_of_birth)->format('d M, Y') : '—' }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Blood Group</p>
+                        <p class="text-sm font-medium text-gray-800">{{ $employee->blood_group ?? '—' }}</p>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Emergency Contact</p>
+                        <p class="text-sm font-medium text-gray-800">{{ $employee->emergency_contact ?? '—' }}</p>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Residential Address</p>
+                        <p class="text-sm font-medium text-gray-850 whitespace-pre-line leading-relaxed">
+                            {{ $employee->address ?? '—' }}</p>
                     </div>
 
                 </div>
