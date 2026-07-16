@@ -7,6 +7,7 @@ use App\Models\TaskComment;
 use App\Models\TaskDocument;
 use App\Models\TaskStatusHistory;
 use App\Models\User;
+use App\Services\ImageKitService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -249,6 +250,7 @@ class TaskController extends Controller implements HasMiddleware
      */
     public function storeDocument(Request $request, Task $task)
     {
+        $imageKit = ImageKitService::getInstance();
         $request->validate([
             'document' => 'required|file|max:10240',  // Max 10MB file
             'remark' => 'nullable|string|max:255',
@@ -266,15 +268,22 @@ class TaskController extends Controller implements HasMiddleware
 
         try {
             DB::beginTransaction();
-
             if ($request->hasFile('document')) {
-                $file = $request->file('document');
-                $originalName = $file->getClientOriginalName();
-                $filePath = $file->store('task_documents', 'public');
+                $upload = $imageKit->uploadFile([
+                    'file' => fopen($request->file('document')->getRealPath(), 'r'),
+                    'fileName' => time() . '_' . $request->file('document')->getClientOriginalName(),
+                    'folder' => '/StaffHub/task_documents'
+                ]);
+
+                if ($upload->error) {
+                    throw new \Exception('ImageKit Profile Upload Error: ' . json_encode($upload->error));
+                }
+
+                $filePath = $upload->result->url;
 
                 $task->documents()->create([
                     'user_id' => Auth::id(),
-                    'file_name' => $originalName,
+                    'file_name' => $request->file('document')->getClientOriginalName(),
                     'file_path' => $filePath,
                     'remark' => $request->remark,
                 ]);
@@ -287,7 +296,11 @@ class TaskController extends Controller implements HasMiddleware
             Log::error('Task Document Store Error: ' . $e->getMessage());
 
             if (isset($filePath)) {
-                Storage::disk('public')->delete($filePath);
+                if (str_starts_with($filePath, 'http')) {
+                    $this->deleteImageKitFileByUrl($filePath, $imageKit);
+                } else {
+                    Storage::disk('public')->delete($filePath);
+                }
             }
 
             return back()->with('error', 'Could not upload document.');
@@ -360,6 +373,30 @@ class TaskController extends Controller implements HasMiddleware
             DB::rollBack();
             Log::error('Task Status Update Error: ' . $e->getMessage());
             return back()->with('error', 'Could not update task status.');
+        }
+    }
+
+    /**
+     * Helper to delete a file from ImageKit by its URL.
+     */
+    private function deleteImageKitFileByUrl($url, $imageKit)
+    {
+        if (empty($url) || !str_starts_with($url, 'http')) {
+            return;
+        }
+
+        try {
+            $fileName = basename(parse_url($url, PHP_URL_PATH));
+            $filesList = $imageKit->listFiles([
+                'searchQuery' => 'name = "' . $fileName . '"'
+            ]);
+
+            if (!$filesList->error && !empty($filesList->result)) {
+                $fileId = $filesList->result[0]->fileId;
+                $imageKit->deleteFile($fileId);
+            }
+        } catch (\Exception $e) {
+            Log::warning('Failed to delete file from ImageKit: ' . $e->getMessage());
         }
     }
 }

@@ -7,6 +7,7 @@ use App\Models\DefectAttachment;
 use App\Models\DefectStatusHistory;
 use App\Models\Task;
 use App\Models\User;
+use App\Services\ImageKitService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -58,7 +59,7 @@ class DefectController extends Controller implements HasMiddleware
      */
     public function create()
     {
-        $employees = User::where('status', 'active')->orderBy('name')->get();
+        $employees = User::withTrashed()->where('status', 'active')->orderBy('name')->get();
         $projects = Task::whereNotNull('project_name')->distinct()->pluck('project_name');
         return view('defects.create', compact('employees', 'projects'));
     }
@@ -124,8 +125,9 @@ class DefectController extends Controller implements HasMiddleware
     public function show(Defect $defect)
     {
         $defect->load(['reporter', 'assignee', 'attachments.uploader', 'histories.user']);
-        $employees = User::where('status', 'active')->orderBy('name')->get();
+        $employees = User::withTrashed()->where('status', 'active')->orderBy('name')->get();
         $projects = Task::whereNotNull('project_name')->distinct()->pluck('project_name');
+        // dd($defect);
         return view('defects.show', compact('defect', 'employees', 'projects'));
     }
 
@@ -134,7 +136,7 @@ class DefectController extends Controller implements HasMiddleware
      */
     public function edit(Defect $defect)
     {
-        $employees = User::where('status', 'active')->orderBy('name')->get();
+        $employees = User::withTrashed()->where('status', 'active')->orderBy('name')->get();
         $projects = Task::whereNotNull('project_name')->distinct()->pluck('project_name');
         return view('defects.edit', compact('defect', 'employees', 'projects'));
     }
@@ -217,6 +219,7 @@ class DefectController extends Controller implements HasMiddleware
      */
     public function storeAttachment(Request $request, Defect $defect)
     {
+        $imageKit = ImageKitService::getInstance();
         $request->validate([
             'file' => 'required|file|max:10240',  // Max 10MB file
         ]);
@@ -230,7 +233,17 @@ class DefectController extends Controller implements HasMiddleware
                 $fileType = $file->getClientOriginalExtension();
                 $fileSize = round($file->getSize() / 1024, 2);  // Size in KB
 
-                $filePath = $file->store('defect_attachments', 'public');
+                $upload = $imageKit->uploadFile([
+                    'file' => fopen($file->getRealPath(), 'r'),
+                    'fileName' => time() . '_' . $originalName,
+                    'folder' => '/StaffHub/defect_attachments'
+                ]);
+
+                if ($upload->error) {
+                    throw new \Exception('ImageKit Upload Error: ' . json_encode($upload->error));
+                }
+
+                $filePath = $upload->result->url;
 
                 $defect->attachments()->create([
                     'uploaded_by' => Auth::id(),
@@ -247,7 +260,11 @@ class DefectController extends Controller implements HasMiddleware
         } catch (\Exception $e) {
             Log::error('Defect Attachment Store Error: ' . $e->getMessage());
             if ($filePath) {
-                Storage::disk('public')->delete($filePath);
+                if (str_starts_with($filePath, 'http')) {
+                    $this->deleteImageKitFileByUrl($filePath, $imageKit);
+                } else {
+                    Storage::disk('public')->delete($filePath);
+                }
             }
             return back()->with('error', 'Something went wrong while uploading attachment.');
         }
@@ -305,6 +322,30 @@ class DefectController extends Controller implements HasMiddleware
         } catch (\Exception $e) {
             Log::error('Defect Restore Error: ' . $e->getMessage());
             return back()->with('error', 'Something went wrong while restoring the defect.');
+        }
+    }
+
+    /**
+     * Helper to delete a file from ImageKit by its URL.
+     */
+    private function deleteImageKitFileByUrl($url, $imageKit)
+    {
+        if (empty($url) || !str_starts_with($url, 'http')) {
+            return;
+        }
+
+        try {
+            $fileName = basename(parse_url($url, PHP_URL_PATH));
+            $filesList = $imageKit->listFiles([
+                'searchQuery' => 'name = "' . $fileName . '"'
+            ]);
+
+            if (!$filesList->error && !empty($filesList->result)) {
+                $fileId = $filesList->result[0]->fileId;
+                $imageKit->deleteFile($fileId);
+            }
+        } catch (\Exception $e) {
+            Log::warning('Failed to delete file from ImageKit: ' . $e->getMessage());
         }
     }
 }

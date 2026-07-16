@@ -314,7 +314,7 @@
                         <div
                             class="p-3 bg-white border border-gray-100 hover:border-gray-200 rounded-xl text-xs space-y-1.5 shadow-2xs hover:shadow-xs transition-shadow">
                             <div class="flex justify-between items-start gap-1">
-                                <a href="{{ asset('storage/' . $attach->file_path) }}" target="_blank"
+                                <a href="{{ str_starts_with($attach->file_path, 'http') ? $attach->file_path : asset('storage/' . $attach->file_path) }}" target="_blank"
                                     class="text-indigo-650 hover:underline font-bold text-xs truncate flex-1 flex items-center gap-1.5">
                                     <i class="fa-solid fa-file-image text-[13px] text-blue-500 flex-shrink-0"></i>
                                     {{ $attach->file_name }}

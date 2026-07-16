@@ -30,12 +30,12 @@ class Defect extends Model
     // Connect everything up!
     public function reporter()
     {
-        return $this->belongsTo(User::class, 'reported_by');
+        return $this->belongsTo(User::class, 'reported_by')->withTrashed();
     }
 
     public function assignee()
     {
-        return $this->belongsTo(User::class, 'assigned_to');
+        return $this->belongsTo(User::class, 'assigned_to')->withTrashed();
     }
 
     // One Defect has Many Attachments
