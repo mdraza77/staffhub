@@ -131,7 +131,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{announcement}', 'update')->name('update');
         Route::delete('/{announcement}', 'destroy')->name('destroy');
         Route::post('/{announcement}/restore', 'restore')->name('restore')->withTrashed();
-        Route::delete('/{announcement}/force-delete', 'forceDelete')->name('force-delete')->withTrashed();
     });
 
     // Defects Routes
@@ -157,6 +156,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{break_type}/edit', 'edit')->name('edit');
         Route::put('/{break_type}', 'update')->name('update');
         Route::delete('/{break_type}', 'destroy')->name('destroy');
+        Route::post('/{break_type}/restore', 'restore')->name('restore')->withTrashed();
     });
 
     // Break Room Routes

@@ -6,6 +6,7 @@ use App\Models\Announcement;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Log;
 
 class AnnouncementController extends Controller implements HasMiddleware
 {
@@ -102,9 +103,16 @@ class AnnouncementController extends Controller implements HasMiddleware
      */
     public function destroy(Announcement $announcement)
     {
-        $announcement->delete();
-
-        return redirect()->route('announcements.index')->with('success', 'Announcement soft deleted successfully.');
+        try {
+            $announcement->update([
+                'status' => 'draft',
+            ]);
+            $announcement->delete();
+            return back()->with('success', 'Announcement deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Announcement Delete Error: ' . $e->getMessage());
+            return back()->with('error', 'Cannot delete this Announcement.');
+        }
     }
 
     /**
@@ -112,20 +120,14 @@ class AnnouncementController extends Controller implements HasMiddleware
      */
     public function restore($id)
     {
-        $announcement = Announcement::onlyTrashed()->findOrFail($id);
+        $announcement = Announcement::withTrashed()->findOrFail($id);
         $announcement->restore();
+        $announcement->update([
+            'status' => 'published',
+        ]);
 
-        return redirect()->route('announcements.index')->with('success', 'Announcement restored successfully.');
-    }
-
-    /**
-     * Permanently delete the resource.
-     */
-    public function forceDelete($id)
-    {
-        $announcement = Announcement::onlyTrashed()->findOrFail($id);
-        $announcement->forceDelete();
-
-        return redirect()->route('announcements.index')->with('success', 'Announcement permanently deleted.');
+        return redirect()
+            ->route('announcements.index')
+            ->with('success', 'Announcement restored successfully.');
     }
 }

@@ -94,7 +94,6 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center justify-center gap-1">
                                     @if ($announcement->trashed())
-                                        {{-- SOFT DELETED STATE: Restore + Force Delete only --}}
                                         @can('Announcement-Restore')
                                             <form action="{{ route('announcements.restore', $announcement->id) }}"
                                                 method="POST" id="restore-form-{{ $announcement->id }}">
@@ -103,19 +102,6 @@
                                                     onclick="confirmRestore({{ $announcement->id }}, '{{ addslashes($announcement->title) }}')"
                                                     class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
                                                     <i class="fa-solid fa-rotate-left text-base"></i>
-                                                </button>
-                                            </form>
-                                        @endcan
-
-                                        @can('Announcement-ForceDelete')
-                                            <form action="{{ route('announcements.force-delete', $announcement->id) }}"
-                                                method="POST" id="force-delete-form-{{ $announcement->id }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" title="Permanently Delete"
-                                                    onclick="confirmForceDelete({{ $announcement->id }}, '{{ addslashes($announcement->title) }}')"
-                                                    class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                                    <i class="fa-solid fa-trash-can text-base"></i>
                                                 </button>
                                             </form>
                                         @endcan
@@ -135,7 +121,7 @@
                                                 <button type="button" title="Delete Announcement"
                                                     onclick="confirmSoftDelete({{ $announcement->id }}, '{{ addslashes($announcement->title) }}')"
                                                     class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
-                                                    <i class="fa-solid fa-trash text-base"></i>
+                                                    <i class="fa-solid fa-trash-can text-base"></i>
                                                 </button>
                                             </form>
                                         @endcan

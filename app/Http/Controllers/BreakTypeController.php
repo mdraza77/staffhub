@@ -6,6 +6,7 @@ use App\Models\BreakType;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Log;
 
 class BreakTypeController extends Controller implements HasMiddleware
 {
@@ -18,7 +19,7 @@ class BreakTypeController extends Controller implements HasMiddleware
 
     public function index()
     {
-        $breakTypes = BreakType::orderBy('name')->get();
+        $breakTypes = BreakType::withTrashed()->orderBy('name')->get();
         return view('break.break_types.index', compact('breakTypes'));
     }
 
@@ -40,7 +41,7 @@ class BreakTypeController extends Controller implements HasMiddleware
             'name' => $request->name,
             'duration_minutes' => $request->duration_minutes,
             'icon' => $request->icon ?? 'fa-solid fa-mug-hot',
-            'is_active' => $request->has('is_active') ? (bool)$request->is_active : true,
+            'is_active' => $request->has('is_active') ? (bool) $request->is_active : true,
         ]);
 
         return redirect()->route('break-types.index')->with('success', 'Break Type created successfully.');
@@ -64,7 +65,7 @@ class BreakTypeController extends Controller implements HasMiddleware
             'name' => $request->name,
             'duration_minutes' => $request->duration_minutes,
             'icon' => $request->icon ?? 'fa-solid fa-mug-hot',
-            'is_active' => (bool)$request->is_active,
+            'is_active' => (bool) $request->is_active,
         ]);
 
         return redirect()->route('break-types.index')->with('success', 'Break Type updated successfully.');
@@ -72,7 +73,28 @@ class BreakTypeController extends Controller implements HasMiddleware
 
     public function destroy(BreakType $breakType)
     {
-        $breakType->delete();
-        return redirect()->route('break-types.index')->with('success', 'Break Type deleted successfully.');
+        try {
+            $breakType->update([
+                'is_active' => false,
+            ]);
+            $breakType->delete();
+            return back()->with('success', 'Break Type deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Break Type Delete Error: ' . $e->getMessage());
+            return back()->with('error', 'Cannot delete this Break Type.');
+        }
+    }
+
+    public function restore($id)
+    {
+        $breakType = BreakType::withTrashed()->findOrFail($id);
+        $breakType->restore();
+        $breakType->update([
+            'is_active' => true,
+        ]);
+
+        return redirect()
+            ->route('break-types.index')
+            ->with('success', 'Break Type restored successfully.');
     }
 }

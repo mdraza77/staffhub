@@ -57,7 +57,7 @@ class EmployeeController extends Controller implements HasMiddleware
     public function create()
     {
         $departments = Department::orderBy('name')->get();
-        $roles = Role::orderBy('name')->get();
+        $roles = Role::where('name', '!=', 'Super Admin')->orderBy('name')->get();
 
         // Auto-generate employee ID
         $todayYear = Carbon::now()->format('y');  // e.g., 26
@@ -229,7 +229,7 @@ class EmployeeController extends Controller implements HasMiddleware
     public function edit(User $employee)
     {
         $departments = Department::all();
-        $roles = Role::orderBy('name')->get();
+        $roles = Role::where('name', '!=', 'Super Admin')->orderBy('name')->get();
         $employeeRole = $employee->roles->first()->name ?? null;
         return view('employees.edit', compact('employee', 'departments', 'roles', 'employeeRole'));
     }

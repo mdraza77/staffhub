@@ -46,7 +46,10 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    @if ($type->is_active)
+                                    @if ($type->trashed())
+                                        <span
+                                            class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Deleted</span>
+                                    @elseif ($type->is_active)
                                         <span
                                             class="bg-green-50 text-green-700 px-2 py-0.5 rounded text-xs border border-green-200 font-semibold">Active</span>
                                     @else
@@ -56,22 +59,34 @@
                                 </td>
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
                                     <div class="flex items-center justify-center gap-1.5">
-                                        <a href="{{ route('break-types.edit', $type->id) }}"
-                                            class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                            title="Edit">
-                                            <i class="fa-solid fa-pen-to-square text-base"></i>
-                                        </a>
-                                        <button type="button"
-                                            onclick="confirmDelete('{{ $type->id }}', '{{ addslashes($type->name) }}')"
-                                            class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                            title="Delete">
-                                            <i class="fa-solid fa-trash text-base"></i>
-                                        </button>
-                                        <form id="delete-form-{{ $type->id }}"
-                                            action="{{ route('break-types.destroy', $type->id) }}" method="POST" class="hidden">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
+                                        @if ($type->trashed())
+                                            <button type="button" onclick="confirmRestore('{{ $type->id }}')"
+                                                class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                title="Restore">
+                                                <i class="fa-solid fa-rotate-left text-base"></i>
+                                            </button>
+                                            <form id="restore-form-{{ $type->id }}"
+                                                action="{{ route('break-types.restore', $type->id) }}" method="POST" class="hidden">
+                                                @csrf
+                                            </form>
+                                        @else
+                                            <a href="{{ route('break-types.edit', $type->id) }}"
+                                                class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                title="Edit">
+                                                <i class="fa-solid fa-pen-to-square text-base"></i>
+                                            </a>
+                                            <button type="button"
+                                                onclick="confirmDelete('{{ $type->id }}', '{{ addslashes($type->name) }}')"
+                                                class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                title="Delete">
+                                                <i class="fa-solid fa-trash-can text-base"></i>
+                                            </button>
+                                            <form id="delete-form-{{ $type->id }}"
+                                                action="{{ route('break-types.destroy', $type->id) }}" method="POST" class="hidden">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -88,7 +103,7 @@
         function confirmDelete(id, name) {
             Swal.fire({
                 title: 'Are you sure?',
-                text: "Delete break type '" + name + "'? Historical records might be affected.",
+                text: "Delete break type '" + name + "'?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -99,6 +114,22 @@
                     document.getElementById('delete-form-' + id).submit();
                 }
             })
+        }
+
+        function confirmRestore(breakTypeId) {
+            Swal.fire({
+                title: "Restore Break Type?",
+                text: "This Break Type will be restored to active status.",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#10b981",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, restore it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('restore-form-' + breakTypeId).submit();
+                }
+            });
         }
     </script>
 @endpush

@@ -29,6 +29,6 @@ class EmployeeBreak extends Model
 
     public function breakType()
     {
-        return $this->belongsTo(BreakType::class, 'break_type_id');
+        return $this->belongsTo(BreakType::class, 'break_type_id')->withTrashed();
     }
 }

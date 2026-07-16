@@ -57,25 +57,25 @@ class UserSeeder extends Seeder
                 'status' => 'active'
             ],
             [
-                'name' => 'Jane Smith',
-                'email' => 'admin2@gmail.com',
+                'name' => 'Amir Alam',
+                'email' => 'sameer72135@gmail.com',
                 'role' => 'Admin',
                 'employee_id' => $nextEmployeeId,
-                'phone' => '+919876543211',
-                'department_id' => $adminDept?->id,
-                'designation' => 'Office Administrator',
-                'joining_date' => '2026-01-15',
+                'phone' => '+919163198477',
+                'department_id' => $rndDept?->id,
+                'designation' => 'Software Engineer',
+                'joining_date' => '2026-03-15',
                 'status' => 'active'
             ],
             [
-                'name' => 'Alice Johnson',
-                'email' => 'hr@gmail.com',
+                'name' => 'Taksin Raja',
+                'email' => 'taskinraja01@gmail.com',
                 'role' => 'HR Manager',
                 'employee_id' => $nextEmployeeId,
-                'phone' => '+919876543212',
+                'phone' => '+919775360314',
                 'department_id' => $hrDept?->id,
                 'designation' => 'HR Lead',
-                'joining_date' => '2026-02-01',
+                'joining_date' => '2026-01-15',
                 'status' => 'active'
             ],
             [
@@ -85,7 +85,7 @@ class UserSeeder extends Seeder
                 'employee_id' => $nextEmployeeId,
                 'phone' => '+919876543213',
                 'department_id' => $itDept?->id,
-                'designation' => 'Lead Laravel Developer',
+                'designation' => 'Laravel Developer',
                 'joining_date' => '2026-02-15',
                 'status' => 'active'
             ],
