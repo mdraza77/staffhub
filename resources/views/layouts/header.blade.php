@@ -515,8 +515,7 @@
                         auth()->check() &&
                         (auth()->user()->can('Employee-Index') ||
                             auth()->user()->can('Employee-Create') ||
-                            auth()->user()->can('Company-Index') ||
-                            auth()->user()->can('Settings-Index'))
+                            auth()->user()->can('Company-Index'))
                     )
                     <li
                         class="sidebar-group-header text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 pt-5 pb-1.5 block select-none">
@@ -562,7 +561,7 @@
                 @php
                     $settingsActive = request()->routeIs('settings.*') || request()->routeIs('company.*');
                 @endphp
-                @if (auth()->check() && (auth()->user()->can('Company-Index') || auth()->user()->can('Settings-Index')))
+                @if (auth()->check() && auth()->user()->can('Company-Index'))
                     <li>
                         <details class="group" {{ $settingsActive ? 'open' : '' }}>
                             <summary

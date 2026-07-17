@@ -5,19 +5,21 @@
 @section('content')
     <div class="mb-6 flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Projects</h1>
-            <p class="text-sm text-gray-500 mt-1">Manage software and operational project portfolios.</p>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-zinc-100">Projects</h1>
+            <p class="text-sm text-gray-500 dark:text-zinc-450 mt-1">Manage software and operational project portfolios.</p>
         </div>
         @can('Project-Create')
             <x-create-button :url="route('projects.create')" label="New Project" />
         @endcan
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden p-6">
+    <div
+        class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800 overflow-hidden p-6">
         <div class="overflow-x-auto">
             <table id="projects_table" class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
+                    <tr
+                        class="bg-gray-50 dark:bg-zinc-950 text-gray-600 dark:text-zinc-400 text-sm border-b border-gray-200 dark:border-zinc-800">
                         <th class="px-6 py-3 font-semibold">#</th>
                         <th class="px-6 py-3 font-semibold">Project Name</th>
                         <th class="px-6 py-3 font-semibold text-center">Status</th>
@@ -28,59 +30,61 @@
                         <th class="px-6 py-3 font-semibold text-center">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody class="divide-y divide-gray-100 dark:divide-zinc-800">
                     @forelse ($projects as $key => $project)
-                        <tr class="hover:bg-gray-50 transition-colors {{ $project->trashed() ? 'opacity-70' : '' }}">
-                            <td class="px-6 py-4 text-sm text-gray-600 font-mono">{{ $key + 1 }}</td>
+                        <tr
+                            class="hover:bg-gray-50 dark:hover:bg-zinc-850/50 transition-colors {{ $project->trashed() ? 'opacity-70' : '' }}">
+                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-zinc-400 font-mono">{{ $key + 1 }}</td>
                             <td class="px-6 py-4">
                                 @if (auth()->user()->can('Project-View'))
                                     <a href="{{ route('projects.show', $project->id) }}">
-                                        <p class="text-sm font-semibold text-indigo-600 hover:underline">
+                                        <p class="text-sm font-semibold text-indigo-650 dark:text-indigo-400 hover:underline">
                                             {{ $project->name }}
                                         </p>
                                     </a>
                                 @else
-                                    <p class="text-sm font-semibold text-gray-800">{{ $project->name }}</p>
+                                    <p class="text-sm font-semibold text-gray-800 dark:text-zinc-200">{{ $project->name }}</p>
                                 @endif
                                 @if ($project->description)
-                                    <p class="text-xs text-gray-400 mt-0.5 line-clamp-1 max-w-sm">{{ $project->description }}</p>
+                                    <p class="text-xs text-gray-400 dark:text-zinc-500 mt-0.5 line-clamp-1 max-w-sm">
+                                        {{ $project->description }}</p>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($project->status === 'planning')
                                     <span
-                                        class="bg-blue-50 text-blue-750 text-[10px] font-bold px-2.5 py-0.5 rounded border border-blue-150 uppercase tracking-wider">Planning</span>
+                                        class="bg-blue-50 text-blue-750 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/50 text-[10px] font-bold px-2.5 py-0.5 rounded border border-blue-150 uppercase tracking-wider">Planning</span>
                                 @elseif ($project->status === 'in_progress')
                                     <span
-                                        class="bg-amber-50 text-amber-750 text-[10px] font-bold px-2.5 py-0.5 rounded border border-amber-150 uppercase tracking-wider">In
+                                        class="bg-amber-50 text-amber-750 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/50 text-[10px] font-bold px-2.5 py-0.5 rounded border border-amber-150 uppercase tracking-wider">In
                                         Progress</span>
                                 @elseif ($project->status === 'on_hold')
                                     <span
-                                        class="bg-gray-50 text-gray-600 text-[10px] font-bold px-2.5 py-0.5 rounded border border-gray-200 uppercase tracking-wider">On
+                                        class="bg-gray-50 text-gray-600 dark:bg-zinc-800/40 dark:text-zinc-400 dark:border-zinc-700/50 text-[10px] font-bold px-2.5 py-0.5 rounded border border-gray-200 uppercase tracking-wider">On
                                         Hold</span>
                                 @elseif ($project->status === 'completed')
                                     <span
-                                        class="bg-emerald-50 text-emerald-750 text-[10px] font-bold px-2.5 py-0.5 rounded border border-emerald-150 uppercase tracking-wider">Completed</span>
+                                        class="bg-emerald-50 text-emerald-750 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/50 text-[10px] font-bold px-2.5 py-0.5 rounded border border-emerald-150 uppercase tracking-wider">Completed</span>
                                 @elseif ($project->status === 'cancelled')
                                     <span
-                                        class="bg-rose-50 text-rose-750 text-[10px] font-bold px-2.5 py-0.5 rounded border border-rose-150 uppercase tracking-wider">Cancelled</span>
+                                        class="bg-rose-50 text-rose-750 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-900/50 text-[10px] font-bold px-2.5 py-0.5 rounded border border-rose-150 uppercase tracking-wider">Cancelled</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-center text-xs text-gray-600 font-medium">
+                            <td class="px-6 py-4 text-center text-xs text-gray-600 dark:text-zinc-400 font-medium">
                                 {{ $project->start_date ? \Carbon\Carbon::parse($project->start_date)->format('d M Y') : '—' }}
                             </td>
-                            <td class="px-6 py-4 text-center text-xs text-gray-600 font-medium">
+                            <td class="px-6 py-4 text-center text-xs text-gray-600 dark:text-zinc-400 font-medium">
                                 {{ $project->end_date ? \Carbon\Carbon::parse($project->end_date)->format('d M Y') : '—' }}
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <span
-                                    class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full border border-indigo-100">
+                                    class="bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-900/50 text-xs font-bold px-2 py-0.5 rounded-full border border-indigo-100">
                                     {{ $project->tasks_count }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <span
-                                    class="bg-rose-50 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full border border-rose-100">
+                                    class="bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-900/50 text-xs font-bold px-2 py-0.5 rounded-full border border-rose-100">
                                     {{ $project->defects_count }}
                                 </span>
                             </td>
@@ -89,7 +93,7 @@
                                     @if ($project->trashed())
                                         @can('Project-Restore')
                                             <button type="button"
-                                                class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                class="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/40 rounded-lg transition-colors"
                                                 title="Restore" onclick="confirmRestore({{ $project->id }})">
                                                 <i class="fa-solid fa-rotate-left text-lg"></i>
                                             </button>
@@ -101,12 +105,14 @@
                                     @else
                                         @can('Project-Edit')
                                             <a href="{{ route('projects.edit', $project->id) }}"
-                                                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                                                class="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-lg transition-colors"
+                                                title="Edit">
                                                 <i class="fa-solid fa-pen-to-square text-lg"></i>
                                             </a>
                                         @endcan
                                         @can('Project-Delete')
-                                            <button type="button" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                            <button type="button"
+                                                class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg transition-colors"
                                                 title="Delete" onclick="confirmDelete({{ $project->id }})">
                                                 <i class="fa-solid fa-trash-can text-lg"></i>
                                             </button>
@@ -122,7 +128,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-10 text-center text-gray-400 italic text-sm">
+                            <td colspan="8" class="px-6 py-10 text-center text-gray-400 dark:text-zinc-500 italic text-sm">
                                 No projects recorded yet.
                             </td>
                         </tr>

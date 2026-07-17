@@ -118,7 +118,7 @@
                                                 <button type="button" title="Delete Role"
                                                     onclick="confirmDeleteRole({{ $role->id }}, '{{ addslashes($role->name) }}')"
                                                     class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
-                                                    <i class="fa-solid fa-trash text-base"></i>
+                                                    <i class="fa-solid fa-trash-can text-base"></i>
                                                 </button>
                                             </form>
                                         @else

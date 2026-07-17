@@ -85,20 +85,24 @@
                 @enderror --}}
 
                 @forelse ($permissions as $module => $perms)
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div
+                        class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800 overflow-hidden">
 
                         {{-- Module Header --}}
-                        <div class="flex items-center justify-between px-5 py-3 bg-gray-50 border-b border-gray-100">
+                        <div
+                            class="flex items-center justify-between px-5 py-3 bg-gray-50 dark:bg-zinc-950/50 border-b border-gray-100 dark:border-zinc-800">
                             <div class="flex items-center gap-2">
-                                <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center">
+                                <div
+                                    class="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 flex items-center justify-center">
                                     <i class="fa-solid fa-layer-group text-indigo-500 text-xs"></i>
                                 </div>
-                                <span class="text-sm font-semibold text-gray-700">{{ $module }}</span>
-                                <span class="text-xs text-gray-400 font-normal">({{ $perms->count() }})</span>
+                                <span class="text-sm font-semibold text-gray-700 dark:text-zinc-350">{{ $module }}</span>
+                                <span
+                                    class="text-xs text-gray-400 dark:text-zinc-500 font-normal">({{ $perms->count() }})</span>
                             </div>
                             {{-- Module-level select toggle --}}
                             <button type="button" onclick="toggleModule('{{ $module }}')"
-                                class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                                class="text-xs font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                                 id="toggle-btn-{{ Str::slug($module) }}">
                                 Select All
                             </button>
@@ -108,16 +112,17 @@
                         <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3" id="module-{{ Str::slug($module) }}">
                             @foreach ($perms as $perm)
                                 <label
-                                    class="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:border-blue-200 hover:bg-blue-50 cursor-pointer transition-all group has-[:checked]:border-blue-300 has-[:checked]:bg-blue-50">
+                                    class="flex items-center gap-3 p-3 rounded-lg border border-gray-100 dark:border-zinc-800 hover:border-blue-200 dark:hover:border-blue-500/50 hover:bg-blue-50 dark:hover:bg-blue-950/20 cursor-pointer transition-all group has-[:checked]:border-blue-300 dark:has-[:checked]:border-blue-500/85 has-[:checked]:bg-blue-50 dark:has-[:checked]:bg-blue-950/30">
                                     <input type="checkbox" name="permission[]" value="{{ $perm->name }}"
-                                        class="perm-checkbox w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer"
+                                        class="perm-checkbox w-4 h-4 text-blue-600 rounded border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:focus:ring-blue-500/50 focus:ring-blue-500 cursor-pointer"
                                         data-module="{{ Str::slug($module) }}" {{ in_array($perm->name, old('permission', [])) ? 'checked' : '' }}>
                                     <div>
                                         {{-- Show only the action part e.g. "Index" from "Employee-Index" --}}
-                                        <p class="text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-colors">
+                                        <p
+                                            class="text-sm font-medium text-gray-700 dark:text-zinc-300 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
                                             {{ explode('-', $perm->name)[1] ?? $perm->name }}
                                         </p>
-                                        <p class="text-xs text-gray-400">{{ $perm->name }}</p>
+                                        <p class="text-xs text-gray-400 dark:text-zinc-500">{{ $perm->name }}</p>
                                     </div>
                                 </label>
                             @endforeach

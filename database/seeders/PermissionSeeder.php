@@ -22,7 +22,7 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Department-Create']);
         Permission::firstOrCreate(['name' => 'Department-Edit']);
         Permission::firstOrCreate(['name' => 'Department-Delete']);
-        Permission::firstOrCreate(['name' => 'Department-View']);
+        // Permission::firstOrCreate(['name' => 'Department-View']);
         Permission::firstOrCreate(['name' => 'Department-Restore']);
         Permission::firstOrCreate(['name' => 'Department-ForceDelete']);
 
@@ -77,14 +77,14 @@ class PermissionSeeder extends Seeder
 
         // ===== REPORTS =====
         Permission::firstOrCreate(['name' => 'Employees-Report']);
-        Permission::firstOrCreate(['name' => 'Departments-Report']);
-        Permission::firstOrCreate(['name' => 'Attendance-Report']);
-        Permission::firstOrCreate(['name' => 'LeaveTypes-Report']);
-        Permission::firstOrCreate(['name' => 'Leaves-Report']);
-        Permission::firstOrCreate(['name' => 'Tasks-Report']);
+        // Permission::firstOrCreate(['name' => 'Departments-Report']);
+        // Permission::firstOrCreate(['name' => 'Attendance-Report']);
+        // Permission::firstOrCreate(['name' => 'LeaveTypes-Report']);
+        // Permission::firstOrCreate(['name' => 'Leaves-Report']);
+        // Permission::firstOrCreate(['name' => 'Tasks-Report']);
 
         // ===== SETTINGS =====
-        Permission::firstOrCreate(['name' => 'Settings-Index']);
+        // Permission::firstOrCreate(['name' => 'Settings-Index']);
         Permission::firstOrCreate(['name' => 'Company-Index']);
         Permission::firstOrCreate(['name' => 'Company-Edit']);
 
@@ -155,7 +155,7 @@ class PermissionSeeder extends Seeder
             'Department-Create',
             'Department-Edit',
             'Department-Delete',
-            'Department-View',
+            // 'Department-View',
             'Department-Restore',
             'AccessManagement-Index',
             'AccessManagement-Create',
@@ -188,12 +188,12 @@ class PermissionSeeder extends Seeder
             'Task-Comment',
             'Task-Document',
             'Employees-Report',
-            'Departments-Report',
-            'Attendance-Report',
-            'LeaveTypes-Report',
-            'Leaves-Report',
-            'Tasks-Report',
-            'Settings-Index',
+            // 'Departments-Report',
+            // 'Attendance-Report',
+            // 'LeaveTypes-Report',
+            // 'Leaves-Report',
+            // 'Tasks-Report',
+            // 'Settings-Index',
             'Company-Index',
             'Company-Edit',
             'Holiday-Index',
@@ -241,7 +241,7 @@ class PermissionSeeder extends Seeder
             'Department-Create',
             'Department-Edit',
             'Department-Delete',
-            'Department-View',
+            // 'Department-View',
             'Department-Restore',
             'Employee-Index',
             'Employee-Create',
@@ -266,11 +266,11 @@ class PermissionSeeder extends Seeder
             'Task-Comment',
             'Task-Document',
             'Employees-Report',
-            'Departments-Report',
-            'Attendance-Report',
-            'LeaveTypes-Report',
-            'Leaves-Report',
-            'Tasks-Report',
+            // 'Departments-Report',
+            // 'Attendance-Report',
+            // 'LeaveTypes-Report',
+            // 'Leaves-Report',
+            // 'Tasks-Report',
             'Holiday-Index',
             'Holiday-Create',
             'Holiday-Edit',
@@ -312,7 +312,7 @@ class PermissionSeeder extends Seeder
         $deptManager->syncPermissions([
             'Dashboard',
             'Department-Index',
-            'Department-View',
+            // 'Department-View',
             'Employee-Index',
             'Employee-View',
             'Employee-Profile-Edit',
@@ -330,9 +330,9 @@ class PermissionSeeder extends Seeder
             'Task-ProgressUpdate',
             'Task-Comment',
             'Task-Document',
-            'Attendance-Report',
-            'Leaves-Report',
-            'Tasks-Report',
+            // 'Attendance-Report',
+            // 'Leaves-Report',
+            // 'Tasks-Report',
             'Holiday-Index',
             'Holiday-View',
             'Payslip-Index',
