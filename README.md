@@ -1,6 +1,6 @@
 # 💼 StaffHub — Enterprise Employee & HR Management System
 
-StaffHub is a modern, and feature-rich **Employee and HR Management System (HRMS)** built on Laravel 11. It is designed to streamline day-to-day HR workflows including employee lifecycle tracking, attendance logging, department structuring, leave approvals, task monitoring, announcements, payroll generation, and advanced reporting.
+StaffHub is a modern, responsive and feature-rich **Employee and HR Management System (HRMS)** built on Laravel 11. It is designed to streamline day-to-day HR workflows including employee lifecycle tracking, attendance logging, department structuring, leave approvals, task monitoring, announcements, payroll generation, and advanced reporting.
 
 ---
 
@@ -26,36 +26,40 @@ StaffHub consists of several fully integrated modules that cover all operational
 - Auto-calculates active employee headcounts per department.
 - Restore capabilities for soft-deleted departments.
 
-### ⏱️ 4. Daily Attendance Logs
+### ⏱️ 4. Daily Attendance Logs & Breaks
 
 - Interactive, one-click Daily Punch-In / Punch-Out logging system.
 - Computes active work duration automatically.
-- Visual indicators of attendance logs with daily records.
+- Break Room: Manage break states (`ongoing` vs `completed`) with custom break types.
 
 ### 🏖️ 5. Leave & Holiday Systems
 
 - **Leave Management:** Dynamic leave type policies, application submission portal for employees, and HR approvals/rejections workflow.
 - **Holidays Calendar:** Manage public, optional, and company-specific holidays. Includes soft-delete recovery mechanisms.
 
-### 📋 6. Task Management
+### 📋 6. Project & Task Management
 
 - Create, delegate, and monitor projects and tasks across teams.
 - Stage-based workflow: Assignee updates progress, tester validates task completion.
 - Built-in file attachment uploading (documents) and comments history on individual tasks.
 
-### 💰 7. Payroll & Payslip Engine
+### 🐛 7. Defect Tracking (Bug Reports)
+
+- Report issues/bugs mapping them to specific projects, severities (`low`, `medium`, `high`, `critical`), and environment parameters.
+- Assign bugs to engineers and trace timeline status updates from reporting to closing.
+
+### 💰 8. Payroll & Payslip Engine
 
 - Custom salary structure allocation (Basic, HRA, Medical, Allowances, PF, Tax).
 - Automatic generation of monthly payslips.
 - Payslip publishing, visual preview layouts, and status tracking (Draft, Published, Paid).
 
-### 📢 8. Announcements (Internal Newsroom)
+### 📢 9. Announcements (Internal Newsroom)
 
 - Internal news broadcasting system for all employees.
 - Supports publication scheduling, priority flags (Low, Medium, High), and active status (Draft vs. Published).
-- Form date selection restricted to present and past dates to maintain historical logging integrity.
 
-### 📊 9. Advanced Reporting & Exports
+### 📊 10. Advanced Reporting & Exports
 
 - Integrates `datatables` (Tailwind Theme) for lightning-fast table queries, pagination, global searches, and styling.
 - One-click data exports to **Excel**, **PDF**, **Printable formats**, or system clipboard.
@@ -64,12 +68,135 @@ StaffHub consists of several fully integrated modules that cover all operational
 
 ## 🛠️ Technology Stack
 
-- **Back-end:** Laravel 13 (PHP 8.2), Eloquent ORM
+- **Back-end:** Laravel 11 (PHP 8.2), Eloquent ORM
 - **Security & Roles:** Spatie Laravel-Permission
 - **Front-end:** Tailwind CSS, HTML5
-- **Interactivity:** SweetAlert2 (Premium popup dialogs), FontAwesome Icons
+- **Interactivity:** SweetAlert2 (Premium popup dialogs), FontAwesome Icons, AlpineJS
 - **Data Management:** DataTables (Tailwind CSS Integration)
-- **Database:** PostgreSQL
+- **Database:** PostgreSQL / MySQL
+
+---
+
+## 📊 Database Schema Relationship Map
+
+The following ER diagram maps out how the tables interact inside StaffHub:
+
+```mermaid
+erDiagram
+    users ||--o| departments : "belongs to"
+    users ||--o{ attendances : "records"
+    users ||--o{ employee_breaks : "takes"
+    users ||--o{ leaves : "requests"
+    users ||--o{ tasks : "assigned_to / assigned_by"
+    users ||--o{ defects : "reported_by / assigned_to"
+    users ||--o{ payslips : "earns"
+
+    projects ||--o{ tasks : "has"
+    projects ||--o{ defects : "contains"
+
+    leave_types ||--o{ leaves : "defines"
+
+    departments {
+        bigint id PK
+        string name
+        text description
+        timestamp deleted_at
+    }
+
+    users {
+        bigint id PK
+        bigint department_id FK
+        string name
+        string email
+        string employee_id
+        enum status "active, inactive, terminated"
+        timestamp deleted_at
+    }
+
+    projects {
+        bigint id PK
+        string name
+        text description
+        date start_date
+        date end_date
+        enum status "planning, in_progress, on_hold, completed, cancelled"
+        timestamp deleted_at
+    }
+
+    tasks {
+        bigint id PK
+        bigint project_id FK
+        bigint assigned_by FK
+        bigint assigned_to FK
+        bigint tester_id FK
+        string title
+        text description
+        date deadline
+        enum priority "low, medium, high, critical"
+        enum status "open, in_progress, testing, completed, closed"
+        timestamp deleted_at
+    }
+
+    defects {
+        bigint id PK
+        bigint project_id FK
+        bigint reported_by FK
+        bigint assigned_to FK
+        bigint closed_by FK
+        string defect_id
+        string title
+        text description
+        enum severity "low, medium, high, critical"
+        enum priority "low, medium, high, urgent"
+        enum status "open, in_progress, ready_for_testing, closed, reopened"
+        timestamp deadline
+        timestamp deleted_at
+    }
+
+    attendances {
+        bigint id PK
+        bigint user_id FK
+        date date
+        time clock_in
+        time clock_out
+        enum status "present, absent, half_day, on_leave, late"
+    }
+
+    employee_breaks {
+        bigint id PK
+        bigint attendance_id FK
+        time break_in
+        time break_out
+        enum status "ongoing, completed, auto_completed"
+    }
+
+    leaves {
+        bigint id PK
+        bigint user_id FK
+        bigint leave_type_id FK
+        date start_date
+        date end_date
+        text reason
+        enum status "pending, approved, rejected"
+    }
+
+    leave_types {
+        bigint id PK
+        string name
+        integer days_allowed
+        boolean is_active
+    }
+
+    payslips {
+        bigint id PK
+        bigint user_id FK
+        string month
+        integer year
+        decimal basic_salary
+        decimal net_salary
+        enum status "unpaid, paid"
+    }
+```
 
 ---
 
@@ -165,5 +292,3 @@ To make evaluation easy, the database seeder creates default accounts for every 
 - **Robust Soft Deletes:** Standardized soft-delete safety boundaries across critical assets (Employees, Departments, Holidays, Announcements).
 - **Validation & Data Cleanliness:** High-security validation criteria (e.g. date limits like `before_or_equal:today` on announcement publish parameters) preventing invalid state changes.
 - **Dynamic Table Controls:** Multi-format file exporter configured with HTML5 Buttons for high fidelity reports.
-
----
