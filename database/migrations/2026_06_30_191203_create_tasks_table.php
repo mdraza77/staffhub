@@ -35,7 +35,7 @@ return new class extends Migration {
             $table->string('title');
             $table->longText('description')->nullable();
 
-            $table->date('deadline')->nullable();
+            $table->dateTime('deadline')->nullable();
 
             $table->enum('priority', [
                 'low',

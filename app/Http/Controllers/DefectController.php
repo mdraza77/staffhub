@@ -70,10 +70,11 @@ class DefectController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'project_id' => 'nullable|exists:projects,id',
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'steps_to_reproduce' => 'nullable|string',
             'module' => 'required|string|max:255',
             'sub_module' => 'nullable|string|max:255',
@@ -82,6 +83,9 @@ class DefectController extends Controller implements HasMiddleware
             'severity' => 'required|in:low,medium,high,critical',
             'priority' => 'required|in:low,medium,high,urgent',
             'assigned_to' => 'nullable|exists:users,id',
+            'deadline' => 'nullable|date|after_or_equal:start_date',
+            'closed_by' => 'nullable|exists:users,id',
+            'closed_at' => 'nullable|date',
         ]);
 
         try {
@@ -90,7 +94,7 @@ class DefectController extends Controller implements HasMiddleware
             $defect = Defect::create([
                 'project_id' => $request->project_id,
                 'title' => $request->title,
-                'description' => $request->description,
+                'description' => $request->description ?? '',
                 'steps_to_reproduce' => $request->steps_to_reproduce,
                 'module' => $request->module,
                 'sub_module' => $request->sub_module,
@@ -101,6 +105,7 @@ class DefectController extends Controller implements HasMiddleware
                 'status' => 'open',
                 'reported_by' => Auth::id(),
                 'assigned_to' => $request->assigned_to,
+                'deadline' => $request->deadline,
             ]);
 
             // Create initial history log
@@ -128,8 +133,9 @@ class DefectController extends Controller implements HasMiddleware
         $defect->load(['reporter', 'assignee', 'attachments.uploader', 'histories.user', 'project']);
         $employees = User::withTrashed()
             ->where(function ($query) use ($defect) {
-                $query->where('status', 'active')
-                      ->orWhere('id', $defect->assigned_to);
+                $query
+                    ->where('status', 'active')
+                    ->orWhere('id', $defect->assigned_to);
             })
             ->orderBy('name')
             ->get();
@@ -144,12 +150,13 @@ class DefectController extends Controller implements HasMiddleware
     {
         $employees = User::withTrashed()
             ->where(function ($query) use ($defect) {
-                $query->where('status', 'active')
-                      ->orWhere('id', $defect->assigned_to);
+                $query
+                    ->where('status', 'active')
+                    ->orWhere('id', $defect->assigned_to);
             })
             ->orderBy('name')
             ->get();
-        
+
         $projects = Project::orderBy('name')->get();
         if ($defect->project_id && !$projects->contains('id', $defect->project_id)) {
             $projects = $projects->push(Project::withTrashed()->find($defect->project_id));
@@ -166,7 +173,7 @@ class DefectController extends Controller implements HasMiddleware
         $request->validate([
             'project_id' => 'nullable|exists:projects,id',
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'steps_to_reproduce' => 'nullable|string',
             'module' => 'required|string|max:255',
             'sub_module' => 'nullable|string|max:255',
@@ -176,6 +183,7 @@ class DefectController extends Controller implements HasMiddleware
             'priority' => 'required|in:low,medium,high,urgent',
             'assigned_to' => 'nullable|exists:users,id',
             'status' => 'required|in:open,in_progress,ready_for_testing,closed,reopened',
+            'deadline' => 'nullable|date',
         ]);
 
         try {
@@ -184,10 +192,10 @@ class DefectController extends Controller implements HasMiddleware
             $oldStatus = $defect->status;
             $newStatus = $request->status;
 
-            $defect->update([
+            $updateData = [
                 'project_id' => $request->project_id,
                 'title' => $request->title,
-                'description' => $request->description,
+                'description' => $request->description ?? '',
                 'steps_to_reproduce' => $request->steps_to_reproduce,
                 'module' => $request->module,
                 'sub_module' => $request->sub_module,
@@ -197,7 +205,20 @@ class DefectController extends Controller implements HasMiddleware
                 'priority' => $request->priority,
                 'status' => $newStatus,
                 'assigned_to' => $request->assigned_to,
-            ]);
+                'deadline' => $request->deadline,
+            ];
+
+            if ($newStatus === 'closed') {
+                if ($oldStatus !== 'closed') {
+                    $updateData['closed_by'] = Auth::id();
+                    $updateData['closed_at'] = now();
+                }
+            } else {
+                $updateData['closed_by'] = null;
+                $updateData['closed_at'] = null;
+            }
+
+            $defect->update($updateData);
 
             if ($oldStatus !== $newStatus) {
                 $defect->histories()->create([
@@ -239,6 +260,7 @@ class DefectController extends Controller implements HasMiddleware
         $imageKit = ImageKitService::getInstance();
         $request->validate([
             'file' => 'required|file|max:10240',  // Max 10MB file
+            'remark' => 'nullable|string|max:255',
         ]);
 
         $filePath = null;
@@ -268,6 +290,7 @@ class DefectController extends Controller implements HasMiddleware
                     'file_path' => $filePath,
                     'file_type' => $fileType,
                     'file_size' => $fileSize,
+                    'remark' => $request->remark,
                 ]);
 
                 return back()->with('success', 'Attachment uploaded successfully.');
@@ -307,9 +330,19 @@ class DefectController extends Controller implements HasMiddleware
         try {
             DB::beginTransaction();
 
-            $defect->update([
+            $updateData = [
                 'status' => $newStatus,
-            ]);
+            ];
+
+            if ($newStatus === 'closed') {
+                $updateData['closed_by'] = Auth::id();
+                $updateData['closed_at'] = now();
+            } else {
+                $updateData['closed_by'] = null;
+                $updateData['closed_at'] = null;
+            }
+
+            $defect->update($updateData);
 
             $defect->histories()->create([
                 'changed_by' => Auth::id(),

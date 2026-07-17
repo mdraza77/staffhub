@@ -25,6 +25,7 @@
                         <th class="px-6 py-3 font-semibold text-center">Severity</th>
                         <th class="px-6 py-3 font-semibold text-center">Priority</th>
                         <th class="px-6 py-3 font-semibold text-center">Assignee</th>
+                        <th class="px-6 py-3 font-semibold text-center whitespace-nowrap">Deadline</th>
                         <th class="px-6 py-3 font-semibold text-center whitespace-nowrap">Status</th>
                         <th class="px-6 py-3 font-semibold text-center whitespace-nowrap">Action</th>
                     </tr>
@@ -100,6 +101,11 @@
                                     <span class="text-gray-400 italic">Unassigned</span>
                                 @endif
                             </td>
+                            <td class="px-6 py-4 text-center text-xs text-gray-700 whitespace-nowrap">
+                                <span class="{{ $defect->deadline && $defect->deadline->isPast() && $defect->status !== 'closed' ? 'text-red-600 font-bold' : 'text-gray-700' }}">
+                                    {{ $defect->deadline ? $defect->deadline->format('d M Y') : '—' }}
+                                </span>
+                            </td>
                             <td class="px-6 py-4 text-center text-sm font-semibold whitespace-nowrap">
                                 @if ($defect->trashed())
                                     <span
@@ -149,7 +155,7 @@
                                         <button type="button" onclick="confirmDelete('{{ $defect->id }}')"
                                             title="Archive Defect"
                                             class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                            <i class="fa-solid fa-trash text-base"></i>
+                                            <i class="fa-solid fa-trash-can text-base"></i>
                                         </button>
                                         <form id="delete-form-{{ $defect->id }}"
                                             action="{{ route('defects.destroy', $defect->id) }}" method="POST" class="hidden">

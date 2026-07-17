@@ -15,23 +15,24 @@ return new class extends Migration {
             $table->string('defect_id')->unique();
 
             $table->string('title');
-            $table->longText('description');
+            $table->longText('description')->nullable();
             $table->longText('steps_to_reproduce')->nullable();
 
-            $table->string('module');
+            $table->string('module')->nullable();
             $table->string('sub_module')->nullable();
-            $table->string('environment')->default('production');
+            $table->string('environment')->default('production')->nullable();
             $table->string('browser_os')->nullable();
 
-            $table->enum('severity', ['low', 'medium', 'high', 'critical']);
-            $table->enum('priority', ['low', 'medium', 'high', 'urgent']);
-            $table->enum('status', ['open', 'in_progress', 'ready_for_testing', 'closed', 'reopened'])->default('open');
+            $table->enum('severity', ['low', 'medium', 'high', 'critical'])->nullable();
+            $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->nullable();
+            $table->enum('status', ['open', 'in_progress', 'ready_for_testing', 'closed', 'reopened'])->default('open')->nullable();
             $table->dateTime('deadline')->nullable();
-            $table->foreignId('closed_by')->nullable()->constrained('users');
-            $table->dateTime('closed_at')->nullable();
 
-            $table->foreignId('reported_by')->constrained('users');
+            $table->foreignId('reported_by')->constrained('users')->nullable();
             $table->foreignId('assigned_to')->nullable()->constrained('users');
+            $table->foreignId('closed_by')->nullable()->constrained('users');
+
+            $table->dateTime('closed_at')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

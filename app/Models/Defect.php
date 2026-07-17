@@ -10,9 +10,28 @@ class Defect extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'defect_id', 'project_id', 'title', 'description', 'steps_to_reproduce',
-        'module', 'sub_module', 'environment', 'browser_os',
-        'severity', 'priority', 'status', 'reported_by', 'assigned_to'
+        'defect_id',
+        'project_id',
+        'title',
+        'description',
+        'steps_to_reproduce',
+        'module',
+        'sub_module',
+        'environment',
+        'browser_os',
+        'severity',
+        'priority',
+        'status',
+        'reported_by',
+        'assigned_to',
+        'deadline',
+        'closed_by',
+        'closed_at',
+    ];
+
+    protected $casts = [
+        'deadline' => 'date',
+        'closed_at' => 'date',
     ];
 
     // Auto-generate Bug ID
@@ -41,6 +60,11 @@ class Defect extends Model
     public function assignee()
     {
         return $this->belongsTo(User::class, 'assigned_to')->withTrashed();
+    }
+
+    public function closedBy()
+    {
+        return $this->belongsTo(User::class, 'closed_by')->withTrashed();
     }
 
     // One Defect has Many Attachments

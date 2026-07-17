@@ -210,14 +210,32 @@
                     @endif
 
                     <div class="flex justify-between items-center border-b border-gray-50 pb-2.5">
+                        <span class="text-gray-500">Deadline:</span>
+                        <span class="font-bold {{ $defect->deadline && $defect->deadline->isPast() && $defect->status !== 'closed' ? 'text-red-650' : 'text-gray-800' }}">
+                            {{ $defect->deadline ? $defect->deadline->format('d M Y') : 'No Deadline' }}
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between items-center border-b border-gray-50 pb-2.5">
                         <span class="text-gray-500">Assignee:</span>
                         <span class="font-bold text-indigo-650">{{ $defect->assignee->name ?? 'Unassigned' }}</span>
                     </div>
 
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center {{ $defect->status === 'closed' ? 'border-b border-gray-50 pb-2.5' : '' }}">
                         <span class="text-gray-500">Reporter:</span>
                         <span class="font-semibold text-gray-700">{{ $defect->reporter->name ?? 'User' }}</span>
                     </div>
+
+                    @if ($defect->status === 'closed')
+                        <div class="flex justify-between items-center border-b border-gray-50 pb-2.5">
+                            <span class="text-gray-500">Closed By:</span>
+                            <span class="font-bold text-gray-800">{{ $defect->closedBy->name ?? 'System' }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500">Closed At:</span>
+                            <span class="font-semibold text-gray-750">{{ $defect->closed_at ? $defect->closed_at->format('d M Y, h:i A') : '—' }}</span>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -313,6 +331,11 @@
                                 class="w-full text-xs text-gray-700 border border-gray-300 bg-white rounded-lg px-2 py-1.5 focus:ring-1 focus:ring-indigo-500"
                                 required>
                         </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Remark / Label</label>
+                            <input type="text" name="remark" placeholder="e.g., Checkout page error screenshot"
+                                class="w-full text-xs text-gray-700 border border-gray-300 bg-white rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-indigo-500">
+                        </div>
                         <button type="submit"
                             class="w-full bg-teal-600 hover:bg-teal-700 text-white py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1 shadow-sm">
                             <i class="fa-solid fa-upload"></i> Upload File
@@ -335,6 +358,11 @@
                                 <span class="text-[9px] text-gray-400 font-medium font-mono ml-auto">{{ $attach->file_size }}
                                     KB</span>
                             </div>
+                            @if ($attach->remark)
+                                <div class="bg-gray-50 border border-gray-100 rounded p-1.5 text-[10px] text-gray-600 leading-normal italic">
+                                    {{ $attach->remark }}
+                                </div>
+                            @endif
                             <div
                                 class="flex justify-between items-center text-[10px] text-gray-405 border-t border-gray-50 pt-1.5">
                                 <span>By {{ $attach->uploader->name ?? 'User' }}</span>

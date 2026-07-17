@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DefectAttachment extends Model
 {
-    protected $fillable = ['defect_id', 'uploaded_by', 'file_name', 'file_path', 'file_type', 'file_size'];
+    protected $fillable = ['defect_id', 'uploaded_by', 'file_name', 'file_path', 'file_type', 'file_size', 'remark'];
 
     public function defect()
     {

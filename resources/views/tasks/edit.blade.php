@@ -22,7 +22,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Project</label>
                 <select name="project_id"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
-                    <option value="">Select a Project (Optional)</option>
+                    <option value="">Select Project</option>
                     @foreach ($projects as $project)
                         <option value="{{ $project->id }}"
                             {{ old('project_id', $task->project_id) == $project->id ? 'selected' : '' }}>
@@ -87,7 +87,7 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Status <span
+                <label class="block text-sm font-medium text-gray-700 mb-1">Current Status <span
                         class="text-red-500">*</span></label>
                 <select name="status"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"

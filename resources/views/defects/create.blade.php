@@ -34,7 +34,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Project</label>
                 <select name="project_id"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
-                    <option value="">Select a Project (Optional)</option>
+                    <option value="">Select Project</option>
                     @foreach ($projects as $project)
                         <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>
                             {{ $project->name }}{{ $project->trashed() ? ' [Deleted]' : '' }}
@@ -109,7 +109,7 @@
                 </select>
             </div>
 
-            <div class="md:col-span-2">
+            <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Assignee (Engineer)</label>
                 <select name="assigned_to"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
@@ -122,13 +122,19 @@
                 </select>
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Deadline / Target Fix Date</label>
+                <input type="date" name="deadline" value="{{ old('deadline', now()->addDays(1)->format('Y-m-d')) }}"
+                    min="{{ now()->format('Y-m-d') }}"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+            </div>
+
             <div class="md:col-span-2 border-b border-gray-100 pb-2 mb-2 mt-4">
                 <h3 class="text-lg font-semibold text-gray-800">Description & Reproduction Steps</h3>
             </div>
 
             <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Defect Description <span
-                        class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Defect Description</label>
                 <textarea name="description" id="defect-description-editor"
                     placeholder="Write a detailed summary of the bug..."></textarea>
             </div>
@@ -142,9 +148,6 @@
         </div>
 
         <div class="mt-8 flex justify-end gap-3 border-t border-gray-100 pt-5">
-            {{-- <a href="{{ route('defects.index') }}"
-                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">Cancel</a>
-            --}}
             <button type="submit"
                 class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium shadow-sm">Report
                 Defect</button>
