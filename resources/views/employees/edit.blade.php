@@ -286,48 +286,94 @@
 
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const phoneInput = document.querySelector('input[name="phone"]');
-            if (!phoneInput) return;
+        function setupPhoneValidation(inputElement) {
+            if (!inputElement) return;
 
-            // Dynamic warning message setup
+            // Create warning span
             const warnSpan = document.createElement('span');
             warnSpan.className = 'text-xs text-red-500 mt-1 hidden block';
             warnSpan.textContent = 'Format invalid. Example: +919876543210 (Must include + and country code)';
-            phoneInput.parentNode.appendChild(warnSpan);
+            inputElement.parentNode.appendChild(warnSpan);
 
-            // Validation function ko alag kar diya
-            const validatePhone = () => {
-                const val = phoneInput.value.trim();
-
-                if (val === '') {
-                    phoneInput.classList.remove('border-red-500');
-                    warnSpan.classList.add('hidden');
-                    phoneInput.setCustomValidity('');
+            // Block non-numeric and non-+ keypresses
+            inputElement.addEventListener('keypress', function (e) {
+                const char = String.fromCharCode(e.which || e.keyCode);
+                
+                // Allow '+' only at the very beginning
+                if (char === '+' && this.selectionStart === 0 && !this.value.includes('+')) {
+                    return;
+                }
+                
+                // Allow only digits (0-9)
+                if (!/^[0-9]$/.test(char)) {
+                    e.preventDefault();
                     return;
                 }
 
-                // Strict Regex: Starts with '+', then 1-3 digit country code, exactly 10 digits
-                const regex = /^\+\d{1,3}\d{10}$/;
+                // Limit maximum character length
+                const maxLength = this.value.startsWith('+') ? 13 : 12;
+                if (this.value.length >= maxLength) {
+                    e.preventDefault();
+                }
+            });
+
+            // Handle paste and other input changes (sanitize non-numeric)
+            const validate = function (input) {
+                let val = input.value;
+                
+                // Sanitize: allow '+' only at index 0, and digits elsewhere
+                if (val.startsWith('+')) {
+                    val = '+' + val.slice(1).replace(/[^0-9]/g, '');
+                } else {
+                    val = val.replace(/[^0-9]/g, '');
+                }
+
+                // Enforce max length limit
+                const maxLength = val.startsWith('+') ? 13 : 12;
+                if (val.length > maxLength) {
+                    val = val.slice(0, maxLength);
+                }
+
+                input.value = val;
+
+                // Perform regex validation
+                if (val === '') {
+                    input.classList.remove('border-red-500');
+                    warnSpan.classList.add('hidden');
+                    input.setCustomValidity('');
+                    return;
+                }
+
+                // Regex: Starts with '+', then 1-3 country code, then exactly 10 digits
+                const regex = val.startsWith('+') ? /^\+\d{1,3}\d{10}$/ : /^\d{1,3}\d{10}$/;
 
                 if (!regex.test(val)) {
-                    phoneInput.classList.add('border-red-500');
+                    input.classList.add('border-red-500');
                     warnSpan.classList.remove('hidden');
-                    phoneInput.setCustomValidity('Invalid phone format.');
+                    input.setCustomValidity('Invalid phone format.');
                 } else {
-                    phoneInput.classList.remove('border-red-500');
+                    input.classList.remove('border-red-500');
                     warnSpan.classList.add('hidden');
-                    phoneInput.setCustomValidity('');
+                    input.setCustomValidity('');
                 }
             };
 
-            // 1. Jab user type karega tab validate hoga
-            phoneInput.addEventListener('input', validatePhone);
+            inputElement.addEventListener('input', function () {
+                validate(this);
+            });
 
-            // 2. IMPORTANT FOR EDIT PAGE: Page load hote hi purana data validate check karega
-            if (phoneInput.value.trim() !== '') {
-                validatePhone();
+            // Validate on load if has initial value
+            if (inputElement.value.trim() !== '') {
+                validate(inputElement);
             }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const phoneInput = document.querySelector('input[name="phone"]');
+            const emergencyInput = document.querySelector('input[name="emergency_contact"]');
+
+            setupPhoneValidation(phoneInput);
+            setupPhoneValidation(emergencyInput);
 
             // Live preview for profile image
             const profileInput = document.getElementById('profile-input');

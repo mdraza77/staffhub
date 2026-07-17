@@ -27,6 +27,9 @@ return new class extends Migration {
             $table->enum('severity', ['low', 'medium', 'high', 'critical']);
             $table->enum('priority', ['low', 'medium', 'high', 'urgent']);
             $table->enum('status', ['open', 'in_progress', 'ready_for_testing', 'closed', 'reopened'])->default('open');
+            $table->dateTime('deadline')->nullable();
+            $table->foreignId('closed_by')->nullable()->constrained('users');
+            $table->dateTime('closed_at')->nullable();
 
             $table->foreignId('reported_by')->constrained('users');
             $table->foreignId('assigned_to')->nullable()->constrained('users');

@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('file_path');
             $table->string('file_type')->nullable();  // png, jpg, pdf etc.
             $table->string('file_size')->nullable();  // in KB
+            $table->text('remark')->nullable();
 
             $table->timestamps();
         });

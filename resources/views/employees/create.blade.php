@@ -278,40 +278,94 @@
 
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const phoneInput = document.querySelector('input[name="phone"]');
-            if (!phoneInput) return;
+        function setupPhoneValidation(inputElement) {
+            if (!inputElement) return;
 
-            // Dynamic warning message setup
+            // Create warning span
             const warnSpan = document.createElement('span');
             warnSpan.className = 'text-xs text-red-500 mt-1 hidden block';
             warnSpan.textContent = 'Format invalid. Example: +919876543210 (Must include + and country code)';
-            phoneInput.parentNode.appendChild(warnSpan);
+            inputElement.parentNode.appendChild(warnSpan);
 
-            phoneInput.addEventListener('input', function () {
-                const val = this.value.trim();
+            // Block non-numeric and non-+ keypresses
+            inputElement.addEventListener('keypress', function (e) {
+                const char = String.fromCharCode(e.which || e.keyCode);
 
-                // Clear styling if input is empty
-                if (val === '') {
-                    this.classList.remove('border-red-500');
-                    warnSpan.classList.add('hidden');
-                    this.setCustomValidity('');
+                // Allow '+' only at the very beginning
+                if (char === '+' && this.selectionStart === 0 && !this.value.includes('+')) {
                     return;
                 }
 
-                // Regex Logic: Starts with '+', then 1-3 digit country code, then exactly 10 digits
-                const regex = /^\+\d{1,3}\d{10}$/;
+                // Allow only digits (0-9)
+                if (!/^[0-9]$/.test(char)) {
+                    e.preventDefault();
+                    return;
+                }
 
-                if (!regex.test(val)) {
-                    this.classList.add('border-red-500');
-                    warnSpan.classList.remove('hidden');
-                    this.setCustomValidity('Invalid phone format.');
-                } else {
-                    this.classList.remove('border-red-500');
-                    warnSpan.classList.add('hidden');
-                    this.setCustomValidity('');
+                // Limit maximum character length
+                const maxLength = this.value.startsWith('+') ? 13 : 12;
+                if (this.value.length >= maxLength) {
+                    e.preventDefault();
                 }
             });
+
+            // Handle paste and other input changes (sanitize non-numeric)
+            const validate = function (input) {
+                let val = input.value;
+
+                // Sanitize: allow '+' only at index 0, and digits elsewhere
+                if (val.startsWith('+')) {
+                    val = '+' + val.slice(1).replace(/[^0-9]/g, '');
+                } else {
+                    val = val.replace(/[^0-9]/g, '');
+                }
+
+                // Enforce max length limit
+                const maxLength = val.startsWith('+') ? 13 : 12;
+                if (val.length > maxLength) {
+                    val = val.slice(0, maxLength);
+                }
+
+                input.value = val;
+
+                // Perform regex validation
+                if (val === '') {
+                    input.classList.remove('border-red-500');
+                    warnSpan.classList.add('hidden');
+                    input.setCustomValidity('');
+                    return;
+                }
+
+                // Regex: Starts with '+', then 1-3 country code, then exactly 10 digits
+                const regex = val.startsWith('+') ? /^\+\d{1,3}\d{10}$/ : /^\d{1,3}\d{10}$/;
+
+                if (!regex.test(val)) {
+                    input.classList.add('border-red-500');
+                    warnSpan.classList.remove('hidden');
+                    input.setCustomValidity('Invalid phone format.');
+                } else {
+                    input.classList.remove('border-red-500');
+                    warnSpan.classList.add('hidden');
+                    input.setCustomValidity('');
+                }
+            };
+
+            inputElement.addEventListener('input', function () {
+                validate(this);
+            });
+
+            // Validate on load if has initial value
+            if (inputElement.value.trim() !== '') {
+                validate(inputElement);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const phoneInput = document.querySelector('input[name="phone"]');
+            const emergencyInput = document.querySelector('input[name="emergency_contact"]');
+
+            setupPhoneValidation(phoneInput);
+            setupPhoneValidation(emergencyInput);
 
             // Live preview for profile image
             const profileInput = document.getElementById('profile-input');
