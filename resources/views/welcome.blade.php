@@ -13,6 +13,9 @@
     <!-- Tailwind CSS (via Vite) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <link href="{{ asset('img/favicon.png') }}" rel="icon">
+    <link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon">
+
     <!-- Dark Mode Theme Initializer Script -->
     <script>
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -23,7 +26,8 @@
     </script>
 </head>
 
-<body class="font-['Inter'] antialiased bg-gray-50 text-gray-800 dark:bg-zinc-950 dark:text-zinc-100 selection:bg-blue-600 selection:text-white transition-colors duration-200">
+<body
+    class="font-['Inter'] antialiased bg-gray-50 text-gray-800 dark:bg-zinc-950 dark:text-zinc-100 selection:bg-blue-600 selection:text-white transition-colors duration-200">
 
     <div class="min-h-screen flex flex-col">
         <!-- Navigation -->

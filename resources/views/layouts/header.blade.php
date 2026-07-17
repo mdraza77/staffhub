@@ -20,8 +20,8 @@
         }
     </script>
 
-    <link href="{{ asset('assets/img/logo.png') }}" rel="icon">
-    <link href="{{ asset('assets/img/logo.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('img/favicon.png') }}" rel="icon">
+    <link href="{{ asset('img/favicon.png') }}" rel="apple-touch-icon">
 
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link
@@ -222,7 +222,7 @@
         </nav>
 
     </header>
-    
+
     <aside id="sidebar"
         class="fixed top-16 left-0 bottom-0 w-64 bg-white dark:bg-zinc-950 border-r border-gray-200 dark:border-zinc-800 z-40 transition-all duration-300 transform md:translate-x-0 -translate-x-full overflow-visible">
 
