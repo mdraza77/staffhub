@@ -83,178 +83,91 @@ The following ER diagram maps out how the tables interact inside StaffHub:
 
 ```mermaid
 erDiagram
-    departments ||--o{ users : "has"
+    users ||--o| departments : "belongs to"
     users ||--o{ attendances : "records"
-    users ||--o{ leaves : "requests"
-    users ||--o{ tasks : "assigned"
-    users ||--o{ task_documents : "uploads"
-    users ||--o{ task_status_histories : "changes"
-    users ||--o{ defects : "reported / assigned / closed"
-    users ||--o{ defect_status_histories : "changes"
-    users ||--o{ defect_attachments : "uploads"
-    users ||--o| salary_structures : "has"
-    users ||--o{ payslips : "earns"
     users ||--o{ employee_breaks : "takes"
-    users ||--o{ announcements : "creates"
+    users ||--o{ leaves : "requests"
+    users ||--o{ tasks : "assigned_to / assigned_by"
+    users ||--o{ defects : "reported_by / assigned_to"
+    users ||--o{ payslips : "earns"
 
-    break_types ||--o{ employee_breaks : "defines"
-    
     projects ||--o{ tasks : "has"
-    projects ||--o{ defects : "has"
-
-    tasks ||--o{ task_documents : "has"
-    tasks ||--o{ task_status_histories : "has"
-
-    defects ||--o{ defect_status_histories : "has"
-    defects ||--o{ defect_attachments : "has"
+    projects ||--o{ defects : "contains"
 
     leave_types ||--o{ leaves : "defines"
 
     departments {
         bigint id PK
-        varchar name
+        string name
         text description
-        timestamp created_at
-        timestamp updated_at
         timestamp deleted_at
     }
 
     users {
         bigint id PK
-        varchar name
-        varchar email
-        varchar password
         bigint department_id FK
-        varchar designation
-        varchar phone
-        date joining_date
-        varchar status
-        timestamp created_at
-        timestamp updated_at
+        string name
+        string email
+        string employee_id
+        enum status "active, inactive, terminated"
         timestamp deleted_at
-    }
-
-    company_settings {
-        bigint id PK
-        varchar setting_key
-        text setting_value
-        timestamp created_at
-        timestamp updated_at
     }
 
     projects {
         bigint id PK
-        varchar name
+        string name
         text description
-        varchar status
         date start_date
         date end_date
-        timestamp created_at
-        timestamp updated_at
+        enum status "planning, in_progress, on_hold, completed, cancelled"
         timestamp deleted_at
     }
 
     tasks {
         bigint id PK
         bigint project_id FK
-        varchar title
-        text description
+        bigint assigned_by FK
         bigint assigned_to FK
-        varchar status
-        varchar priority
-        date due_date
-        timestamp created_at
-        timestamp updated_at
+        bigint tester_id FK
+        string title
+        text description
+        date deadline
+        enum priority "low, medium, high, critical"
+        enum status "open, in_progress, testing, completed, closed"
         timestamp deleted_at
-    }
-
-    task_documents {
-        bigint id PK
-        bigint task_id FK
-        bigint user_id FK
-        varchar file_name
-        varchar file_path
-        text remark
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    task_status_histories {
-        bigint id PK
-        bigint task_id FK
-        varchar old_status
-        varchar new_status
-        text remark
-        bigint changed_by FK
-        timestamp created_at
-        timestamp updated_at
     }
 
     defects {
         bigint id PK
-        varchar defect_id
         bigint project_id FK
-        varchar title
-        text description
-        text steps_to_reproduce
-        varchar module
-        varchar sub_module
-        varchar environment
-        varchar browser_os
-        varchar severity
-        varchar priority
-        varchar status
-        timestamp deadline
         bigint reported_by FK
         bigint assigned_to FK
         bigint closed_by FK
-        timestamp closed_at
-        timestamp created_at
-        timestamp updated_at
+        string defect_id
+        string title
+        text description
+        enum severity "low, medium, high, critical"
+        enum priority "low, medium, high, urgent"
+        enum status "open, in_progress, ready_for_testing, closed, reopened"
+        timestamp deadline
         timestamp deleted_at
-    }
-
-    defect_status_histories {
-        bigint id PK
-        bigint defect_id FK
-        bigint changed_by FK
-        varchar old_status
-        varchar new_status
-        text remark
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    defect_attachments {
-        bigint id PK
-        bigint defect_id FK
-        bigint uploaded_by FK
-        varchar file_name
-        varchar file_path
-        varchar file_type
-        varchar file_size
-        text remark
-        timestamp created_at
-        timestamp updated_at
     }
 
     attendances {
         bigint id PK
         bigint user_id FK
         date date
-        timestamp punch_in
-        timestamp punch_out
-        varchar status
-        timestamp created_at
-        timestamp updated_at
+        time clock_in
+        time clock_out
+        enum status "present, absent, half_day, on_leave, late"
     }
 
-    leave_types {
+    employee_breaks {
         bigint id PK
-        varchar name
-        integer days_allowed
-        timestamp created_at
-        timestamp updated_at
+        bigint attendance_id FK
+        time break_in
+        time break_out
+        enum status "ongoing, completed, auto_completed"
     }
 
     leaves {
@@ -264,88 +177,25 @@ erDiagram
         date start_date
         date end_date
         text reason
-        varchar status
-        timestamp created_at
-        timestamp updated_at
-        timestamp deleted_at
+        enum status "pending, approved, rejected"
     }
 
-    holidays {
+    leave_types {
         bigint id PK
-        varchar name
-        date start_date
-        date end_date
-        varchar type
-        text description
-        varchar status
-        timestamp deleted_at
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    break_types {
-        bigint id PK
-        varchar name
-        integer duration_minutes
-        varchar icon
+        string name
+        integer days_allowed
         boolean is_active
-        timestamp deleted_at
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    employee_breaks {
-        bigint id PK
-        bigint user_id FK
-        bigint break_type_id FK
-        timestamp start_time
-        timestamp end_time
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    salary_structures {
-        bigint id PK
-        bigint user_id FK
-        decimal base_salary
-        decimal hra
-        decimal other_allowances
-        decimal pf_deduction
-        decimal tax_deduction
-        timestamp created_at
-        timestamp updated_at
     }
 
     payslips {
         bigint id PK
         bigint user_id FK
-        varchar month
+        string month
         integer year
-        integer working_days
-        integer present_days
-        integer paid_leaves
-        integer unpaid_leaves
-        decimal gross_salary
-        decimal total_deductions
+        decimal basic_salary
         decimal net_salary
-        varchar status
-        timestamp created_at
-        timestamp updated_at
+        enum status "unpaid, paid"
     }
-
-    announcements {
-        bigint id PK
-        varchar title
-        text message
-        bigint created_by FK
-        date publish_date
-        varchar priority
-        varchar status
-        timestamp deleted_at
-        timestamp created_at
-        timestamp updated_at
-    }
-}
 ```
 
 ---
