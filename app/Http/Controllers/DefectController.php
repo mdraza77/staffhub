@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Defect;
 use App\Models\DefectAttachment;
 use App\Models\DefectStatusHistory;
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\ImageKitService;
@@ -38,10 +39,10 @@ class DefectController extends Controller implements HasMiddleware
         $user = Auth::user();
 
         if ($user->hasRole('Super Admin') || $user->hasRole('Admin') || $user->hasRole('HR Manager')) {
-            $defects = Defect::withTrashed()->with(['reporter', 'assignee'])->latest()->get();
+            $defects = Defect::withTrashed()->with(['reporter', 'assignee', 'project'])->latest()->get();
         } else {
             $defects = Defect::withTrashed()
-                ->with(['reporter', 'assignee'])
+                ->with(['reporter', 'assignee', 'project'])
                 ->where(function ($q) use ($user) {
                     $q
                         ->where('reported_by', $user->id)
@@ -60,7 +61,7 @@ class DefectController extends Controller implements HasMiddleware
     public function create()
     {
         $employees = User::withTrashed()->where('status', 'active')->orderBy('name')->get();
-        $projects = Task::whereNotNull('project_name')->distinct()->pluck('project_name');
+        $projects = Project::orderBy('name')->get();
         return view('defects.create', compact('employees', 'projects'));
     }
 
@@ -70,7 +71,7 @@ class DefectController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         $request->validate([
-            'project_name' => 'nullable|string|max:255',
+            'project_id' => 'nullable|exists:projects,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'steps_to_reproduce' => 'nullable|string',
@@ -87,7 +88,7 @@ class DefectController extends Controller implements HasMiddleware
             DB::beginTransaction();
 
             $defect = Defect::create([
-                'project_name' => $request->project_name,
+                'project_id' => $request->project_id,
                 'title' => $request->title,
                 'description' => $request->description,
                 'steps_to_reproduce' => $request->steps_to_reproduce,
@@ -124,7 +125,7 @@ class DefectController extends Controller implements HasMiddleware
      */
     public function show(Defect $defect)
     {
-        $defect->load(['reporter', 'assignee', 'attachments.uploader', 'histories.user']);
+        $defect->load(['reporter', 'assignee', 'attachments.uploader', 'histories.user', 'project']);
         $employees = User::withTrashed()
             ->where(function ($query) use ($defect) {
                 $query->where('status', 'active')
@@ -132,8 +133,7 @@ class DefectController extends Controller implements HasMiddleware
             })
             ->orderBy('name')
             ->get();
-        $projects = Task::whereNotNull('project_name')->distinct()->pluck('project_name');
-        // dd($defect);
+        $projects = Project::orderBy('name')->get();
         return view('defects.show', compact('defect', 'employees', 'projects'));
     }
 
@@ -149,7 +149,12 @@ class DefectController extends Controller implements HasMiddleware
             })
             ->orderBy('name')
             ->get();
-        $projects = Task::whereNotNull('project_name')->distinct()->pluck('project_name');
+        
+        $projects = Project::orderBy('name')->get();
+        if ($defect->project_id && !$projects->contains('id', $defect->project_id)) {
+            $projects = $projects->push(Project::withTrashed()->find($defect->project_id));
+        }
+
         return view('defects.edit', compact('defect', 'employees', 'projects'));
     }
 
@@ -159,7 +164,7 @@ class DefectController extends Controller implements HasMiddleware
     public function update(Request $request, Defect $defect)
     {
         $request->validate([
-            'project_name' => 'nullable|string|max:255',
+            'project_id' => 'nullable|exists:projects,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'steps_to_reproduce' => 'nullable|string',
@@ -180,7 +185,7 @@ class DefectController extends Controller implements HasMiddleware
             $newStatus = $request->status;
 
             $defect->update([
-                'project_name' => $request->project_name,
+                'project_id' => $request->project_id,
                 'title' => $request->title,
                 'description' => $request->description,
                 'steps_to_reproduce' => $request->steps_to_reproduce,

@@ -32,8 +32,6 @@ return new class extends Migration {
                 ->constrained('users')
                 ->nullOnDelete();
 
-            $table->string('project_name')->nullable();
-
             $table->string('title');
             $table->longText('description')->nullable();
 

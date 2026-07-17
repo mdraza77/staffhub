@@ -17,7 +17,7 @@ class Task extends Model
         'assigned_by',
         'assigned_to',
         'tester_id',
-        'project_name',
+        'project_id',
         'title',
         'description',
         'deadline',
@@ -30,6 +30,11 @@ class Task extends Model
     ];
 
     // Relationships
+    public function project()
+    {
+        return $this->belongsTo(Project::class)->withTrashed();
+    }
+
     public function assigner()
     {
         return $this->belongsTo(User::class, 'assigned_by')->withTrashed();

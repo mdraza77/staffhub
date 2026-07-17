@@ -149,10 +149,10 @@
                 <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider mb-2">Properties & Metrics</h3>
 
                 <div class="space-y-3.5 text-xs text-gray-700">
-                    @if ($defect->project_name)
+                    @if ($defect->project)
                         <div class="flex justify-between items-center border-b border-gray-50 pb-2.5">
                             <span class="text-gray-500">Project:</span>
-                            <span class="font-bold text-gray-800">{{ $defect->project_name }}</span>
+                            <span class="font-bold text-gray-800">{{ $defect->project->name }}{{ $defect->project->trashed() ? ' [Deleted]' : '' }}</span>
                         </div>
                     @endif
 

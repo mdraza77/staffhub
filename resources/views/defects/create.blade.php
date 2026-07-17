@@ -31,15 +31,16 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
-                <input type="text" name="project_name" list="project-list" value="{{ old('project_name') }}"
-                    placeholder="e.g., StaffHub, E-Commerce"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
-                <datalist id="project-list">
-                    @foreach ($projects as $proj)
-                        <option value="{{ $proj }}">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Project</label>
+                <select name="project_id"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
+                    <option value="">Select a Project (Optional)</option>
+                    @foreach ($projects as $project)
+                        <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>
+                            {{ $project->name }}{{ $project->trashed() ? ' [Deleted]' : '' }}
+                        </option>
                     @endforeach
-                </datalist>
+                </select>
             </div>
 
             <div>

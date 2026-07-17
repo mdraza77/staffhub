@@ -43,10 +43,10 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4">
-                                @if ($defect->project_name)
+                                @if ($defect->project)
                                     <span
                                         class="bg-indigo-50 text-indigo-700 text-[10px] font-semibold px-2 py-0.5 rounded border border-indigo-150 mr-1.5 align-middle">
-                                        {{ $defect->project_name }}
+                                        {{ $defect->project->name }}{{ $defect->project->trashed() ? ' [Deleted]' : '' }}
                                     </span>
                                 @endif
                                 <p>{{ $defect->title }}</p>

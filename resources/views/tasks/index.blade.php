@@ -80,10 +80,10 @@
                                             title="{{ $task->title }}">
                                             {{ Str::limit($task->title, 45) }}
                                         </p>
-                                        @if ($task->project_name)
+                                        @if ($task->project)
                                             <p class="text-xs text-gray-500 dark:text-zinc-500 mt-1"><i
                                                     class="fa-solid fa-folder text-gray-400 dark:text-zinc-600"></i>
-                                                Project: {{ $task->project_name }}</p>
+                                                Project: {{ $task->project->name }}{{ $task->project->trashed() ? ' [Deleted]' : '' }}</p>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-700 dark:text-zinc-300">
@@ -197,10 +197,10 @@
                                                 title="{{ $task->title }}">
                                                 {{ Str::limit($task->title, 45) }}
                                             </p>
-                                            @if ($task->project_name)
+                                            @if ($task->project)
                                                 <p class="text-xs text-gray-500 dark:text-zinc-500 mt-1"><i
                                                         class="fa-solid fa-folder text-gray-400 dark:text-zinc-600"></i>
-                                                    Project: {{ $task->project_name }}</p>
+                                                    Project: {{ $task->project->name }}{{ $task->project->trashed() ? ' [Deleted]' : '' }}</p>
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-700 dark:text-zinc-300">
@@ -314,10 +314,10 @@
                                         @if (auth()->user()->can('Task-View'))
                                             <a href="{{ route('tasks.show', $task->id) }}"
                                                 class="text-sm font-medium text-blue-600 hover:text-blue-700">
-                                                {{ $task->project_name ?? 'N/A' }}
+                                                {{ $task->project->name ?? 'N/A' }}{{ $task->project && $task->project->trashed() ? ' [Deleted]' : '' }}
                                             </a>
                                         @else
-                                            {{ $task->project_name ?? 'N/A' }}
+                                            {{ $task->project->name ?? 'N/A' }}{{ $task->project && $task->project->trashed() ? ' [Deleted]' : '' }}
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">

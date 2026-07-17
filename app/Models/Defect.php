@@ -10,7 +10,7 @@ class Defect extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'defect_id', 'project_name', 'title', 'description', 'steps_to_reproduce',
+        'defect_id', 'project_id', 'title', 'description', 'steps_to_reproduce',
         'module', 'sub_module', 'environment', 'browser_os',
         'severity', 'priority', 'status', 'reported_by', 'assigned_to'
     ];
@@ -28,6 +28,11 @@ class Defect extends Model
     }
 
     // Connect everything up!
+    public function project()
+    {
+        return $this->belongsTo(Project::class)->withTrashed();
+    }
+
     public function reporter()
     {
         return $this->belongsTo(User::class, 'reported_by')->withTrashed();

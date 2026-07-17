@@ -13,7 +13,6 @@ return new class extends Migration {
         Schema::create('defects', function (Blueprint $table) {
             $table->id();
             $table->string('defect_id')->unique();
-            $table->string('project_name')->nullable();
 
             $table->string('title');
             $table->longText('description');

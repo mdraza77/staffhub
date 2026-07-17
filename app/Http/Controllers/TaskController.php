@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskComment;
 use App\Models\TaskDocument;
@@ -39,19 +40,19 @@ class TaskController extends Controller implements HasMiddleware
         $userId = Auth::id();
 
         // 1. My Tasks (assigned to user)
-        $myTasks = Task::withTrashed()->with(['assigner', 'engineer', 'tester'])
+        $myTasks = Task::withTrashed()->with(['assigner', 'engineer', 'tester', 'project'])
             ->where('assigned_to', $userId)
             ->latest()
             ->get();
 
         // 2. Assigned By Me (assigned by user)
-        $assignedByMe = Task::withTrashed()->with(['assigner', 'engineer', 'tester'])
+        $assignedByMe = Task::withTrashed()->with(['assigner', 'engineer', 'tester', 'project'])
             ->where('assigned_by', $userId)
             ->latest()
             ->get();
 
         // 3. Tasks to Test (where user is the tester)
-        $tasksToTest = Task::withTrashed()->with(['assigner', 'engineer', 'tester'])
+        $tasksToTest = Task::withTrashed()->with(['assigner', 'engineer', 'tester', 'project'])
             ->where('tester_id', $userId)
             ->latest()
             ->get();
@@ -65,8 +66,9 @@ class TaskController extends Controller implements HasMiddleware
     public function create()
     {
         $employees = User::withTrashed()->where('status', 'active')->where('id', '!=', Auth::id())->get();
+        $projects = Project::orderBy('name')->get();
 
-        return view('tasks.create', compact('employees'));
+        return view('tasks.create', compact('employees', 'projects'));
     }
 
     /**
@@ -75,7 +77,7 @@ class TaskController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         $request->validate([
-            'project_name' => 'nullable|string|max:255',
+            'project_id' => 'nullable|exists:projects,id',
             'title' => 'required|string|max:255',
             'assigned_to' => 'required|exists:users,id',
             'tester_id' => 'nullable|exists:users,id',
@@ -92,7 +94,7 @@ class TaskController extends Controller implements HasMiddleware
                 'assigned_by' => Auth::id(),
                 'assigned_to' => $request->assigned_to,
                 'tester_id' => $request->tester_id,
-                'project_name' => $request->project_name,
+                'project_id' => $request->project_id,
                 'title' => $request->title,
                 'description' => $request->description,
                 'deadline' => $request->deadline,
@@ -128,7 +130,8 @@ class TaskController extends Controller implements HasMiddleware
             'tester',
             'comments.user',
             'documents.user',
-            'statusHistories.user'
+            'statusHistories.user',
+            'project'
         ]);
 
         return view('tasks.show', compact('task'));
@@ -147,7 +150,13 @@ class TaskController extends Controller implements HasMiddleware
             ->where('id', '!=', Auth::id())
             ->orderBy('name')
             ->get();
-        return view('tasks.edit', compact('task', 'employees'));
+        
+        $projects = Project::orderBy('name')->get();
+        if ($task->project_id && !$projects->contains('id', $task->project_id)) {
+            $projects = $projects->push(Project::withTrashed()->find($task->project_id));
+        }
+
+        return view('tasks.edit', compact('task', 'employees', 'projects'));
     }
 
     /**
@@ -156,7 +165,7 @@ class TaskController extends Controller implements HasMiddleware
     public function update(Request $request, Task $task)
     {
         $request->validate([
-            'project_name' => 'nullable|string|max:255',
+            'project_id' => 'nullable|exists:projects,id',
             'title' => 'required|string|max:255',
             'assigned_to' => 'required|exists:users,id',
             'tester_id' => 'nullable|exists:users,id',
@@ -173,7 +182,7 @@ class TaskController extends Controller implements HasMiddleware
             $newStatus = $request->status;
 
             $task->update([
-                'project_name' => $request->project_name,
+                'project_id' => $request->project_id,
                 'title' => $request->title,
                 'assigned_to' => $request->assigned_to,
                 'tester_id' => $request->tester_id,

@@ -226,7 +226,7 @@
                                             {{ $task->assigner->name ?? 'Manager' }}</span>
                                     </td>
                                     <td class="px-6 py-3.5 text-gray-600 text-xs font-medium">
-                                        {{ $task->project_name ?? '—' }}
+                                        {{ $task->project->name ?? '—' }}{{ $task->project && $task->project->trashed() ? ' [Deleted]' : '' }}
                                     </td>
                                     <td class="px-6 py-3.5 text-gray-600 text-xs">
                                         <span

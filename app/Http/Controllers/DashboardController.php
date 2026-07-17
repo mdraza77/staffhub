@@ -72,7 +72,7 @@ class DashboardController extends Controller implements HasMiddleware
         $myTasks = auth()
             ->user()
             ->workingTasks()
-            ->with('assigner')
+            ->with(['assigner', 'project'])
             ->latest()
             ->take(5)
             ->get();

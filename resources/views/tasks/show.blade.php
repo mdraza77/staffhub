@@ -31,10 +31,10 @@
             <!-- Core Meta Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
                 <div>
-                    @if ($task->project_name)
+                    @if ($task->project)
                         <span
                             class="bg-indigo-50 border border-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-2 inline-block">
-                            <i class="fa-solid fa-folder text-indigo-400 mr-0.5"></i> {{ $task->project_name }}
+                            <i class="fa-solid fa-folder text-indigo-400 mr-0.5"></i> {{ $task->project->name }}{{ $task->project->trashed() ? ' [Deleted]' : '' }}
                         </span>
                     @endif
                     <h2 class="text-xl font-extrabold text-gray-850">{{ $task->title }}</h2>
