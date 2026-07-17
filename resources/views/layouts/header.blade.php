@@ -338,7 +338,8 @@
                 {{-- ===== GROUP: WORK ===== --}}
                 @if (
                         auth()->check() &&
-                        (auth()->user()->can('Task-Index') ||
+                        (auth()->user()->can('Project-Index') ||
+                            auth()->user()->can('Task-Index') ||
                             auth()->user()->can('Defect-Index') ||
                             auth()->user()->can('Break-Room-Access') ||
                             auth()->user()->can('BreakType-Manage') ||
@@ -349,6 +350,16 @@
                         Work & Breaks
                     </li>
                 @endif
+
+                @can('Project-Index')
+                    <li>
+                        <a href="{{ route('projects.index') }}"
+                            class="{{ request()->routeIs('projects.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700' }} flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors font-medium">
+                            <i class="fa-solid fa-folder-open text-base w-5 text-center"></i>
+                            <span>Projects</span>
+                        </a>
+                    </li>
+                @endcan
 
                 @can('Task-Index')
                     <li>

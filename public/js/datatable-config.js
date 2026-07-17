@@ -418,3 +418,31 @@ $(document).ready(function () {
         },
     });
 });
+
+// Projects table
+$(document).ready(function () {
+    $("#projects_table").DataTable({
+        destroy: true,
+        dom: '<"flex flex-col md:flex-row justify-between items-center gap-4 mb-4 p-4"<"flex items-center gap-3"lB>f>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 p-4 border-t border-gray-100"<"flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-600"i><"flex items-center"p>>',
+        buttons: [
+            {
+                extend: "excel",
+                className:
+                    "bg-green-50 hover:bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-green-200 mr-2 transition-colors",
+            },
+            {
+                extend: "pdf",
+                className:
+                    "bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 text-sm font-medium rounded-lg border border-red-200 mr-2 transition-colors",
+            },
+        ],
+        pageLength: 10,
+        language: {
+            search: "",
+            searchPlaceholder: "Search here...",
+            lengthMenu: "_MENU_",
+            info: "Showing _START_ to _END_ of _TOTAL_ entries",
+        },
+        columnDefs: [{ orderable: false, targets: 7 }],
+    });
+});

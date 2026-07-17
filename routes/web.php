@@ -14,6 +14,7 @@ use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaskController;
@@ -81,6 +82,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('tasks/{task}/comments', [TaskController::class, 'storeComment'])->name('tasks.comments.store')->withTrashed();
     Route::post('tasks/{task}/documents', [TaskController::class, 'storeDocument'])->name('tasks.documents.store')->withTrashed();
     Route::post('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.status.update')->withTrashed();
+
+    // Projects Routes
+    Route::controller(ProjectController::class)->prefix('projects')->name('projects.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{project}', 'show')->name('show')->withTrashed();
+        Route::get('/{project}/edit', 'edit')->name('edit')->withTrashed();
+        Route::put('/{project}', 'update')->name('update')->withTrashed();
+        Route::delete('/{project}', 'destroy')->name('destroy')->withTrashed();
+        Route::post('/{project}/restore', 'restore')->name('restore')->withTrashed();
+    });
 
     // Reports Routes
     Route::controller(ReportController::class)->prefix('reports')->name('reports.')->group(function () {

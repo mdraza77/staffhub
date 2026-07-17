@@ -123,6 +123,14 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Defect-Delete']);
         Permission::firstOrCreate(['name' => 'Defect-Restore']);
 
+        // ===== PROJECTS =====
+        Permission::firstOrCreate(['name' => 'Project-Index']);
+        Permission::firstOrCreate(['name' => 'Project-Create']);
+        Permission::firstOrCreate(['name' => 'Project-Edit']);
+        Permission::firstOrCreate(['name' => 'Project-View']);
+        Permission::firstOrCreate(['name' => 'Project-Delete']);
+        Permission::firstOrCreate(['name' => 'Project-Restore']);
+
         // ===== BREAKS & BREAK ROOM =====
         Permission::firstOrCreate(['name' => 'BreakType-Manage']);
         Permission::firstOrCreate(['name' => 'Break-Room-Access']);
@@ -215,6 +223,12 @@ class PermissionSeeder extends Seeder
             'Defect-View',
             'Defect-Delete',
             'Defect-Restore',
+            'Project-Index',
+            'Project-Create',
+            'Project-Edit',
+            'Project-View',
+            'Project-Delete',
+            'Project-Restore',
             'BreakType-Manage',
             'Break-Room-Access',
             'Break-History-View',
@@ -283,6 +297,12 @@ class PermissionSeeder extends Seeder
             'Defect-View',
             'Defect-Delete',
             'Defect-Restore',
+            'Project-Index',
+            'Project-Create',
+            'Project-Edit',
+            'Project-View',
+            'Project-Delete',
+            'Project-Restore',
             'BreakType-Manage',
             'Break-Room-Access',
             'Break-History-View',
@@ -325,6 +345,12 @@ class PermissionSeeder extends Seeder
             'Defect-View',
             'Defect-Delete',
             'Defect-Restore',
+            'Project-Index',
+            'Project-Create',
+            'Project-Edit',
+            'Project-View',
+            'Project-Delete',
+            'Project-Restore',
             'Break-Room-Access',
             'Break-History-View',
         ]);
@@ -353,6 +379,8 @@ class PermissionSeeder extends Seeder
             'Defect-Create',
             'Defect-Edit',
             'Defect-View',
+            'Project-Index',
+            'Project-View',
             'Break-Room-Access',
             'Break-History-View',
         ]);
@@ -379,6 +407,8 @@ class PermissionSeeder extends Seeder
             'Defect-Index',
             'Defect-Create',
             'Defect-View',
+            'Project-Index',
+            'Project-View',
             'Break-Room-Access',
             'Break-History-View',
         ]);
