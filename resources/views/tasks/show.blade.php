@@ -201,17 +201,11 @@
                                     </span>
                                 </div>
 
-                                <p class="text-gray-700 mt-2 text-xs flex items-center gap-1.5 flex-wrap">
+                                <p class="text-gray-700 dark:text-zinc-300 mt-2 text-xs flex items-center gap-1.5 flex-wrap">
                                     Transitioned status from
-                                    <span
-                                        class="bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded-full font-semibold uppercase text-[10px]">
-                                        {{ str_replace('_', ' ', $history->old_status) }}
-                                    </span>
+                                    <x-badge :value="$history->old_status" />
                                     to
-                                    <span
-                                        class="bg-indigo-50 text-indigo-750 border border-indigo-100 px-2 py-0.5 rounded-full font-bold uppercase text-[10px]">
-                                        {{ str_replace('_', ' ', $history->new_status) }}
-                                    </span>
+                                    <x-badge :value="$history->new_status" />
                                 </p>
 
                                 @if ($history->remark)
@@ -248,42 +242,13 @@
                     <div
                         class="flex justify-between items-center text-sm border-b border-gray-100 dark:border-zinc-800 pb-2.5">
                         <span class="text-gray-500 dark:text-zinc-400">Current Status:</span>
-                        @if ($task->status === 'completed')
-                            <span
-                                class="bg-green-50 text-green-700 border border-green-200 dark:bg-green-950/40 dark:text-green-400 dark:border-green-900/50 text-xs font-bold px-3 py-1 rounded-full uppercase">Completed</span>
-                        @elseif($task->status === 'in_progress')
-                            <span
-                                class="bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/50 text-xs font-bold px-3 py-1 rounded-full uppercase">In
-                                Progress</span>
-                        @elseif($task->status === 'testing')
-                            <span
-                                class="bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/50 text-xs font-bold px-3 py-1 rounded-full uppercase">Testing</span>
-                        @elseif($task->status === 'closed')
-                            <span
-                                class="bg-gray-50 text-gray-700 border border-gray-200 dark:bg-zinc-800/40 dark:text-zinc-400 dark:border-zinc-700/50 text-xs font-bold px-3 py-1 rounded-full uppercase">Closed</span>
-                        @else
-                            <span
-                                class="bg-yellow-50 text-yellow-700 border border-yellow-200 dark:bg-yellow-950/40 dark:text-yellow-400 dark:border-yellow-900/50 text-xs font-bold px-3 py-1 rounded-full uppercase">Open</span>
-                        @endif
+                        <x-badge :value="$task->status" />
                     </div>
 
                     <div
                         class="flex justify-between items-center text-sm border-b border-gray-100 dark:border-zinc-800 pb-2.5">
                         <span class="text-gray-500 dark:text-zinc-400">Priority Level:</span>
-                        @if ($task->priority === 'critical')
-                            <span
-                                class="bg-red-50 border border-red-200 text-red-700 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i
-                                    class="fa-solid fa-triangle-exclamation mr-0.5"></i> Critical</span>
-                        @elseif($task->priority === 'high')
-                            <span
-                                class="bg-orange-50 border border-orange-200 text-orange-700 dark:bg-orange-950/40 dark:text-orange-400 dark:border-orange-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full">High</span>
-                        @elseif($task->priority === 'low')
-                            <span
-                                class="bg-gray-50 border border-gray-200 text-gray-600 dark:bg-zinc-800/40 dark:text-zinc-400 dark:border-zinc-700/50 text-xs font-semibold px-2.5 py-0.5 rounded-full">Low</span>
-                        @else
-                            <span
-                                class="bg-indigo-50 border border-indigo-200 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full">Medium</span>
-                        @endif
+                        <x-badge :value="$task->priority" />
                     </div>
                 </div>
 

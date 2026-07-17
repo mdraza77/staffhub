@@ -36,9 +36,8 @@
                             <td class="px-6 py-4 text-sm font-bold text-gray-800">{{ $type->name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-700 text-center font-medium">{{ $type->days_allowed }}
                             </td>
-                            <td class="px-6 py-4 text-center"
-                                title="{{ $type->deleted_at ? 'Deleted on ' . $type->deleted_at->format('d M Y') . ' and status is ' . ($type->is_active ? 'Active' : 'Inactive') : ($type->is_active ? 'Active' : 'Inactive') }}">
-                                @if ($type->trashed())
+                            <td class="px-6 py-4 text-center">
+                                {{-- @if ($type->trashed())
                                     <span
                                         class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Deleted</span>
                                 @elseif ($type->is_active)
@@ -47,7 +46,8 @@
                                 @else
                                     <span
                                         class="inline-flex items-center rounded-md bg-gray-400/10 px-2 py-1 text-xs font-medium text-gray-400 ring-1 ring-inset ring-gray-500/20">Inactive</span>
-                                @endif
+                                @endif --}}
+                                <x-badge :value="$type->is_active ? 'active' : 'inactive'" />
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($type->trashed())

@@ -83,7 +83,8 @@
                                         @if ($task->project)
                                             <p class="text-xs text-gray-500 dark:text-zinc-500 mt-1"><i
                                                     class="fa-solid fa-folder text-gray-400 dark:text-zinc-600"></i>
-                                                Project: {{ $task->project->name }}{{ $task->project->trashed() ? ' [Deleted]' : '' }}</p>
+                                                Project:
+                                                {{ $task->project->name }}{{ $task->project->trashed() ? ' [Deleted]' : '' }}</p>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-700 dark:text-zinc-300">
@@ -200,7 +201,8 @@
                                             @if ($task->project)
                                                 <p class="text-xs text-gray-500 dark:text-zinc-500 mt-1"><i
                                                         class="fa-solid fa-folder text-gray-400 dark:text-zinc-600"></i>
-                                                    Project: {{ $task->project->name }}{{ $task->project->trashed() ? ' [Deleted]' : '' }}</p>
+                                                    Project:
+                                                    {{ $task->project->name }}{{ $task->project->trashed() ? ' [Deleted]' : '' }}</p>
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-700 dark:text-zinc-300">
@@ -363,25 +365,26 @@
                                         {{ $task->deadline ? \Carbon\Carbon::parse($task->deadline)->format('d M, Y') : 'No Deadline' }}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-semibold">
-                                        @if ($task->trashed())
-                                            <span
-                                                class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Deleted</span>
+                                        {{-- @if ($task->trashed())
+                                        <span
+                                            class="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">Deleted</span>
                                         @elseif ($task->status === 'completed')
-                                            <span
-                                                class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
+                                        <span
+                                            class="bg-green-150 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
                                         @elseif($task->status === 'in_progress')
-                                            <span class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
-                                                Progress</span>
+                                        <span class="bg-blue-150 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">In
+                                            Progress</span>
                                         @elseif($task->status === 'testing')
-                                            <span
-                                                class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
+                                        <span
+                                            class="bg-amber-150 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">Testing</span>
                                         @elseif($task->status === 'closed')
-                                            <span
-                                                class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>
+                                        <span
+                                            class="bg-gray-150 text-gray-700 text-xs font-bold px-3 py-1 rounded-full">Closed</span>
                                         @else
-                                            <span
-                                                class="bg-yellow-150 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full">Open</span>
-                                        @endif
+                                        <span
+                                            class="bg-yellow-150 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full">Open</span>
+                                        @endif --}}
+                                        <x-badge :value="$task->status" />
                                     </td>
                                     <td class="px-6 py-4 text-center flex justify-center gap-2">
                                         @if ($task->trashed())

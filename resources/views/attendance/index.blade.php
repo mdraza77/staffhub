@@ -73,13 +73,13 @@
                             {{-- <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
                                     @if ($attendance->user->profile)
-                                        <img src="{{ asset('storage/' . $attendance->user->profile) }}" alt=""
-                                            class="w-8 h-8 rounded-full object-cover border border-gray-200">
+                                    <img src="{{ asset('storage/' . $attendance->user->profile) }}" alt=""
+                                        class="w-8 h-8 rounded-full object-cover border border-gray-200">
                                     @else
-                                        <div
-                                            class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs border border-blue-200">
-                                            {{ substr($attendance->user->name, 0, 2) }}
-                                        </div>
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs border border-blue-200">
+                                        {{ substr($attendance->user->name, 0, 2) }}
+                                    </div>
                                     @endif
                                     <div>
                                         <p class="text-sm font-semibold text-gray-800">{{ $attendance->user->name }}</p>
@@ -121,10 +121,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <span
-                                    class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                                    {{ $attendance->status }}
-                                </span>
+                                <x-badge :value="$attendance->status" />
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <span class="text-xs px-3 py-1">

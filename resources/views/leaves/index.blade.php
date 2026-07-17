@@ -52,15 +52,16 @@
                                 {{ Str::limit($leave->reason, 40) }}
                             </td>
                             <td class="px-6 py-4 text-center">
-                                @if ($leave->status === 'approved')
-                                    <span
-                                        class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Approved</span>
+                                {{-- @if ($leave->status === 'approved')
+                                <span
+                                    class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Approved</span>
                                 @elseif($leave->status === 'rejected')
-                                    <span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Rejected</span>
+                                <span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full">Rejected</span>
                                 @else
-                                    <span
-                                        class="bg-yellow-100 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full">Pending</span>
-                                @endif
+                                <span
+                                    class="bg-yellow-100 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full">Pending</span>
+                                @endif --}}
+                                <x-badge :value="$leave->status" />
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($leave->status === 'pending')

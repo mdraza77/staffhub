@@ -75,9 +75,8 @@
                             </td>
 
                             {{-- Status Badge --}}
-                            <td class="px-6 py-4"
-                                title="{{ $holiday->deleted_at ? 'Deleted on ' . $holiday->deleted_at->format('d M Y') . ' and status is ' . str($holiday->status)->ucfirst() : str($holiday->status)->ucfirst() }}">
-                                @if ($holiday->trashed())
+                            <td class="px-6 py-4">
+                                {{-- @if ($holiday->trashed())
                                     <span class="bg-red-100 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         <i class="fa-solid fa-ban text-[10px] mr-1"></i>Deleted
                                     </span>
@@ -91,11 +90,12 @@
                                         class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         <i class="fa-solid fa-circle text-[8px] mr-1"></i>Inactive
                                     </span>
-                                    {{-- @else
+                                    @else
                                     <span class="bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                                         <i class="fa-solid fa-circle text-[8px] mr-1"></i>Terminated
-                                    </span> --}}
-                                @endif
+                                    </span>
+                                @endif --}}
+                                <x-badge :value="$holiday->status" />
                             </td>
 
                             {{-- Actions --}}

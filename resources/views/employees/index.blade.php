@@ -44,7 +44,7 @@
                                     @else
                                         <div
                                             class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border
-                                                                                                                                            {{ $employee->trashed() ? 'bg-gray-200 text-gray-400 border-gray-300' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
+                                                                                                                                                                                                                    {{ $employee->trashed() ? 'bg-gray-200 text-gray-400 border-gray-300' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
                                             {{ strtoupper(substr($employee->name, 0, 2)) }}
                                         </div>
                                     @endif
@@ -107,26 +107,13 @@
 
                             {{-- Status Badge --}}
                             <td class="px-6 py-4">
-                                @if ($employee->status === 'active')
-                                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                        <i class="fa-solid fa-circle text-[8px] mr-1"></i>Active
-                                    </span>
-                                @elseif ($employee->status === 'inactive')
-                                    <span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                        <i class="fa-solid fa-circle text-[8px] mr-1"></i>Inactive
-                                    </span>
-                                @else
-                                    <span class="bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                        <i class="fa-solid fa-circle text-[8px] mr-1"></i>Terminated
-                                    </span>
-                                @endif
+                                <x-badge :value="$employee->status" />
                             </td>
 
                             {{-- Actions --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center justify-center gap-1">
                                     @if ($employee->trashed())
-                                        {{-- SOFT DELETED STATE: Restore + Force Delete only --}}
 
                                         {{-- Restore Form --}}
                                         @can('Employee-Restore')
@@ -140,20 +127,6 @@
                                                 </button>
                                             </form>
                                         @endcan
-
-                                        {{-- Permanent Delete Form --}}
-                                        {{-- @can('Employee-ForceDelete')
-                                        <form action="{{ route('employees.force-delete', $employee->id) }}" method="POST"
-                                            id="force-delete-form-{{ $employee->id }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" title="Permanently Delete"
-                                                onclick="confirmForceDelete({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
-                                                class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                                <i class="fa-solid fa-trash-can text-base"></i>
-                                            </button>
-                                        </form>
-                                        @endcan --}}
                                     @else
                                         @if (!$employee->hasRole('Super Admin'))
                                             {{-- Edit --}}
@@ -185,15 +158,7 @@
                                     @endif
                                 </div>
                             </td>
-
                         </tr>
-                        {{-- @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-12 text-center text-gray-400">
-                                <i class="fa-solid fa-users-slash text-3xl mb-3 block"></i>
-                                No employees found. Click "Add Employee" to get started.
-                            </td>
-                        </tr> --}}
                     @endforeach
                 </tbody>
             </table>

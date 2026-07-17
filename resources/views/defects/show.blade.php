@@ -36,9 +36,10 @@
                             class="bg-indigo-50 border border-indigo-150 text-indigo-700 text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                             {{ $defect->defect_id }}
                         </span>
-                        <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase">
+                        {{-- <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase">
                             {{ $defect->environment }}
-                        </span>
+                        </span> --}}
+                        <x-badge :value="$defect->environment" />
                     </div>
                     <h2 class="text-xl font-extrabold text-gray-850">{{ $defect->title }}</h2>
                     <p class="text-xs text-gray-400 mt-1">
@@ -69,7 +70,6 @@
                 @endif
             </div>
 
-            <!-- Activity Logs / Status histories (JIRA / GitHub style) -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
                 <h3 class="text-base font-bold text-gray-800 flex items-center gap-2">
                     <i class="fa-solid fa-timeline text-indigo-650"></i> Status Timeline History
@@ -103,22 +103,16 @@
                                     </span>
                                 </div>
 
-                                <p class="text-gray-700 mt-2 text-xs flex items-center gap-1.5 flex-wrap">
+                                <p class="text-gray-700 dark:text-zinc-300 mt-2 text-xs flex items-center gap-1.5 flex-wrap">
                                     Transitioned status from
                                     @if ($history->old_status)
-                                        <span
-                                            class="bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded-full font-semibold uppercase text-[10px]">
-                                            {{ str_replace('_', ' ', $history->old_status) }}
-                                        </span>
+                                        <x-badge :value="$history->old_status" />
                                     @else
                                         <span
-                                            class="bg-gray-100 text-gray-400 border border-gray-200 px-2 py-0.5 rounded-full uppercase text-[10px] italic">None</span>
+                                            class="bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-zinc-500 border border-gray-200 dark:border-zinc-700 px-2 py-0.5 rounded uppercase text-[10px] italic">None</span>
                                     @endif
                                     to
-                                    <span
-                                        class="bg-indigo-50 text-indigo-750 border border-indigo-100 px-2 py-0.5 rounded-full font-bold uppercase text-[10px]">
-                                        {{ str_replace('_', ' ', $history->new_status) }}
-                                    </span>
+                                    <x-badge :value="$history->new_status" />
                                 </p>
 
                                 @if ($history->remark)
@@ -152,42 +146,45 @@
                     @if ($defect->project)
                         <div class="flex justify-between items-center border-b border-gray-50 pb-2.5">
                             <span class="text-gray-500">Project:</span>
-                            <span class="font-bold text-gray-800">{{ $defect->project->name }}{{ $defect->project->trashed() ? ' [Deleted]' : '' }}</span>
+                            <span
+                                class="font-bold text-gray-800">{{ $defect->project->name }}{{ $defect->project->trashed() ? ' [Deleted]' : '' }}</span>
                         </div>
                     @endif
 
                     <div class="flex justify-between items-center border-b border-gray-50 pb-2.5">
                         <span class="text-gray-500">Severity:</span>
-                        @if ($defect->severity === 'critical')
-                            <span
-                                class="bg-red-50 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-red-100">Critical</span>
+                        {{-- @if ($defect->severity === 'critical')
+                        <span
+                            class="bg-red-50 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-red-100">Critical</span>
                         @elseif($defect->severity === 'high')
-                            <span
-                                class="bg-orange-50 text-orange-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-orange-100">High</span>
+                        <span
+                            class="bg-orange-50 text-orange-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-orange-100">High</span>
                         @elseif($defect->severity === 'medium')
-                            <span
-                                class="bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-blue-100">Medium</span>
+                        <span
+                            class="bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-blue-100">Medium</span>
                         @else
-                            <span
-                                class="bg-gray-50 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-gray-200">Low</span>
-                        @endif
+                        <span
+                            class="bg-gray-50 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-gray-200">Low</span>
+                        @endif --}}
+                        <x-badge :value="$defect->severity" />
                     </div>
 
                     <div class="flex justify-between items-center border-b border-gray-50 pb-2.5">
                         <span class="text-gray-500">Priority:</span>
-                        @if ($defect->priority === 'urgent')
-                            <span
-                                class="bg-red-50 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-red-100">Urgent</span>
+                        {{-- @if ($defect->priority === 'urgent')
+                        <span
+                            class="bg-red-50 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-red-100">Urgent</span>
                         @elseif($defect->priority === 'high')
-                            <span
-                                class="bg-orange-50 text-orange-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-orange-100">High</span>
+                        <span
+                            class="bg-orange-50 text-orange-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-orange-100">High</span>
                         @elseif($defect->priority === 'medium')
-                            <span
-                                class="bg-yellow-50 text-yellow-750 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-yellow-100">Medium</span>
+                        <span
+                            class="bg-yellow-50 text-yellow-750 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-yellow-100">Medium</span>
                         @else
-                            <span
-                                class="bg-gray-50 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-gray-200">Low</span>
-                        @endif
+                        <span
+                            class="bg-gray-50 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-gray-200">Low</span>
+                        @endif --}}
+                        <x-badge :value="$defect->priority" />
                     </div>
 
                     <div class="flex justify-between items-center border-b border-gray-50 pb-2.5">
@@ -211,7 +208,8 @@
 
                     <div class="flex justify-between items-center border-b border-gray-50 pb-2.5">
                         <span class="text-gray-500">Deadline:</span>
-                        <span class="font-bold {{ $defect->deadline && $defect->deadline->isPast() && $defect->status !== 'closed' ? 'text-red-650' : 'text-gray-800' }}">
+                        <span
+                            class="font-bold {{ $defect->deadline && $defect->deadline->isPast() && $defect->status !== 'closed' ? 'text-red-650' : 'text-gray-800' }}">
                             {{ $defect->deadline ? $defect->deadline->format('d M Y') : 'No Deadline' }}
                         </span>
                     </div>
@@ -221,7 +219,8 @@
                         <span class="font-bold text-indigo-650">{{ $defect->assignee->name ?? 'Unassigned' }}</span>
                     </div>
 
-                    <div class="flex justify-between items-center {{ $defect->status === 'closed' ? 'border-b border-gray-50 pb-2.5' : '' }}">
+                    <div
+                        class="flex justify-between items-center {{ $defect->status === 'closed' ? 'border-b border-gray-50 pb-2.5' : '' }}">
                         <span class="text-gray-500">Reporter:</span>
                         <span class="font-semibold text-gray-700">{{ $defect->reporter->name ?? 'User' }}</span>
                     </div>
@@ -233,7 +232,8 @@
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-gray-500">Closed At:</span>
-                            <span class="font-semibold text-gray-750">{{ $defect->closed_at ? $defect->closed_at->format('d M Y, h:i A') : '—' }}</span>
+                            <span
+                                class="font-semibold text-gray-750">{{ $defect->closed_at ? $defect->closed_at->format('d M Y, h:i A') : '—' }}</span>
                         </div>
                     @endif
                 </div>
@@ -359,7 +359,8 @@
                                     KB</span>
                             </div>
                             @if ($attach->remark)
-                                <div class="bg-gray-50 border border-gray-100 rounded p-1.5 text-[10px] text-gray-600 leading-normal italic">
+                                <div
+                                    class="bg-gray-50 border border-gray-100 rounded p-1.5 text-[10px] text-gray-600 leading-normal italic">
                                     {{ $attach->remark }}
                                 </div>
                             @endif

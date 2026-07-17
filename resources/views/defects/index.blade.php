@@ -62,7 +62,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center">
-                                @if ($defect->severity === 'critical')
+                                {{-- @if ($defect->severity === 'critical')
                                     <span
                                         class="bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-red-200">Critical</span>
                                 @elseif($defect->severity === 'high')
@@ -74,10 +74,11 @@
                                 @else
                                     <span
                                         class="bg-gray-100 text-gray-600 dark:bg-zinc-800/40 dark:text-zinc-400 dark:border-zinc-700/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-gray-200">Low</span>
-                                @endif
+                                @endif --}}
+                                <x-badge :value="$defect->severity" />
                             </td>
                             <td class="px-6 py-4 text-center">
-                                @if ($defect->priority === 'urgent')
+                                {{-- @if ($defect->priority === 'urgent')
                                     <span
                                         class="bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-red-200"><i
                                             class="fa-solid fa-triangle-exclamation mr-0.5"></i> Urgent</span>
@@ -90,7 +91,8 @@
                                 @else
                                     <span
                                         class="bg-gray-50 text-gray-600 dark:bg-zinc-800/40 dark:text-zinc-400 dark:border-zinc-700/50 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase text-[10px] border border-gray-200">Low</span>
-                                @endif
+                                @endif --}}
+                                <x-badge :value="$defect->priority" />
                             </td>
                             <td class="px-6 py-4 text-center text-xs text-gray-700">
                                 @if ($defect->assignee)
@@ -107,7 +109,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-center text-sm font-semibold whitespace-nowrap">
-                                @if ($defect->trashed())
+                                {{-- @if ($defect->trashed())
                                     <span
                                         class="bg-red-150 text-red-750 text-xs font-bold px-3 py-1 rounded-full uppercase text-[10px] border border-red-200">
                                         <i class="fa-solid fa-ban mr-0.5"></i> Deleted
@@ -128,7 +130,8 @@
                                 @else
                                     <span
                                         class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full uppercase text-[10px] border border-green-200">Open</span>
-                                @endif
+                                @endif --}}
+                                <x-badge :value="$defect->status" />
                             </td>
                             <td class="px-6 py-4 text-center whitespace-nowrap">
                                 @if ($defect->trashed())

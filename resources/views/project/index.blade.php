@@ -51,24 +51,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center">
-                                @if ($project->status === 'planning')
-                                    <span
-                                        class="bg-blue-50 text-blue-750 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-900/50 text-[10px] font-bold px-2.5 py-0.5 rounded border border-blue-150 uppercase tracking-wider">Planning</span>
-                                @elseif ($project->status === 'in_progress')
-                                    <span
-                                        class="bg-amber-50 text-amber-750 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/50 text-[10px] font-bold px-2.5 py-0.5 rounded border border-amber-150 uppercase tracking-wider">In
-                                        Progress</span>
-                                @elseif ($project->status === 'on_hold')
-                                    <span
-                                        class="bg-gray-50 text-gray-600 dark:bg-zinc-800/40 dark:text-zinc-400 dark:border-zinc-700/50 text-[10px] font-bold px-2.5 py-0.5 rounded border border-gray-200 uppercase tracking-wider">On
-                                        Hold</span>
-                                @elseif ($project->status === 'completed')
-                                    <span
-                                        class="bg-emerald-50 text-emerald-750 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/50 text-[10px] font-bold px-2.5 py-0.5 rounded border border-emerald-150 uppercase tracking-wider">Completed</span>
-                                @elseif ($project->status === 'cancelled')
-                                    <span
-                                        class="bg-rose-50 text-rose-750 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-900/50 text-[10px] font-bold px-2.5 py-0.5 rounded border border-rose-150 uppercase tracking-wider">Cancelled</span>
-                                @endif
+                                <x-badge :value="$project->status" />
                             </td>
                             <td class="px-6 py-4 text-center text-xs text-gray-600 dark:text-zinc-400 font-medium">
                                 {{ $project->start_date ? \Carbon\Carbon::parse($project->start_date)->format('d M Y') : '—' }}
