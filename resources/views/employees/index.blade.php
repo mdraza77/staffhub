@@ -44,7 +44,7 @@
                                     @else
                                         <div
                                             class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border
-                                                                                                                                                                                                                    {{ $employee->trashed() ? 'bg-gray-200 text-gray-400 border-gray-300' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
+                                                                                                                                                                                                                                            {{ $employee->trashed() ? 'bg-gray-200 text-gray-400 border-gray-300' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
                                             {{ strtoupper(substr($employee->name, 0, 2)) }}
                                         </div>
                                     @endif

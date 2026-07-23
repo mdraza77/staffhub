@@ -84,7 +84,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
                 <select name="department_id"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                    class="department_id w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
                     <option value="">Select Department</option>
                     @foreach ($departments as $dept)
                         <option value="{{ $dept->id }}" {{ old('department_id', $employee->department_id) == $dept->id ? 'selected' : '' }}>
@@ -341,6 +341,12 @@
                     }
                 });
             }
+        });
+
+        $(document).ready(function () {
+            $('.department_id, select[name="role"], select[name="status"], select[name="gender"], select[name="blood_group"]').select2({
+                width: '100%'
+            });
         });
     </script>
 @endpush

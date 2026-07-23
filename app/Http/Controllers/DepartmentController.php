@@ -151,15 +151,4 @@ class DepartmentController extends Controller implements HasMiddleware
 
         return redirect()->route('departments.index')->with('error', 'Department is not deleted.');
     }
-
-    /**
-     * Permanently delete a soft deleted resource.
-     */
-    public function forceDelete(string $id)
-    {
-        $department = Department::withTrashed()->findOrFail($id);
-        $department->forceDelete();
-
-        return redirect()->route('departments.index')->with('success', 'Department permanently deleted!');
-    }
 }

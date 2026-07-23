@@ -22,18 +22,18 @@
         <!-- Departments Table Card -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
-                <table id="departments" class="w-full">
-                    <thead class="bg-gray-50 border-b border-gray-200">
-                        <tr>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">#</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Department Name</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Description</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Created On</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
-                            <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
+                <table id="departments" class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
+                            <th class="px-6 py-3 font-semibold">#</th>
+                            <th class="px-6 py-3 font-semibold">Department Name</th>
+                            <th class="px-6 py-3 font-semibold">Description</th>
+                            <th class="px-6 py-3 font-semibold">Created On</th>
+                            <th class="px-6 py-3 font-semibold">Status</th>
+                            <th class="px-6 py-3 font-semibold text-center">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200">
+                    <tbody class="divide-y divide-gray-100">
                         @foreach($departments as $key => $department)
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $key + 1 }}</td>
@@ -59,30 +59,23 @@
                                         @if ($department->deleted_at === null)
                                             @can('Department-Edit')
                                                 <a href="{{ route('departments.edit', $department->id) }}"
-                                                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                    title="Edit">
+                                                    class="text-blue-600 hover:text-blue-800 mx-2 transition-colors" title="Edit">
                                                     <i class="fa-solid fa-pen-to-square text-lg"></i>
                                                 </a>
                                             @endcan
                                             @can('Department-Delete')
-                                                <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                    title="Delete" onclick="confirmDelete({{ $department->id }})">
+                                                <button class="text-red-600 hover:text-red-800 mx-2 transition-colors" title="Delete"
+                                                    onclick="confirmDelete({{ $department->id }})">
                                                     <i class="fa-solid fa-trash-can text-lg"></i>
                                                 </button>
                                             @endcan
                                         @else
                                             @can('Department-Restore')
-                                                <button class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                                <button class="text-green-600 hover:text-green-800 mx-2 transition-colors"
                                                     title="Restore" onclick="confirmRestore({{ $department->id }})">
                                                     <i class="fa-solid fa-rotate-left text-lg"></i>
                                                 </button>
                                             @endcan
-                                            {{-- @can('Department-ForceDelete')
-                                            <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                title="Permanent Delete" onclick="confirmPermanentDelete({{ $department->id }})">
-                                                <i class="fa-solid fa-trash-can text-lg"></i>
-                                            </button>
-                                            @endcan --}}
                                         @endif
                                     </div>
                                 </td>
