@@ -64,7 +64,8 @@ class EmployeeController extends Controller implements HasMiddleware
         $todayMonth = Carbon::now()->format('m');  // e.g., 07
         $prefix = "SH-{$todayYear}{$todayMonth}-";
 
-        $lastEmployee = User::where('employee_id', 'LIKE', $prefix . '%')
+        $lastEmployee = User::withTrashed()
+            ->where('employee_id', 'LIKE', $prefix . '%')
             ->orderBy('id', 'desc')
             ->first();
 
@@ -77,7 +78,17 @@ class EmployeeController extends Controller implements HasMiddleware
 
         $nextEmployeeId = $prefix . str_pad($nextSeq, 3, '0', STR_PAD_LEFT);
 
-        return view('employees.create', compact('departments', 'roles', 'nextEmployeeId'));
+        $countryCodes = [
+            '+91' => '+91 (IN)',
+            '+92' => '+92 (PK)',
+            '+971' => '+971 (AE)',
+            '+1' => '+1 (US)',
+            '+44' => '+44 (UK)',
+            '+880' => '+880 (BD)',
+            '+966' => '+966 (SA)',
+        ];
+
+        return view('employees.create', compact('departments', 'roles', 'nextEmployeeId', 'countryCodes'));
     }
 
     /**
@@ -113,8 +124,10 @@ class EmployeeController extends Controller implements HasMiddleware
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'employee_id' => 'required|string|unique:users,employee_id',
-            'phone' => 'nullable|string|regex:/^\+?[1-9]\d{9,14}$/',
-            'emergency_contact' => 'nullable|string|regex:/^\+?[1-9]\d{9,14}$/',
+            'phone_country_code' => 'nullable|string|max:5',
+            'phone' => 'nullable|string|regex:/^\d{10}$/',
+            'emergency_country_code' => 'nullable|string|max:5',
+            'emergency_contact' => 'nullable|string|regex:/^\d{10}$/',
             'department_id' => 'nullable|exists:departments,id',
             'designation' => 'nullable|string|max:255',
             'joining_date' => 'nullable|date',
@@ -127,7 +140,8 @@ class EmployeeController extends Controller implements HasMiddleware
             'blood_group' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
             'address' => 'nullable|string|max:500',
         ], [
-            'phone.regex' => 'The phone number format must be valid (e.g. +918544568958 or 918544568958).',
+            'phone.regex' => 'The phone number must be exactly 10 digits.',
+            'emergency_contact.regex' => 'The emergency contact number must be exactly 10 digits.',
         ]);
 
         try {
@@ -184,7 +198,9 @@ class EmployeeController extends Controller implements HasMiddleware
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'employee_id' => $request->employee_id,
+                'phone_country_code' => $request->phone_country_code,
                 'phone' => $request->phone,
+                'emergency_country_code' => $request->emergency_country_code,
                 'emergency_contact' => $request->emergency_contact,
                 'department_id' => $request->department_id,
                 'designation' => $request->designation,
@@ -248,7 +264,18 @@ class EmployeeController extends Controller implements HasMiddleware
         $departments = Department::all();
         $roles = Role::where('name', '!=', 'Super Admin')->orderBy('name')->get();
         $employeeRole = $employee->roles->first()->name ?? null;
-        return view('employees.edit', compact('employee', 'departments', 'roles', 'employeeRole'));
+
+        $countryCodes = [
+            '+91' => '+91 (IN)',
+            '+92' => '+92 (PK)',
+            '+971' => '+971 (AE)',
+            '+1' => '+1 (US)',
+            '+44' => '+44 (UK)',
+            '+880' => '+880 (BD)',
+            '+966' => '+966 (SA)',
+        ];
+
+        return view('employees.edit', compact('employee', 'departments', 'roles', 'employeeRole', 'countryCodes'));
     }
 
     /**
@@ -265,8 +292,10 @@ class EmployeeController extends Controller implements HasMiddleware
             'email' => 'required|string|email|max:255|unique:users,email,' . $employee->id,
             'password' => 'nullable|string|min:8|confirmed',
             'employee_id' => 'nullable|string|unique:users,employee_id,' . $employee->id,
-            'phone' => 'nullable|string|regex:/^\+?[1-9]\d{9,14}$/',
-            'emergency_contact' => 'nullable|string|regex:/^\+?[1-9]\d{9,14}$/',
+            'phone_country_code' => 'nullable|string|max:5',
+            'phone' => 'nullable|string|regex:/^\d{10}$/',
+            'emergency_country_code' => 'nullable|string|max:5',
+            'emergency_contact' => 'nullable|string|regex:/^\d{10}$/',
             'department_id' => 'nullable|exists:departments,id',
             'designation' => 'nullable|string|max:255',
             'joining_date' => 'nullable|date',
@@ -279,7 +308,8 @@ class EmployeeController extends Controller implements HasMiddleware
             'blood_group' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
             'address' => 'nullable|string|max:500',
         ], [
-            'phone.regex' => 'The phone number format must be valid (e.g. +918544568958 or 918544568958).',
+            'phone.regex' => 'The phone number must be exactly 10 digits.',
+            'emergency_contact.regex' => 'The emergency contact number must be exactly 10 digits.',
         ]);
 
         $imageKit = ImageKitService::getInstance();
@@ -291,7 +321,9 @@ class EmployeeController extends Controller implements HasMiddleware
                 'name' => $request->name,
                 'email' => $request->email,
                 'employee_id' => $request->employee_id,
+                'phone_country_code' => $request->phone_country_code,
                 'phone' => $request->phone,
+                'emergency_country_code' => $request->emergency_country_code,
                 'emergency_contact' => $request->emergency_contact,
                 'department_id' => $request->department_id,
                 'designation' => $request->designation,

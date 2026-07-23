@@ -185,9 +185,22 @@
                         {{-- Phone --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                            <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('phone') border-red-500 @enderror"
-                                placeholder="+91 00000 00000">
+                            <div class="flex gap-2">
+                                <select name="phone_country_code"
+                                    class="w-28 border border-gray-300 rounded-lg px-2 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white dark:bg-zinc-950 dark:text-zinc-100 @error('phone_country_code') border-red-500 @enderror">
+                                    @foreach ($countryCodes as $code => $label)
+                                        <option value="{{ $code }}" {{ old('phone_country_code', $user->phone_country_code ?? '+91') == $code ? 'selected' : '' }}>
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
+                                    placeholder="e.g. 9876543210"
+                                    class="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('phone') border-red-500 @enderror">
+                            </div>
+                            @error('phone_country_code')
+                                <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                            @enderror
                             @error('phone')
                                 <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
                             @enderror
@@ -397,5 +410,13 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const phoneInput = document.querySelector('input[name="phone"]');
+
+            setupPhoneValidation(phoneInput);
+        });
     </script>
 @endpush

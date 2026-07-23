@@ -19,6 +19,73 @@
 {{-- All tables datatable js is here --}}
 <script src="{{ asset('js/datatable-config.js') }}"></script>
 
+<script>
+    function setupPhoneValidation(inputElement) {
+        if (!inputElement) return;
+
+        // Create warning span
+        const warnSpan = document.createElement('span');
+        warnSpan.className = 'text-xs text-red-500 mt-1 hidden block';
+        warnSpan.textContent = 'Phone number must be exactly 10 digits.';
+        inputElement.parentNode.appendChild(warnSpan);
+
+        // Block non-numeric keypresses
+        inputElement.addEventListener('keypress', function (e) {
+            const char = String.fromCharCode(e.which || e.keyCode);
+
+            // Allow only digits (0-9)
+            if (!/^[0-9]$/.test(char)) {
+                e.preventDefault();
+                return;
+            }
+
+            // Limit maximum character length to 10
+            if (this.value.length >= 10) {
+                e.preventDefault();
+            }
+        });
+
+        // Handle paste and other input changes (sanitize non-numeric)
+        const validate = function (input) {
+            let val = input.value.replace(/[^0-9]/g, '');
+
+            // Enforce max length limit
+            if (val.length > 10) {
+                val = val.slice(0, 10);
+            }
+
+            input.value = val;
+
+            // Perform validation
+            if (val === '') {
+                input.classList.remove('border-red-500');
+                warnSpan.classList.add('hidden');
+                input.setCustomValidity('');
+                return;
+            }
+
+            if (val.length !== 10) {
+                input.classList.add('border-red-500');
+                warnSpan.classList.remove('hidden');
+                input.setCustomValidity('Must be exactly 10 digits.');
+            } else {
+                input.classList.remove('border-red-500');
+                warnSpan.classList.add('hidden');
+                input.setCustomValidity('');
+            }
+        };
+
+        inputElement.addEventListener('input', function () {
+            validate(this);
+        });
+
+        // Validate on load if has initial value
+        if (inputElement.value.trim() !== '') {
+            validate(inputElement);
+        }
+    }
+</script>
+
 @stack('scripts')
 </body>
 

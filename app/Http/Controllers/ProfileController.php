@@ -30,7 +30,16 @@ class ProfileController extends Controller implements HasMiddleware
     public function index()
     {
         $user = auth()->user()->load('department');
-        return view('profile.index', compact('user'));
+        $countryCodes = [
+            '+91' => '+91 (IN)',
+            '+92' => '+92 (PK)',
+            '+971' => '+971 (AE)',
+            '+1' => '+1 (US)',
+            '+44' => '+44 (UK)',
+            '+880' => '+880 (BD)',
+            '+966' => '+966 (SA)',
+        ];
+        return view('profile.index', compact('user', 'countryCodes'));
     }
 
     /**
@@ -54,9 +63,12 @@ class ProfileController extends Controller implements HasMiddleware
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
-            'phone' => 'nullable|string|max:20',
+            'phone_country_code' => 'nullable|string|max:5',
+            'phone' => 'nullable|string|regex:/^\d{10}$/',
             'designation' => 'nullable|string|max:255',
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'phone.regex' => 'The phone number must be exactly 10 digits.',
         ]);
 
         $imageKit = ImageKitService::getInstance();
@@ -67,6 +79,7 @@ class ProfileController extends Controller implements HasMiddleware
             $data = [
                 'name' => $request->name,
                 'email' => $request->email,
+                'phone_country_code' => $request->phone_country_code,
                 'phone' => $request->phone,
                 'designation' => $request->designation,
             ];

@@ -225,7 +225,9 @@
 
                     <div>
                         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Phone Number</p>
-                        <p class="text-sm font-medium text-gray-800">{{ $employee->phone ?? '—' }}</p>
+                        <p class="text-sm font-medium text-gray-800">{{ $employee->phone_country_code }}
+                            {{ $employee->phone ?? '—' }}
+                        </p>
                     </div>
 
                     <div>

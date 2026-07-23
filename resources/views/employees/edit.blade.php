@@ -157,21 +157,46 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                <input type="text" name="phone" value="{{ old('phone', $employee->phone) }}"
-                    placeholder="e.g., +918544568958"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('phone') border-red-500 @enderror">
+                <div class="flex gap-2">
+                    <select name="phone_country_code"
+                        class="w-28 border border-gray-300 rounded-lg px-2 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white dark:bg-zinc-950 dark:text-zinc-100 @error('phone_country_code') border-red-500 @enderror">
+                        @foreach ($countryCodes as $code => $label)
+                            <option value="{{ $code }}" {{ old('phone_country_code', $employee->phone_country_code ?? '+91') == $code ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <input type="text" name="phone" value="{{ old('phone', $employee->phone) }}" placeholder="e.g. 9876543210"
+                        class="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('phone') border-red-500 @enderror">
+                </div>
+                @error('phone_country_code')
+                    <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                @enderror
                 @error('phone')
-                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                    <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
                 @enderror
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact Number</label>
-                <input type="text" name="emergency_contact"
-                    value="{{ old('emergency_contact', $employee->emergency_contact) }}" placeholder="e.g., +919876543210"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('emergency_contact') border-red-500 @enderror">
+                <div class="flex gap-2">
+                    <select name="emergency_country_code"
+                        class="w-28 border border-gray-300 rounded-lg px-2 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white dark:bg-zinc-950 dark:text-zinc-100 @error('emergency_country_code') border-red-500 @enderror">
+                        @foreach ($countryCodes as $code => $label)
+                            <option value="{{ $code }}" {{ old('emergency_country_code', $employee->emergency_country_code ?? '+91') == $code ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <input type="text" name="emergency_contact" value="{{ old('emergency_contact', $employee->emergency_contact) }}"
+                        placeholder="e.g. 9876543210"
+                        class="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all @error('emergency_contact') border-red-500 @enderror">
+                </div>
+                @error('emergency_country_code')
+                    <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
+                @enderror
                 @error('emergency_contact')
-                    <span class="text-xs text-red-500 mt-1">{{ $message }}</span>
+                    <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span>
                 @enderror
             </div>
 
@@ -286,88 +311,6 @@
 
 @push('scripts')
     <script>
-        function setupPhoneValidation(inputElement) {
-            if (!inputElement) return;
-
-            // Create warning span
-            const warnSpan = document.createElement('span');
-            warnSpan.className = 'text-xs text-red-500 mt-1 hidden block';
-            warnSpan.textContent = 'Format invalid. Example: +919876543210 (Must include + and country code)';
-            inputElement.parentNode.appendChild(warnSpan);
-
-            // Block non-numeric and non-+ keypresses
-            inputElement.addEventListener('keypress', function (e) {
-                const char = String.fromCharCode(e.which || e.keyCode);
-                
-                // Allow '+' only at the very beginning
-                if (char === '+' && this.selectionStart === 0 && !this.value.includes('+')) {
-                    return;
-                }
-                
-                // Allow only digits (0-9)
-                if (!/^[0-9]$/.test(char)) {
-                    e.preventDefault();
-                    return;
-                }
-
-                // Limit maximum character length
-                const maxLength = this.value.startsWith('+') ? 13 : 12;
-                if (this.value.length >= maxLength) {
-                    e.preventDefault();
-                }
-            });
-
-            // Handle paste and other input changes (sanitize non-numeric)
-            const validate = function (input) {
-                let val = input.value;
-                
-                // Sanitize: allow '+' only at index 0, and digits elsewhere
-                if (val.startsWith('+')) {
-                    val = '+' + val.slice(1).replace(/[^0-9]/g, '');
-                } else {
-                    val = val.replace(/[^0-9]/g, '');
-                }
-
-                // Enforce max length limit
-                const maxLength = val.startsWith('+') ? 13 : 12;
-                if (val.length > maxLength) {
-                    val = val.slice(0, maxLength);
-                }
-
-                input.value = val;
-
-                // Perform regex validation
-                if (val === '') {
-                    input.classList.remove('border-red-500');
-                    warnSpan.classList.add('hidden');
-                    input.setCustomValidity('');
-                    return;
-                }
-
-                // Regex: Starts with '+', then 1-3 country code, then exactly 10 digits
-                const regex = val.startsWith('+') ? /^\+\d{1,3}\d{10}$/ : /^\d{1,3}\d{10}$/;
-
-                if (!regex.test(val)) {
-                    input.classList.add('border-red-500');
-                    warnSpan.classList.remove('hidden');
-                    input.setCustomValidity('Invalid phone format.');
-                } else {
-                    input.classList.remove('border-red-500');
-                    warnSpan.classList.add('hidden');
-                    input.setCustomValidity('');
-                }
-            };
-
-            inputElement.addEventListener('input', function () {
-                validate(this);
-            });
-
-            // Validate on load if has initial value
-            if (inputElement.value.trim() !== '') {
-                validate(inputElement);
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const phoneInput = document.querySelector('input[name="phone"]');
             const emergencyInput = document.querySelector('input[name="emergency_contact"]');

@@ -12,7 +12,9 @@ return new class extends Migration {
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('employee_id')->unique()->nullable();
+            $table->string('phone_country_code', 5)->nullable();
             $table->string('phone')->nullable();
+            $table->string('emergency_country_code', 5)->nullable();
             $table->string('emergency_contact')->nullable();
             $table->foreignId('department_id')->nullable()->constrained('departments')->nullOnDelete();
             $table->string('designation')->nullable();
@@ -45,7 +47,9 @@ return new class extends Migration {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn([
                 'employee_id',
+                'phone_country_code',
                 'phone',
+                'emergency_country_code',
                 'emergency_contact',
                 'department_id',
                 'designation',
