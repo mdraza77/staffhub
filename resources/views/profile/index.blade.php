@@ -297,19 +297,7 @@
                         <div>
                             <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Status</p>
                             <div class="flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg">
-                                @if ($user->status === 'active')
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">
-                                        <i class="fa-solid fa-circle text-[8px] mr-1"></i>Active
-                                    </span>
-                                @elseif ($user->status === 'inactive')
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">
-                                        <i class="fa-solid fa-circle text-[8px] mr-1"></i>Inactive
-                                    </span>
-                                @else
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600">
-                                        <i class="fa-solid fa-circle text-[8px] mr-1"></i>Terminated
-                                    </span>
-                                @endif
+                                <x-badge :value="$user->status" />
                             </div>
                         </div>
 

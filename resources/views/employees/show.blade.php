@@ -47,22 +47,23 @@
 
                 {{-- Status Badge --}}
                 <div class="mt-4">
-                    @if ($employee->status === 'active')
-                        <span
-                            class="px-4 py-1.5 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
-                            <i class="fa-solid fa-circle text-green-500 text-[8px] mr-1"></i> Active
-                        </span>
+                    {{-- @if ($employee->status === 'active')
+                    <span
+                        class="px-4 py-1.5 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
+                        <i class="fa-solid fa-circle text-green-500 text-[8px] mr-1"></i> Active
+                    </span>
                     @elseif ($employee->status === 'inactive')
-                        <span
-                            class="px-4 py-1.5 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700 border border-yellow-200">
-                            <i class="fa-solid fa-circle text-yellow-500 text-[8px] mr-1"></i> Inactive
-                        </span>
+                    <span
+                        class="px-4 py-1.5 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700 border border-yellow-200">
+                        <i class="fa-solid fa-circle text-yellow-500 text-[8px] mr-1"></i> Inactive
+                    </span>
                     @else
-                        <span
-                            class="px-4 py-1.5 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-200">
-                            <i class="fa-solid fa-circle text-red-500 text-[8px] mr-1"></i> Terminated
-                        </span>
-                    @endif
+                    <span
+                        class="px-4 py-1.5 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-200">
+                        <i class="fa-solid fa-circle text-red-500 text-[8px] mr-1"></i> Terminated
+                    </span>
+                    @endif --}}
+                    <x-badge :value="$employee->status" />
                 </div>
             </div>
 
@@ -118,8 +119,9 @@
                         Signature</h3>
                     <div
                         class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-zinc-950/40 rounded-lg border border-gray-100 dark:border-zinc-800">
-                        <img src="{{ str_starts_with($employee->signature, 'http') ? $employee->signature : asset('storage/' . $employee->signature) }}" alt="Signature"
-                            class="max-h-16 object-contain mix-blend-multiply dark:mix-blend-screen" draggable="false">
+                        <img src="{{ str_starts_with($employee->signature, 'http') ? $employee->signature : asset('storage/' . $employee->signature) }}"
+                            alt="Signature" class="max-h-16 object-contain mix-blend-multiply dark:mix-blend-screen"
+                            draggable="false">
                     </div>
                 </div>
             @endif
@@ -235,14 +237,15 @@
 
                     <div>
                         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Status</p>
-                        @if ($employee->status === 'active')
-                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">Active</span>
+                        {{-- @if ($employee->status === 'active')
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700">Active</span>
                         @elseif ($employee->status === 'inactive')
-                            <span
-                                class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">Inactive</span>
+                        <span
+                            class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700">Inactive</span>
                         @else
-                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600">Terminated</span>
-                        @endif
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600">Terminated</span>
+                        @endif --}}
+                        <x-badge :value="$employee->status" />
                     </div>
 
                     <div>
@@ -294,7 +297,8 @@
                     <div class="sm:col-span-2">
                         <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Residential Address</p>
                         <p class="text-sm font-medium text-gray-850 whitespace-pre-line leading-relaxed">
-                            {{ $employee->address ?? '—' }}</p>
+                            {{ $employee->address ?? '—' }}
+                        </p>
                     </div>
 
                 </div>

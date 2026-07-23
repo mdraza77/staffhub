@@ -103,16 +103,16 @@
                     </label>
                     <input type="date" name="joining_from"
                         value="{{ request('joining_from', now()->subMonths(3)->format('Y-m-d')) }}""
-                                class=" w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2
-                        focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                                    class=" w-full border border-gray-300 rounded-lg px-3 py-2 text-sm
+                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-500 mb-1">
                         <i class="fa-solid fa-calendar mr-1"></i> Joining Date To
                     </label>
                     <input type="date" name="joining_to" value="{{ request('joining_to', now()->format('Y-m-d')) }}""
-                                class=" w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2
-                        focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                                    class=" w-full border border-gray-300 rounded-lg px-3 py-2 text-sm
+                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
                 </div>
             </div>
 
@@ -120,7 +120,7 @@
     </form>
 
     {{-- ===== SUMMARY CARDS ===== --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-5">
         <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
                 <i class="fa-solid fa-users text-blue-600 text-sm"></i>
@@ -157,6 +157,15 @@
                 <p class="text-xl font-bold text-gray-800">{{ $summary['terminated'] }}</p>
             </div>
         </div>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center">
+                <i class="fa-solid fa-trash-can text-gray-500 text-sm"></i>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400">Deleted</p>
+                <p class="text-xl font-bold text-gray-800">{{ $summary['deleted'] }}</p>
+            </div>
+        </div>
     </div>
 
     {{-- ===== REPORT TABLE ===== --}}
@@ -190,7 +199,7 @@
                                     @else
                                         <div
                                             class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm border
-                                                                    {{ $employee->trashed() ? 'bg-gray-100 text-gray-400' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
+                                                                                                                                {{ $employee->trashed() ? 'bg-gray-100 text-gray-400' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
                                             {{ strtoupper(substr($employee->name, 0, 2)) }}
                                         </div>
                                     @endif
@@ -198,6 +207,12 @@
                                         <p class="text-sm font-semibold text-gray-800">{{ $employee->name }}</p>
                                         <p class="text-xs text-gray-400">{{ $employee->email }}</p>
                                     </div>
+                                    @if ($employee->trashed())
+                                        <span
+                                            class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-600 tracking-wide">
+                                            Deleted
+                                        </span>
+                                    @endif
                                 </div>
                             </td>
 
@@ -236,25 +251,8 @@
 
                             {{-- Status --}}
                             <td class="px-4 py-3">
-                                @if ($employee->trashed())
-                                    <span class="bg-red-100 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                        Deleted
-                                    </span>
-                                @elseif ($employee->status === 'active')
-                                    <span class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                        Active
-                                    </span>
-                                @elseif ($employee->status === 'inactive')
-                                    <span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                        Inactive
-                                    </span>
-                                @else
-                                    <span class="bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                        Terminated
-                                    </span>
-                                @endif
+                                <x-badge :value="$employee->status" />
                             </td>
-
                         </tr>
                     @endforeach
                 </tbody>

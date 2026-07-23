@@ -218,7 +218,7 @@ select.dt-input {
 /* ========================================================= */
 
 /* Body global background override for jet-black */
-.dark, 
+.dark,
 .dark body,
 .dark main,
 .dark #main {
@@ -721,6 +721,30 @@ select.dt-input {
     border-color: rgba(71, 85, 105, 0.4) !important;
 }
 
+.dark .bg-amber-50 {
+    background-color: rgba(245, 158, 11, 0.15) !important;
+    color: #fbbf24 !important; /* text-amber-400 */
+    border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+.dark .bg-rose-50 {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+    color: #f87171 !important; /* text-rose-400 */
+    border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+.dark .bg-violet-50 {
+    background-color: rgba(139, 92, 246, 0.15) !important;
+    color: #c084fc !important; /* text-violet-400 */
+    border-color: rgba(139, 92, 246, 0.3) !important;
+}
+
+.dark .bg-orange-50 {
+    background-color: rgba(249, 115, 22, 0.15) !important;
+    color: #fdba74 !important; /* text-orange-350 */
+    border-color: rgba(249, 115, 22, 0.3) !important;
+}
+
 /* Profile photo upload buttons adjustments */
 .dark .bg-blue-50.text-blue-700.border.border-blue-200 {
     background-color: rgba(59, 130, 246, 0.15) !important;
@@ -818,7 +842,9 @@ select.dt-input {
     background-color: #121214 !important; /* Premium dark charcoal background */
     color: #f4f4f5 !important; /* text-zinc-100 */
     border: 1px solid #1f1f23 !important; /* border-zinc-800 */
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4) !important;
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.4),
+        0 4px 6px -4px rgba(0, 0, 0, 0.4) !important;
 }
 
 .dark .swal2-title {

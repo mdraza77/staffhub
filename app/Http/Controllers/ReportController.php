@@ -2,28 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Department;
-use Spatie\Permission\Models\Role;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Spatie\Permission\Models\Role;
 
 class ReportController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:Employees-Report',  only: ['employeesReport']),
+            new Middleware('permission:Employees-Report', only: ['employeesReport']),
         ];
     }
 
     public function employeesReport(Request $request)
     {
-        $departments = Department::orderBy('name')->get();
-        $roles       = Role::orderBy('name')->get();
+        $departments = Department::withTrashed()->orderBy('name')->get();
+        $roles = Role::orderBy('name')->get();
 
-        $query = User::with(['department', 'roles'])
+        $query = User::with([
+            'department' => function ($q) {
+                $q->withTrashed();
+            },
+            'roles'
+        ])
             ->withTrashed()
             ->where('id', '!=', auth()->id())
             ->whereDoesntHave('roles', function ($q) {
@@ -45,12 +50,10 @@ class ReportController extends Controller implements HasMiddleware
             if ($request->status === 'deleted') {
                 $query->whereNotNull('deleted_at');
             } else {
-                $query->whereNull('deleted_at')
+                $query
+                    ->whereNull('deleted_at')
                     ->where('status', $request->status);
             }
-        } else {
-            // Default: deleted wale mat dikhao
-            $query->whereNull('deleted_at');
         }
 
         if ($request->filled('joining_from')) {
@@ -64,7 +67,8 @@ class ReportController extends Controller implements HasMiddleware
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+                $q
+                    ->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
                     ->orWhere('employee_id', 'like', "%{$search}%")
                     ->orWhere('designation', 'like', "%{$search}%");
@@ -75,10 +79,11 @@ class ReportController extends Controller implements HasMiddleware
 
         // Summary counts
         $summary = [
-            'total'      => $employees->count(),
-            'active'     => $employees->where('status', 'active')->whereNull('deleted_at')->count(),
-            'inactive'   => $employees->where('status', 'inactive')->whereNull('deleted_at')->count(),
+            'total' => $employees->count(),
+            'active' => $employees->where('status', 'active')->whereNull('deleted_at')->count(),
+            'inactive' => $employees->where('status', 'inactive')->whereNull('deleted_at')->count(),
             'terminated' => $employees->where('status', 'terminated')->whereNull('deleted_at')->count(),
+            'deleted' => $employees->whereNotNull('deleted_at')->count(),
         ];
 
         return view('reports.employee', compact(
