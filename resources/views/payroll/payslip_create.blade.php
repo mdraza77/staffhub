@@ -22,7 +22,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Select Month <span
                             class="text-red-500">*</span></label>
                     <select name="month"
-                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none transition-all bg-white @error('month') border-red-500 @enderror"
+                        class="month w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none transition-all bg-white @error('month') border-red-500 @enderror"
                         required>
                         <option value="">Choose Month</option>
                         @foreach ($months as $month)
@@ -42,7 +42,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Select Year <span
                             class="text-red-500">*</span></label>
                     <select name="year"
-                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none transition-all bg-white @error('year') border-red-500 @enderror"
+                        class="year w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none transition-all bg-white @error('year') border-red-500 @enderror"
                         required>
                         @foreach ($years as $year)
                             <option value="{{ $year }}" {{ old('year', now()->year) == $year ? 'selected' : '' }}>
@@ -94,5 +94,12 @@
                 $('#spinner').removeClass('hidden');
             });
         });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+          $('.month').select2();  
+          $('.year').select2();
+        })
     </script>
 @endpush

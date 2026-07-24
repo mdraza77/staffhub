@@ -42,7 +42,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Priority <span
                         class="text-red-500">*</span></label>
                 <select name="priority"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white @error('priority') border-red-500 @enderror"
+                    class="priority w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white @error('priority') border-red-500 @enderror"
                     required>
                     <option value="low" {{ old('priority') == 'low' ? 'selected' : '' }}>Low</option>
                     <option value="medium" {{ old('priority', 'medium') == 'medium' ? 'selected' : '' }}>Medium</option>
@@ -57,7 +57,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Status <span
                         class="text-red-500">*</span></label>
                 <select name="status"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white @error('status') border-red-500 @enderror"
+                    class="status w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white @error('status') border-red-500 @enderror"
                     required>
                     <option value="draft" {{ old('status', 'draft') == 'draft' ? 'selected' : '' }}>Draft</option>
                     <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>Published</option>
@@ -87,4 +87,13 @@
             </button>
         </div>
     </form>
+
+    @push('scripts')
+        <script>
+            $(document).ready(function () {
+                $('.priority').select2();
+                $('.status').select2();
+            })
+        </script>
+    @endpush
 @endsection

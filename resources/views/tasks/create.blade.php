@@ -20,7 +20,7 @@
             <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Project</label>
                 <select name="project_id"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
+                    class="project_id w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
                     <option value="">Select Project</option>
                     @foreach ($projects as $project)
                         <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>
@@ -41,12 +41,13 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Assign To <span
                         class="text-red-500">*</span></label>
                 <select name="assigned_to"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
+                    class="assigned_to w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
                     required>
                     <option value="">Select an Employee</option>
                     @foreach ($employees as $employee)
                         <option value="{{ $employee->id }}" {{ old('assigned_to') == $employee->id ? 'selected' : '' }}>
-                            {{ $employee->name }} ({{ $employee->designation ?? 'Employee' }}){{ $employee->trashed() ? ' [Deleted]' : '' }}
+                            {{ $employee->name }}
+                            ({{ $employee->designation ?? 'Employee' }}){{ $employee->trashed() ? ' [Deleted]' : '' }}
                         </option>
                     @endforeach
                 </select>
@@ -55,11 +56,12 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Assign Tester (Optional)</label>
                 <select name="tester_id"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
+                    class="tester_id w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
                     <option value="">Select a Tester</option>
                     @foreach ($employees as $employee)
                         <option value="{{ $employee->id }}" {{ old('tester_id') == $employee->id ? 'selected' : '' }}>
-                            {{ $employee->name }} ({{ $employee->designation ?? 'Employee' }}){{ $employee->trashed() ? ' [Deleted]' : '' }}
+                            {{ $employee->name }}
+                            ({{ $employee->designation ?? 'Employee' }}){{ $employee->trashed() ? ' [Deleted]' : '' }}
                         </option>
                     @endforeach
                 </select>
@@ -69,7 +71,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Priority <span
                         class="text-red-500">*</span></label>
                 <select name="priority"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
+                    class="priority w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
                     required>
                     <option value="low" {{ old('priority', 'medium') == 'low' ? 'selected' : '' }}>Low</option>
                     <option value="medium" {{ old('priority', 'medium') == 'medium' ? 'selected' : '' }}>Medium</option>
@@ -141,4 +143,15 @@
             background-color: #f9fafb !important;
         }
     </style>
+@endpush
+
+@push('scripts')
+    <script>
+        $(document).ready(function () {
+            $('.project_id').select2();
+            $('.assigned_to').select2();
+            $('.tester_id').select2();
+            $('.priority').select2();
+        });
+    </script>
 @endpush

@@ -61,33 +61,12 @@
 
                             {{-- Priority --}}
                             <td class="px-6 py-4">
-                                <span
-                                    class="px-2 py-1 rounded-full text-xs font-semibold uppercase tracking-wider
-                                    {{ $announcement->priority === 'high' ? 'bg-red-50 text-red-700 border border-red-100' : '' }}
-                                    {{ $announcement->priority === 'medium' ? 'bg-amber-50 text-amber-700 border border-amber-100' : '' }}
-                                    {{ $announcement->priority === 'low' ? 'bg-blue-50 text-blue-700 border border-blue-100' : '' }}
-                                ">
-                                    {{ $announcement->priority }}
-                                </span>
+                                <x-badge :value="$announcement->priority" />
                             </td>
 
                             {{-- Status Badge --}}
                             <td class="px-6 py-4">
-                                @if ($announcement->trashed())
-                                    <span class="bg-red-100 text-red-600 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                        <i class="fa-solid fa-ban text-[10px] mr-1"></i>Deleted
-                                    </span>
-                                @elseif ($announcement->status === 'published')
-                                    <span
-                                        class="bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                        <i class="fa-solid fa-circle text-[8px] mr-1"></i>Published
-                                    </span>
-                                @elseif ($announcement->status === 'draft')
-                                    <span
-                                        class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                        <i class="fa-solid fa-circle text-[8px] mr-1"></i>Draft
-                                    </span>
-                                @endif
+                                <x-badge :value="$announcement->status" />
                             </td>
 
                             {{-- Actions --}}

@@ -299,7 +299,7 @@
                         <div>
                             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Change Task Status</label>
                             <select name="status"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-xs {{ $isDropdownDisabled ? 'bg-gray-100 cursor-not-allowed text-gray-500' : '' }}"
+                                class="status w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-xs {{ $isDropdownDisabled ? 'bg-gray-100 cursor-not-allowed text-gray-500' : '' }}"
                                 required {{ $isDropdownDisabled ? 'disabled' : '' }}>
                                 @if (in_array('open', $allowedStatuses))
                                     <option value="open" {{ $task->status === 'open' ? 'selected' : '' }}>Open</option>
@@ -459,5 +459,11 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $('.status').select2();
+        })
     </script>
 @endpush

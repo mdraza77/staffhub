@@ -46,7 +46,7 @@
                 <div>
                     <label class="block text-xs font-medium text-gray-500 mb-1">Department</label>
                     <select name="department_id"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                        class="department_id w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
                         <option value="">All Departments</option>
                         @foreach ($departments as $dept)
                             <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>
@@ -60,7 +60,7 @@
                 <div>
                     <label class="block text-xs font-medium text-gray-500 mb-1">Role</label>
                     <select name="role"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                        class="role w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
                         <option value="">All Roles</option>
                         @foreach ($roles as $role)
                             <option value="{{ $role->name }}" {{ request('role') == $role->name ? 'selected' : '' }}>
@@ -74,7 +74,7 @@
                 <div>
                     <label class="block text-xs font-medium text-gray-500 mb-1">Status</label>
                     <select name="status"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                        class="status w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
                         <option value="">All Status</option>
                         <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
                         <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive
@@ -103,16 +103,18 @@
                     </label>
                     <input type="date" name="joining_from"
                         value="{{ request('joining_from', now()->subMonths(3)->format('Y-m-d')) }}""
-                                                    class=" w-full border border-gray-300 rounded-lg px-3 py-2 text-sm
-                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                                                            class=" w-full border border-gray-300
+                        rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none
+                        transition-all">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-500 mb-1">
                         <i class="fa-solid fa-calendar mr-1"></i> Joining Date To
                     </label>
                     <input type="date" name="joining_to" value="{{ request('joining_to', now()->format('Y-m-d')) }}""
-                                                    class=" w-full border border-gray-300 rounded-lg px-3 py-2 text-sm
-                        focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                                                            class=" w-full border border-gray-300
+                        rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none
+                        transition-all">
                 </div>
             </div>
 
@@ -199,7 +201,7 @@
                                     @else
                                         <div
                                             class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm border
-                                                                                                                                {{ $employee->trashed() ? 'bg-gray-100 text-gray-400' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
+                                                                                                                                                                                                        {{ $employee->trashed() ? 'bg-gray-100 text-gray-400' : 'bg-blue-100 text-blue-600 border-blue-200' }}">
                                             {{ strtoupper(substr($employee->name, 0, 2)) }}
                                         </div>
                                     @endif
@@ -262,7 +264,7 @@
 
 @endsection
 
-@push('scripts')
+@push('styles')
     <style>
         .dt-btn {
             display: inline-flex;
@@ -401,4 +403,14 @@
             border-bottom: none !important;
         }
     </style>
+@endpush
+
+@push('scripts')
+    <script>
+        $(document).ready(function () {
+            $('.department_id').select2()
+            $('.role').select2()
+            $('.status').select2()
+        })
+    </script>
 @endpush

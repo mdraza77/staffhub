@@ -25,21 +25,7 @@
         <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-6">
             <h2 class="text-xl font-bold text-gray-800">{{ $announcement->title }}</h2>
             <div>
-                @if ($announcement->trashed())
-                    <span class="bg-red-50 text-red-600 border border-red-200 text-xs font-semibold px-3 py-1.5 rounded-full">
-                        <i class="fa-solid fa-ban text-[10px] mr-1"></i> Deleted
-                    </span>
-                @elseif ($announcement->status === 'published')
-                    <span
-                        class="bg-green-50 text-green-700 border border-green-200 text-xs font-semibold px-3 py-1.5 rounded-full">
-                        <i class="fa-solid fa-circle text-green-500 text-[8px] mr-1"></i> Published
-                    </span>
-                @else
-                    <span
-                        class="bg-yellow-50 text-yellow-700 border border-yellow-200 text-xs font-semibold px-3 py-1.5 rounded-full">
-                        <i class="fa-solid fa-circle text-yellow-500 text-[8px] mr-1"></i> Draft
-                    </span>
-                @endif
+                <x-badge :value="$announcement->status" />
             </div>
         </div>
 
@@ -55,13 +41,7 @@
             <div>
                 <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Priority</p>
                 <p class="mt-1 text-sm font-medium text-gray-800">
-                    <span class="px-2.5 py-1 rounded text-xs font-bold border uppercase
-                                {{ $announcement->priority === 'high' ? 'bg-red-50 text-red-700 border-red-100' : '' }}
-                                {{ $announcement->priority === 'medium' ? 'bg-amber-50 text-amber-700 border-amber-100' : '' }}
-                                {{ $announcement->priority === 'low' ? 'bg-blue-50 text-blue-700 border-blue-100' : '' }}
-                            ">
-                        {{ $announcement->priority }}
-                    </span>
+                    <x-badge :value="$announcement->priority" />
                 </p>
             </div>
 
@@ -83,8 +63,7 @@
 
             <div class="sm:col-span-2">
                 <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Message</p>
-                <div
-                    class="mt-2 text-sm text-gray-700 bg-gray-50 border border-gray-100 p-4 rounded-lg leading-relaxed whitespace-pre-wrap">
+                <div class="mt-2 text-sm text-gray-700 bg-gray-50 border border-gray-100 p-4 rounded-lg leading-relaxed">
                     {{ $announcement->message }}
                 </div>
             </div>
@@ -100,19 +79,6 @@
                             onclick="confirmRestore({{ $announcement->id }}, '{{ addslashes($announcement->title) }}')"
                             class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium text-sm flex items-center gap-2 shadow-sm">
                             <i class="fa-solid fa-rotate-left"></i> Restore
-                        </button>
-                    </form>
-                @endcan
-
-                @can('Announcement-ForceDelete')
-                    <form action="{{ route('announcements.force-delete', $announcement->id) }}" method="POST"
-                        id="force-delete-form-{{ $announcement->id }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button"
-                            onclick="confirmForceDelete({{ $announcement->id }}, '{{ addslashes($announcement->title) }}')"
-                            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium text-sm flex items-center gap-2 shadow-sm">
-                            <i class="fa-solid fa-trash-can"></i> Permanently Delete
                         </button>
                     </form>
                 @endcan

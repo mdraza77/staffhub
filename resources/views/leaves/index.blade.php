@@ -117,7 +117,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Leave Type <span
                                 class="text-red-500">*</span></label>
                         <select name="leave_type_id"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                            class="leave_type_id w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
                             required>
                             <option value="">Select leave type</option>
                             @foreach ($leaveTypes as $type)
@@ -239,5 +239,11 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.leave_type_id').select2();
+        });
     </script>
 @endpush

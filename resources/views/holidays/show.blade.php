@@ -25,21 +25,22 @@
         <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-6">
             <h2 class="text-xl font-bold text-gray-800">{{ $holiday->name }}</h2>
             <div>
-                @if ($holiday->trashed())
-                    <span class="bg-red-50 text-red-600 border border-red-200 text-xs font-semibold px-3 py-1.5 rounded-full">
-                        <i class="fa-solid fa-ban text-[10px] mr-1"></i> Deleted
-                    </span>
+                {{-- @if ($holiday->trashed())
+                <span class="bg-red-50 text-red-600 border border-red-200 text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <i class="fa-solid fa-ban text-[10px] mr-1"></i> Deleted
+                </span>
                 @elseif ($holiday->status === 'active')
-                    <span
-                        class="bg-green-50 text-green-700 border border-green-200 text-xs font-semibold px-3 py-1.5 rounded-full">
-                        <i class="fa-solid fa-circle text-green-500 text-[8px] mr-1"></i> Active
-                    </span>
+                <span
+                    class="bg-green-50 text-green-700 border border-green-200 text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <i class="fa-solid fa-circle text-green-500 text-[8px] mr-1"></i> Active
+                </span>
                 @else
-                    <span
-                        class="bg-yellow-50 text-yellow-700 border border-yellow-200 text-xs font-semibold px-3 py-1.5 rounded-full">
-                        <i class="fa-solid fa-circle text-yellow-500 text-[8px] mr-1"></i> Inactive
-                    </span>
-                @endif
+                <span
+                    class="bg-yellow-50 text-yellow-700 border border-yellow-200 text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <i class="fa-solid fa-circle text-yellow-500 text-[8px] mr-1"></i> Inactive
+                </span>
+                @endif --}}
+                <x-badge :value="$holiday->status" />
             </div>
         </div>
 
@@ -65,6 +66,7 @@
                 <p class="mt-1 text-sm font-medium text-gray-800 uppercase">
                     <span class="px-2.5 py-1 rounded bg-gray-100 text-gray-700 text-xs font-bold border border-gray-200">
                         {{ $holiday->type }}
+                        {{-- <x-badge :value="$holiday->type" /> --}}
                     </span>
                 </p>
             </div>
@@ -98,18 +100,6 @@
                         <button type="button" onclick="confirmRestore({{ $holiday->id }}, '{{ addslashes($holiday->name) }}')"
                             class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium text-sm flex items-center gap-2 shadow-sm">
                             <i class="fa-solid fa-rotate-left"></i> Restore
-                        </button>
-                    </form>
-                @endcan
-
-                @can('holiday-ForceDelete')
-                    <form action="{{ route('holidays.force-delete', $holiday->id) }}" method="POST"
-                        id="force-delete-form-{{ $holiday->id }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button" onclick="confirmForceDelete({{ $holiday->id }}, '{{ addslashes($holiday->name) }}')"
-                            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium text-sm flex items-center gap-2 shadow-sm">
-                            <i class="fa-solid fa-trash-can"></i> Permanently Delete
                         </button>
                     </form>
                 @endcan

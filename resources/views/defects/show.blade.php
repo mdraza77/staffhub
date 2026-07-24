@@ -274,7 +274,7 @@
                         <div>
                             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Status</label>
                             <select name="status"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-xs"
+                                class="status w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-xs"
                                 required>
                                 <option value="open" {{ $defect->status === 'open' ? 'selected' : '' }}>Open</option>
                                 <option value="in_progress" {{ $defect->status === 'in_progress' ? 'selected' : '' }}>In
@@ -399,5 +399,11 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.status').select2();
+        })
     </script>
 @endpush

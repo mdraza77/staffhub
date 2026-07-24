@@ -34,7 +34,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Project</label>
                 <select name="project_id"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
+                    class="project_id w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
                     <option value="">Select Project</option>
                     @foreach ($projects as $project)
                         <option value="{{ $project->id }}"
@@ -65,7 +65,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Environment <span
                         class="text-red-500">*</span></label>
                 <select name="environment"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
+                    class="environment w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
                     required>
                     <option value="production" {{ old('environment', $defect->environment) === 'production' ? 'selected' : '' }}>Production
                     </option>
@@ -93,7 +93,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Severity <span
                         class="text-red-500">*</span></label>
                 <select name="severity"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
+                    class="severity w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
                     required>
                     <option value="low" {{ old('severity', $defect->severity) === 'low' ? 'selected' : '' }}>Low
                     </option>
@@ -110,7 +110,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Priority <span
                         class="text-red-500">*</span></label>
                 <select name="priority"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
+                    class="priority w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
                     required>
                     <option value="low" {{ old('priority', $defect->priority) === 'low' ? 'selected' : '' }}>Low
                     </option>
@@ -126,7 +126,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Assignee (Engineer)</label>
                 <select name="assigned_to"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
+                    class="assigned_to w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white">
                     <option value="">Select Assignee</option>
                     @foreach ($employees as $employee)
                         <option value="{{ $employee->id }}" {{ old('assigned_to', $defect->assigned_to) == $employee->id ? 'selected' : '' }}>
@@ -140,7 +140,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Current Status <span
                         class="text-red-500">*</span></label>
                 <select name="status"
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
+                    class="status w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
                     required>
                     <option value="open" {{ old('status', $defect->status) === 'open' ? 'selected' : '' }}>Open</option>
                     <option value="in_progress" {{ old('status', $defect->status) === 'in_progress' ? 'selected' : '' }}>In
@@ -216,5 +216,16 @@
                     console.error(error);
                 });
         });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.project_id').select2();
+            $('.environment').select2();
+            $('.severity').select2();
+            $('.priority').select2();
+            $('.assigned_to').select2();
+            $('.status').select2();
+        })
     </script>
 @endpush
