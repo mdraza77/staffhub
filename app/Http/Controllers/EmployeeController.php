@@ -220,7 +220,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
             DB::commit();  // Save changes to database
 
-            return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
+            return redirect()->route('employees.index')->with('success', "Employee '{$employee->name}' has been created successfully.");
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -235,7 +235,7 @@ class EmployeeController extends Controller implements HasMiddleware
                 Storage::disk('public')->delete($signaturePath);
             }
 
-            return back()->withInput()->with('error', 'Something went wrong while creating the employee. Please try again.');
+            return back()->withInput()->with('error', 'Unable to create the employee at the moment. Please try again later.');
         }
     }
 
@@ -398,13 +398,15 @@ class EmployeeController extends Controller implements HasMiddleware
 
             DB::commit();
 
-            return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
+            return redirect()->route('employees.index')->with('success', "Employee '{$employee->name}' has been updated successfully.");;
         } catch (\Exception $e) {
             DB::rollBack();
 
             Log::error('Employee Update Failed: ' . $e->getMessage());
 
-            return back()->withInput()->with('error', 'Something went wrong while updating the employee. Please try again.');
+            return back()
+                ->withInput()
+                ->with('error', 'Unable to update the employee at the moment. Please try again later.');
         }
     }
 
@@ -425,7 +427,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
         return redirect()
             ->route('employees.index')
-            ->with('success', 'Employee deleted successfully.');
+            ->with('success', "Employee '{$employee->name}' has been deleted successfully.");
     }
 
     public function restore($id)
@@ -440,7 +442,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
         return redirect()
             ->route('employees.index')
-            ->with('success', 'Employee restored successfully.');
+            ->with('success', "Employee '{$employee->name}' has been restored successfully.");
     }
 
     public function forceDelete($id)
@@ -472,7 +474,7 @@ class EmployeeController extends Controller implements HasMiddleware
         }
 
         $employee->forceDelete();
-        return redirect()->route('employees.index')->with('success', 'Employee permanently deleted.');
+        return redirect()->route('employees.index')->with('success', "Employee '{$employee->name}' has been permanently deleted.");
     }
 
     /**
